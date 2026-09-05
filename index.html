@@ -78,6 +78,10 @@ body{
   color:var(--ink);
   font-family:"Work Sans",system-ui,-apple-system,sans-serif;
   -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+  padding-left:env(safe-area-inset-left, 0px);
+  padding-right:env(safe-area-inset-right, 0px);
 }
 ::selection{background:var(--accent-soft);color:var(--accent-ink);}
 h1,h2,h3,.display{
@@ -253,6 +257,10 @@ button{font:inherit;color:inherit;}
   background:var(--surface-2);color:var(--muted);border:1px solid var(--border);
 }
 .filter-chip[data-kid="1"].active{background:#8A4433;border-color:#8A4433;color:#fff;}
+.filter-chip[data-diet="veg"].active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.filter-chip[data-diet="vegan"].active{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff;}
+.filter-chip[data-diet="fav"].active{background:#C9782B;border-color:#C9782B;color:#fff;}
+.card-bottom-left{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .match-chip{
   font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:8px;
   background:var(--surface-2);color:var(--muted);white-space:nowrap;
@@ -264,7 +272,7 @@ button{font:inherit;color:inherit;}
 .match-bar>div{height:100%;background:var(--accent);}
 .card-ing-preview{font-size:12.5px;color:var(--muted);line-height:1.5;}
 .card-ing-preview b{color:var(--ink-soft);font-weight:600;}
-.card-bottom{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:auto;}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted);margin-top:auto;}
 .kcal-tag{font-family:"JetBrains Mono";font-weight:600;color:var(--ink-soft);}
 
 .empty-state{padding:50px 20px;text-align:center;color:var(--muted);}
@@ -273,7 +281,8 @@ button{font:inherit;color:inherit;}
 /* ---------- Detail overlay ---------- */
 .overlay{
   position:fixed;inset:0;background:rgba(18,22,14,.5);backdrop-filter:blur(2px);
-  display:none;align-items:flex-start;justify-content:center;padding:32px 16px;z-index:50;overflow:auto;
+  display:none;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;
+  padding:calc(32px + env(safe-area-inset-top, 0px)) 16px calc(32px + env(safe-area-inset-bottom, 0px));
 }
 .overlay.open{display:flex;}
 .detail-card{
@@ -345,6 +354,56 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
 }
 .shop-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
 .shop-btn:disabled{opacity:.5;cursor:default;}
+
+/* ---------- Planner ---------- */
+.day-pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;}
+.day-pill{
+  flex:none;padding:10px 16px;border-radius:11px;border:1px solid var(--border);background:var(--surface);
+  font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;
+}
+.day-pill.active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.meal-slots{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;}
+.meal-slot{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;
+  display:flex;align-items:center;gap:14px;
+}
+.meal-slot-label{
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  width:78px;flex:none;
+}
+.meal-slot-body{flex:1;min-width:0;}
+.meal-slot-empty{
+  background:none;border:1px dashed var(--border);border-radius:10px;padding:10px 14px;width:100%;text-align:left;
+  color:var(--muted);font-size:13.5px;cursor:pointer;
+}
+.meal-slot-filled{display:flex;align-items:center;gap:10px;}
+.meal-slot-name{flex:1;font-family:"Fraunces";font-weight:600;font-size:15px;cursor:pointer;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.meal-slot-kcal{font-family:"JetBrains Mono";font-size:11.5px;color:var(--muted);flex:none;}
+.meal-slot-remove{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;width:26px;height:26px;border-radius:50%;flex:none;}
+.meal-slot-remove:hover{background:var(--surface-2);}
+
+.picker-search{
+  width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);
+  background:var(--bg);color:var(--ink);font-size:14.5px;margin-bottom:14px;
+}
+.picker-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto;}
+.picker-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid transparent;
+  background:var(--surface-2);cursor:pointer;text-align:left;width:100%;
+}
+.picker-item:hover{border-color:var(--accent);}
+.picker-item .name{flex:1;font-size:14px;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.picker-item .kcal{font-family:"JetBrains Mono";font-size:11px;color:var(--muted);flex:none;}
+
+/* ---------- Favorite toggle ---------- */
+.fav-toggle{
+  background:none;border:none;cursor:pointer;font-size:19px;line-height:1;color:var(--border);padding:0;
+  flex:none;
+}
+.fav-toggle.active{color:#C9782B;}
+.detail-fav{font-size:22px;position:absolute;top:20px;right:60px;background:none;border:none;cursor:pointer;color:var(--border);}
+.detail-fav.active{color:#C9782B;}
 </style>
 </head>
 <body>
@@ -373,6 +432,7 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
   <div class="tabs">
     <button class="tab-btn active" data-view="foods"><span data-i="tabFoods">Alimenti</span></button>
     <button class="tab-btn" data-view="recipes"><span data-i="tabRecipes">Ricette</span></button>
+    <button class="tab-btn" data-view="planner"><span data-i="tabPlanner">Pianifica</span></button>
     <button class="tab-btn" data-view="shopping"><span data-i="tabShopping">Lista spesa</span><span class="n" id="shoppingCount"></span></button>
   </div>
 
@@ -404,6 +464,16 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
 
     <div class="results-count" id="resultsCount"></div>
     <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+
+  <!-- ================= PLANNER VIEW ================= -->
+  <div class="view" id="view-planner">
+    <div class="day-pills" id="plannerDays"></div>
+    <div class="meal-slots" id="plannerSlots"></div>
+    <div class="shop-actions">
+      <button class="shop-btn primary" id="genShoppingFromPlanBtn" data-i="genShopping">Genera lista della spesa dal piano</button>
+      <button class="shop-btn" id="clearPlanBtn" data-i="clearPlan">Svuota piano</button>
+    </div>
   </div>
 
   <!-- ================= SHOPPING LIST VIEW ================= -->
@@ -438,7 +508,7 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
 var I18N = {
   it: {
     tagline: "Alimenti ammessi e ricette senza lectine, ispirate al metodo del Dr. Gundry.",
-    tabFoods: "Alimenti", tabRecipes: "Ricette", tabShopping: "Lista spesa",
+    tabFoods: "Alimenti", tabRecipes: "Ricette", tabShopping: "Lista spesa", tabPlanner: "Pianifica",
     foodSearchPh: "Cerca un alimento (es. mandorle, pomodori, cocco...)",
     allowedTitle: "Alimenti ammessi", forbiddenTitle: "Alimenti non ammessi",
     finderLabel: "Cosa hai in frigo?",
@@ -453,6 +523,12 @@ var I18N = {
     have:"in frigo", missing:"da comprare",
     noResults:"Nessuna ricetta trovata", noResultsSub:"Prova a rimuovere qualche filtro o ad aggiungere altri ingredienti.",
     kidFilter:"Adatto ai bambini", kidBadge:"Bambini",
+    vegFilter:"Vegetariano", veganFilter:"Vegano", vegBadge:"Vegetariano", veganBadge:"Vegano",
+    favFilter:"Preferiti",
+    addToSlot:"+ Aggiungi ricetta", pickerSearchPh:"Cerca una ricetta…",
+    genShopping:"Genera lista della spesa dal piano", clearPlan:"Svuota piano",
+    planUpdated:"Lista aggiornata ✓", planEmptyNote:"Aggiungi almeno una ricetta al piano prima di generare la lista.",
+    fastLabel:"Digiuno", fastTo:"– fine pasti –", fastHoursSuffix:"di digiuno",
     shoppingLabel:"Aggiungi un ingrediente alla lista", shopPh:"Scrivi un ingrediente e premi Invio…",
     moveToFridge:"Sposta i selezionati nel frigo", clearShopping:"Svuota lista",
     addMissing:"Aggiungi mancanti alla lista", added:"Aggiunti ✓",
@@ -462,7 +538,7 @@ var I18N = {
   },
   en: {
     tagline: "Lectin-free approved foods and recipes, inspired by Dr. Gundry's method.",
-    tabFoods: "Foods", tabRecipes: "Recipes", tabShopping: "Shopping list",
+    tabFoods: "Foods", tabRecipes: "Recipes", tabShopping: "Shopping list", tabPlanner: "Meal plan",
     foodSearchPh: "Search a food (e.g. almonds, tomatoes, coconut...)",
     allowedTitle: "Allowed foods", forbiddenTitle: "Foods to avoid",
     finderLabel: "What's in your fridge?",
@@ -477,6 +553,12 @@ var I18N = {
     have:"in fridge", missing:"to buy",
     noResults:"No recipes found", noResultsSub:"Try removing a filter or adding more ingredients.",
     kidFilter:"Kid-friendly", kidBadge:"Kids",
+    vegFilter:"Vegetarian", veganFilter:"Vegan", vegBadge:"Vegetarian", veganBadge:"Vegan",
+    favFilter:"Favorites",
+    addToSlot:"+ Add recipe", pickerSearchPh:"Search a recipe…",
+    genShopping:"Build shopping list from plan", clearPlan:"Clear plan",
+    planUpdated:"List updated ✓", planEmptyNote:"Add at least one recipe to the plan before generating the list.",
+    fastLabel:"Fasting", fastTo:"– eating ends –", fastHoursSuffix:"fasting",
     shoppingLabel:"Add an ingredient to the list", shopPh:"Type an ingredient and press Enter…",
     moveToFridge:"Move checked items to fridge", clearShopping:"Clear list",
     addMissing:"Add missing to list", added:"Added ✓",
@@ -493,7 +575,7 @@ var CHAPTERS = {
   principali: {it:"Piatti Principali", en:"Main Dishes"},
   dolci: {it:"Dolci & Snack", en:"Desserts & Snacks"},
   salse: {it:"Salse & Base", en:"Sauces & Basics"},
-  mediterranea: {it:"Mediterranea & Bambini", en:"Mediterranean & Kids"}
+  mediterranea: {it:"Mediterranea", en:"Mediterranean"}
 };
 var TAGS = {
   KC: {it:"Keto Code", en:"Keto Code"},
@@ -501,6 +583,13 @@ var TAGS = {
   EP: {it:"Energy Paradox", en:"Energy Paradox"},
   MED: {it:"Mediterranea", en:"Mediterranean"}
 };
+var DAYS = [
+  {key:"mon",it:"Lun",en:"Mon"},{key:"tue",it:"Mar",en:"Tue"},{key:"wed",it:"Mer",en:"Wed"},
+  {key:"thu",it:"Gio",en:"Thu"},{key:"fri",it:"Ven",en:"Fri"},{key:"sat",it:"Sab",en:"Sat"},{key:"sun",it:"Dom",en:"Sun"}
+];
+var MEALS = [
+  {key:"b",it:"Colazione",en:"Breakfast"},{key:"l",it:"Pranzo",en:"Lunch"},{key:"d",it:"Cena",en:"Dinner"}
+];
 
 /* ============================= INGREDIENT DICTIONARY ============================= */
 var ING = {
@@ -603,7 +692,11 @@ var ING = {
   olives:{it:"olive",en:"olives",a:["oliva","olive","olives"]},
   prosciutto:{it:"prosciutto crudo",en:"cured ham (prosciutto)",a:["prosciutto","ham"]},
   buffalo_mozzarella:{it:"mozzarella di bufala",en:"buffalo mozzarella",a:["mozzarella"]},
-  white_fish:{it:"merluzzo (o altro pesce bianco)",en:"cod (or other white fish)",a:["merluzzo","cod","nasello"]}
+  white_fish:{it:"merluzzo (o altro pesce bianco)",en:"cod (or other white fish)",a:["merluzzo","cod","nasello"]},
+  artichoke:{it:"carciofi",en:"artichokes",a:["carciofo","artichoke"]},
+  pear:{it:"pere",en:"pears",a:["pera","pear"]},
+  celeriac:{it:"sedano rapa",en:"celeriac",a:["celeriac","sedano rapa"]},
+  salmon:{it:"salmone selvaggio",en:"wild salmon",a:["salmone","salmon"]}
 };
 var PANTRY = Object.keys(ING).filter(function(k){return ING[k].pantry;});
 
@@ -777,382 +870,433 @@ var FOOD_LIST = {
 
 /* ============================= RECIPES (Ricettario Completo Gundry) ============================= */
 var RECIPES = [
-{id:1,ch:"colazioni",tag:"KC",it:"Uncoupling Cappuccino",en:"Uncoupling Cappuccino",serv:1,
+{id:1,veg:true,vegan:false,ch:"colazioni",tag:"KC",it:"Uncoupling Cappuccino",en:"Uncoupling Cappuccino",serv:1,
  ing:["coffee","mct_oil","cream","sweetener"],
  si:["Preparare il caffè caldo.","Aggiungere olio MCT e panna.","Frullare 20–30 secondi.","Servire cremoso."],
  se:["Brew the hot coffee.","Add MCT oil and cream.","Blend for 20–30 seconds.","Serve creamy."],
  kcal:145,fat:14,prot:1,carb:1},
-{id:2,ch:"colazioni",tag:"KC",it:"Smoothie Cioccolato & Cocco",en:"Chocolate & Coconut Smoothie",serv:1,
+{id:2,veg:true,vegan:true,ch:"colazioni",tag:"KC",it:"Smoothie Cioccolato & Cocco",en:"Chocolate & Coconut Smoothie",serv:1,
  ing:["coconut_milk","cauliflower","cocoa","mct_oil","sweetener"],
  si:["Inserire tutto nel frullatore.","Frullare fino a crema liscia.","Servire freddo."],
  se:["Put everything in the blender.","Blend until smooth.","Serve chilled."],
  kcal:220,fat:18,prot:3,carb:6},
-{id:3,ch:"colazioni",tag:null,it:"Pancakes di Mandorle e Uova con Lamponi",en:"Almond & Egg Pancakes with Raspberries",serv:2,
+{id:3,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Pancakes di Mandorle e Uova con Lamponi",en:"Almond & Egg Pancakes with Raspberries",serv:2,
  ing:["egg","almond_flour","coconut_milk","vanilla","coconut_oil","raspberry","coconut_yogurt","sweetener","salt"],
  si:["Sbatti le uova con farina di mandorle, latte di cocco, vaniglia, dolcificante e sale.","Scalda l'olio di cocco in padella antiaderente e versa dischetti di impasto.","Cuoci 2–3 minuti per lato finché dorati.","Servi con yogurt di cocco e lamponi freschi."],
  se:["Whisk the eggs with almond flour, coconut milk, vanilla, sweetener and salt.","Heat coconut oil in a nonstick pan and pour small rounds of batter.","Cook 2–3 minutes per side until golden.","Serve with coconut yogurt and fresh raspberries."],
  kcal:349,fat:28.6,prot:16.5,carb:7},
-{id:4,ch:"colazioni",tag:"KC",it:"Budino ai Semi di Basilico",en:"Basil Seed Pudding",serv:2,
+{id:4,veg:true,vegan:true,ch:"colazioni",tag:"KC",it:"Budino ai Semi di Basilico",en:"Basil Seed Pudding",serv:2,
  ing:["coconut_milk","basil_seeds","shredded_coconut","sweetener","kiwi"],
  si:["Mescolare latte e semi.","Lasciare riposare 3 ore in frigo.","Aggiungere il topping."],
  se:["Mix the milk and seeds.","Let rest in the fridge for 3 hours.","Add the topping."],
  kcal:190,fat:15,prot:3,carb:5},
-{id:5,ch:"colazioni",tag:null,it:"Waffle di Cavolfiore",en:"Cauliflower Waffles",serv:2,
+{id:5,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Waffle di Cavolfiore",en:"Cauliflower Waffles",serv:2,
  ing:["cauliflower","egg","almond_flour","coconut_flour"],
  si:["Frullare il cavolfiore.","Mescolare con gli altri ingredienti.","Cuocere in waffle maker per 5 minuti."],
  se:["Blend the cauliflower.","Mix with the remaining ingredients.","Cook in a waffle maker for 5 minutes."],
  kcal:280,fat:20,prot:15,carb:7},
-{id:6,ch:"colazioni",tag:null,it:"Granola Keto Croccante",en:"Crunchy Keto Granola",serv:4,
+{id:6,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Granola Keto Croccante",en:"Crunchy Keto Granola",serv:4,
  ing:["hazelnut","shredded_coconut","flaxseed","sesame_seed","coconut_oil","sweetener","cinnamon"],
  si:["Tritare grossolanamente la frutta secca.","Mescolare con olio e dolcificante.","Cuocere a 150°C per 25 minuti.","Raffreddare fino a croccantezza."],
  se:["Roughly chop the nuts.","Mix with oil and sweetener.","Bake at 150°C (300°F) for 25 minutes.","Let cool until crisp."],
  kcal:320,fat:28,prot:6,carb:5},
-{id:7,ch:"colazioni",tag:null,it:"Uova Strapazzate con Spinaci",en:"Scrambled Eggs with Spinach",serv:1,
+{id:7,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Uova Strapazzate con Spinaci",en:"Scrambled Eggs with Spinach",serv:1,
  ing:["egg","spinach","olive_oil","salt"],
  si:["Saltare gli spinaci.","Aggiungere le uova.","Mescolare fino a cremoso."],
  se:["Sauté the spinach.","Add the eggs.","Stir until creamy."],
  kcal:290,fat:23,prot:18,carb:3},
-{id:8,ch:"colazioni",tag:null,it:"Smoothie Verde Detox",en:"Green Detox Smoothie",serv:1,
+{id:8,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Smoothie Verde Detox",en:"Green Detox Smoothie",serv:1,
  ing:["lettuce","spinach","hemp_seed","lemon"],
  si:["Frullare tutto fino a consistenza liquida."],
  se:["Blend everything until liquid."],
  kcal:180,fat:12,prot:9,carb:5},
-{id:9,ch:"colazioni",tag:null,it:"Muffin Salati di Cavolfiore",en:"Savory Cauliflower Muffins",serv:12,
+{id:9,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Muffin Salati di Cavolfiore",en:"Savory Cauliflower Muffins",serv:12,
  ing:["cauliflower","egg","goat_cheese","almond_flour","baking_powder","rosemary"],
  si:["Preriscaldare il forno a 190°C.","Mescolare tutti gli ingredienti.","Versare negli stampini.","Cuocere 20–25 minuti fino a doratura."],
  se:["Preheat the oven to 190°C (375°F).","Mix all ingredients.","Pour into muffin tins.","Bake 20–25 minutes until golden."],
  kcal:120,fat:9,prot:5,carb:3},
-{id:10,ch:"colazioni",tag:null,it:"“Gelato” Keto ai Frutti di Bosco",en:"Keto Berry “Ice Cream”",serv:2,
+{id:10,veg:true,vegan:true,ch:"colazioni",tag:null,it:"“Gelato” Keto ai Frutti di Bosco",en:"Keto Berry “Ice Cream”",serv:2,
  ing:["berries","coconut_milk","sweetener"],
  si:["Frullare fino a consistenza cremosa."],
  se:["Blend until creamy."],
  kcal:160,fat:12,prot:2,carb:7},
-{id:11,ch:"colazioni",tag:null,it:"Avocado Bowl Salato",en:"Savory Avocado Bowl",serv:1,
+{id:11,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Avocado Bowl Salato",en:"Savory Avocado Bowl",serv:1,
  ing:["avocado","olive_oil","sesame_seed","salt"],
  si:["Tagliare l'avocado.","Condire con olio e semi.","Servire."],
  se:["Cut the avocado.","Dress with oil and seeds.","Serve."],
  kcal:320,fat:29,prot:4,carb:4},
-{id:12,ch:"colazioni",tag:null,it:"Pancake di Farina di Mandorle",en:"Almond Flour Pancakes",serv:2,
+{id:12,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Pancake di Farina di Mandorle",en:"Almond Flour Pancakes",serv:2,
  ing:["almond_flour","egg","coconut_milk","sweetener"],
  si:["Cuocere in padella 2–3 minuti per lato."],
  se:["Cook in a pan 2–3 minutes per side."],
  kcal:290,fat:24,prot:10,carb:5},
-{id:13,ch:"colazioni",tag:null,it:"Omelette al Formaggio di Capra",en:"Goat Cheese Omelette",serv:1,
+{id:13,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Omelette al Formaggio di Capra",en:"Goat Cheese Omelette",serv:1,
  ing:["egg","goat_cheese","olive_oil"],
  si:["Sbattere le uova.","Cuocere in padella.","Aggiungere il formaggio."],
  se:["Beat the eggs.","Cook in a pan.","Add the cheese."],
  kcal:330,fat:26,prot:20,carb:2},
-{id:14,ch:"colazioni",tag:null,it:"Latte di Cocco + MCT (shot energetico)",en:"Coconut Milk + MCT Energy Shot",serv:1,
+{id:14,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Latte di Cocco + MCT (shot energetico)",en:"Coconut Milk + MCT Energy Shot",serv:1,
  ing:["coconut_milk","mct_oil"],
  si:["Mescolare e bere subito."],
  se:["Mix and drink right away."],
  kcal:180,fat:18,prot:1,carb:2},
-{id:15,ch:"colazioni",tag:null,it:"Yogurt di Cocco + Frutti di Bosco",en:"Coconut Yogurt + Berries",serv:1,
+{id:15,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Yogurt di Cocco + Frutti di Bosco",en:"Coconut Yogurt + Berries",serv:1,
  ing:["coconut_yogurt","berries","chia_seed"],
  si:["Mescolare tutto."],
  se:["Mix everything together."],
  kcal:200,fat:15,prot:3,carb:7},
-{id:16,ch:"colazioni",tag:null,it:"Frullato Avocado Vaniglia",en:"Avocado Vanilla Smoothie",serv:1,
+{id:16,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Frullato Avocado Vaniglia",en:"Avocado Vanilla Smoothie",serv:1,
  ing:["avocado","coconut_milk","vanilla","sweetener"],
  si:["Frullare fino a cremoso."],
  se:["Blend until creamy."],
  kcal:240,fat:21,prot:2,carb:5},
-{id:17,ch:"colazioni",tag:null,it:"Uova Sode + Olio EVO",en:"Hard-Boiled Eggs + Olive Oil",serv:1,
+{id:17,veg:true,vegan:false,ch:"colazioni",tag:null,it:"Uova Sode + Olio EVO",en:"Hard-Boiled Eggs + Olive Oil",serv:1,
  ing:["egg","olive_oil"],
  si:["Lessare le uova e condire."],
  se:["Boil the eggs and dress."],
  kcal:250,fat:20,prot:14,carb:1},
-{id:18,ch:"colazioni",tag:null,it:"Crema Keto Cacao",en:"Keto Cocoa Spread",serv:1,
+{id:18,veg:true,vegan:true,ch:"colazioni",tag:null,it:"Crema Keto Cacao",en:"Keto Cocoa Spread",serv:1,
  ing:["cocoa","almond_butter","coconut_milk"],
  si:["Mescolare fino a crema."],
  se:["Mix until creamy."],
  kcal:210,fat:18,prot:5,carb:6},
 
-{id:19,ch:"leggeri",tag:"LO",it:"Insalata di Verdure Amare con Salsa al Gorgonzola e Noci",en:"Bitter Greens Salad with Gorgonzola-Walnut Dressing",serv:2,
+{id:19,veg:true,vegan:false,ch:"leggeri",tag:"LO",it:"Insalata di Verdure Amare con Salsa al Gorgonzola e Noci",en:"Bitter Greens Salad with Gorgonzola-Walnut Dressing",serv:2,
  ing:["gorgonzola","red_wine_vinegar","olive_oil","walnut","mustard","radicchio","arugula","endive","red_onion","black_pepper"],
  si:["Mescolare gorgonzola, aceto e senape.","Aggiungere lentamente l'olio per emulsionare.","Unire le noci tritate.","Condire l'insalata e mescolare."],
  se:["Mix the gorgonzola, vinegar and mustard.","Slowly whisk in the oil to emulsify.","Fold in the chopped walnuts.","Dress the salad and toss."],
  kcal:420,fat:38,prot:10,carb:6},
-{id:20,ch:"leggeri",tag:"LO",it:"Insalata di Lattuga Romana con Avocado",en:"Romaine & Avocado Salad",serv:2,
+{id:20,veg:true,vegan:true,ch:"leggeri",tag:"LO",it:"Insalata di Lattuga Romana con Avocado",en:"Romaine & Avocado Salad",serv:2,
  ing:["lettuce","avocado","olive_oil","lemon","salt","black_pepper"],
  si:["Tagliare lattuga e avocado.","Condire con olio, limone, sale e pepe.","Mescolare delicatamente."],
  se:["Cut the lettuce and avocado.","Dress with oil, lemon, salt and pepper.","Toss gently."],
  kcal:300,fat:26,prot:3,carb:7},
-{id:21,ch:"leggeri",tag:"LO",it:"Wrap di Alghe con Avocado e Verdure",en:"Nori Wrap with Avocado & Vegetables",serv:2,
+{id:21,veg:true,vegan:true,ch:"leggeri",tag:"LO",it:"Wrap di Alghe con Avocado e Verdure",en:"Nori Wrap with Avocado & Vegetables",serv:2,
  ing:["nori","avocado","cucumber","carrot","olive_oil","lemon"],
  si:["Tagliare avocado, cetriolo e carota.","Disporre sui fogli d'alga.","Condire e arrotolare."],
  se:["Cut the avocado, cucumber and carrot.","Arrange on the nori sheets.","Dress and roll up."],
  kcal:260,fat:20,prot:4,carb:9},
-{id:22,ch:"leggeri",tag:"LO",it:"Broccoli Arrosto con Olio di Avocado",en:"Roasted Broccoli with Avocado Oil",serv:2,
+{id:22,veg:true,vegan:true,ch:"leggeri",tag:"LO",it:"Broccoli Arrosto con Olio di Avocado",en:"Roasted Broccoli with Avocado Oil",serv:2,
  ing:["broccoli","avocado_oil","salt","black_pepper"],
  si:["Preriscaldare il forno a 180°C.","Condire i broccoli.","Cuocere 15–20 minuti."],
  se:["Preheat the oven to 180°C (350°F).","Season the broccoli.","Roast for 15–20 minutes."],
  kcal:210,fat:14,prot:6,carb:8},
-{id:23,ch:"leggeri",tag:"LO",it:"Cavolo Saltato al Limone",en:"Sautéed Cabbage with Lemon",serv:2,
+{id:23,veg:true,vegan:true,ch:"leggeri",tag:"LO",it:"Cavolo Saltato al Limone",en:"Sautéed Cabbage with Lemon",serv:2,
  ing:["cabbage","olive_oil","lemon","salt"],
  si:["Saltare il cavolo in padella.","Condire con limone e sale."],
  se:["Sauté the cabbage in a pan.","Dress with lemon and salt."],
  kcal:180,fat:13,prot:4,carb:7},
-{id:24,ch:"leggeri",tag:"KC",it:"Insalata Caprino e Pistacchi",en:"Goat Cheese & Pistachio Salad",serv:4,
+{id:24,veg:true,vegan:false,ch:"leggeri",tag:"KC",it:"Insalata Caprino e Pistacchi",en:"Goat Cheese & Pistachio Salad",serv:4,
  ing:["goat_cheese","pistachio","almond_flour","olive_oil","mct_oil","lemon","arugula","avocado"],
  si:["Impanare il formaggio con la farina di mandorle.","Rosolare leggermente in padella.","Preparare l'insalata con rucola e avocado.","Aggiungere formaggio e pistacchi, condire con olio e limone."],
  se:["Coat the cheese in almond flour.","Lightly sear in a pan.","Prepare the salad with arugula and avocado.","Add the cheese and pistachios, dress with oil and lemon."],
  kcal:450,fat:38,prot:12,carb:6},
-{id:25,ch:"leggeri",tag:"LO",it:"Insalata Tiepida di Cavolo e Cipolla",en:"Warm Cabbage & Onion Salad",serv:2,
+{id:25,veg:true,vegan:true,ch:"leggeri",tag:"LO",it:"Insalata Tiepida di Cavolo e Cipolla",en:"Warm Cabbage & Onion Salad",serv:2,
  ing:["cabbage","red_onion","olive_oil","lemon","salt"],
  si:["Saltare cavolo e cipolla in padella con olio.","Cuocere fino a tenero.","Condire con limone e sale, servire tiepido."],
  se:["Sauté the cabbage and onion in oil.","Cook until tender.","Dress with lemon and salt, serve warm."],
  kcal:190,fat:13,prot:4,carb:9},
 
-{id:26,ch:"zuppe",tag:null,it:"Zuppa di Porri della Longevità",en:"Longevity Leek Soup",serv:5,
+{id:26,veg:true,vegan:true,ch:"zuppe",tag:null,it:"Zuppa di Porri della Longevità",en:"Longevity Leek Soup",serv:5,
  ing:["olive_oil","leek","celery","garlic","thyme","lemon_zest","cauliflower","nutmeg","salt","black_pepper","vegetable_broth","bay_leaf","chives"],
  si:["Scaldare l'olio in una pentola grande.","Aggiungere porri, sedano, aglio, timo, scorza di limone, cavolfiore e spezie.","Cuocere finché i porri si ammorbidiscono.","Aggiungere brodo e alloro, cuocere coperto 25–35 minuti.","Frullare fino a crema, cuocere altri 10–15 minuti e regolare di sale."],
  se:["Heat the oil in a large pot.","Add leeks, celery, garlic, thyme, lemon zest, cauliflower and spices.","Cook until the leeks soften.","Add broth and bay leaf, simmer covered 25–35 minutes.","Blend until creamy, simmer 10–15 more minutes and adjust salt."],
  kcal:180,fat:9,prot:5,carb:14},
-{id:27,ch:"zuppe",tag:"LO",it:"Zuppa di Lenticchie e Miso con Shiitake",en:"Lentil & Miso Soup with Shiitake",serv:4,
+{id:27,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"Zuppa di Lenticchie e Miso con Shiitake",en:"Lentil & Miso Soup with Shiitake",serv:4,
  ing:["olive_oil","shallot","garlic","mushroom","thyme","rosemary","miso","vegetable_broth","lentils","kale","coconut_aminos"],
  si:["Soffriggere scalogno e aglio nell'olio.","Aggiungere funghi, timo e rosmarino.","Unire il miso e mescolare.","Aggiungere brodo e lenticchie, cuocere coperto 20–30 minuti.","Aggiungere il cavolo e cuocere altri 20 minuti, regolare con aminos di cocco."],
  se:["Sauté the shallot and garlic in oil.","Add the mushrooms, thyme and rosemary.","Stir in the miso.","Add broth and lentils, simmer covered 20–30 minutes.","Add the kale and cook 20 more minutes, adjust with coconut aminos."],
  kcal:260,fat:10,prot:14,carb:28},
-{id:28,ch:"zuppe",tag:"LO",it:"Zuppa Cremosa di Cavolfiore e Parmigiano",en:"Creamy Cauliflower & Parmesan Soup",serv:6,
+{id:28,veg:true,vegan:false,ch:"zuppe",tag:"LO",it:"Zuppa Cremosa di Cavolfiore e Parmigiano",en:"Creamy Cauliflower & Parmesan Soup",serv:6,
  ing:["olive_oil","red_onion","celery","garlic","cauliflower","nutmeg","salt","black_pepper","miso","vegetable_broth","coconut_milk","parmesan","bay_leaf"],
  si:["Soffriggere cipolla, sedano, aglio e cavolfiore con le spezie.","Aggiungere il miso e mescolare.","Unire brodo, latte di cocco, parmigiano e alloro.","Cuocere coperto 35–45 minuti.","Frullare fino a crema liscia, cuocere ancora 10–15 minuti."],
  se:["Sauté the onion, celery, garlic and cauliflower with the spices.","Stir in the miso.","Add broth, coconut milk, parmesan and bay leaf.","Simmer covered 35–45 minutes.","Blend until smooth, simmer 10–15 more minutes."],
  kcal:265,fat:20,prot:7,carb:13},
-{id:29,ch:"zuppe",tag:"EP",it:"Zuppa di Funghi 2.0",en:"Mushroom Soup 2.0",serv:7,
+{id:29,veg:true,vegan:true,ch:"zuppe",tag:"EP",it:"Zuppa di Funghi 2.0",en:"Mushroom Soup 2.0",serv:7,
  ing:["cauliflower","mushroom","shallot","garlic","tahini","miso","vegetable_broth","coconut_milk"],
  si:["Soffriggere scalogni e aglio in una pentola.","Aggiungere i funghi e cuocere per alcuni minuti.","Unire cavolfiore, brodo e latte di cocco.","Cuocere 15–20 minuti fino a verdure tenere.","Aggiungere tahini e miso, frullare fino a crema liscia."],
  se:["Sauté the shallots and garlic in a pot.","Add the mushrooms and cook a few minutes.","Add cauliflower, broth and coconut milk.","Simmer 15–20 minutes until vegetables are tender.","Add tahini and miso, blend until smooth."],
  kcal:220,fat:15,prot:6,carb:10},
-{id:30,ch:"zuppe",tag:"EP",it:"Zuppa di Lenticchie, Kale, Porro e Funghi",en:"Lentil, Kale, Leek & Mushroom Soup",serv:7,
+{id:30,veg:true,vegan:true,ch:"zuppe",tag:"EP",it:"Zuppa di Lenticchie, Kale, Porro e Funghi",en:"Lentil, Kale, Leek & Mushroom Soup",serv:7,
  ing:["olive_oil","leek","shallot","garlic","mushroom","lentils","vegetable_broth","kale"],
  si:["Scaldare l'olio e soffriggere porro, scalogni e aglio.","Aggiungere i funghi e cuocere qualche minuto.","Unire lenticchie e brodo, cuocere 15–20 minuti.","Aggiungere il cavolo riccio e cuocere ancora qualche minuto."],
  se:["Heat the oil and sauté the leek, shallots and garlic.","Add the mushrooms and cook a few minutes.","Add lentils and broth, simmer 15–20 minutes.","Add the kale and cook a few more minutes."],
  kcal:260,fat:14,prot:12,carb:18},
-{id:31,ch:"zuppe",tag:"LO",it:"Curry di Lenticchie con Broccoli",en:"Lentil & Broccoli Curry",serv:4,
+{id:31,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"Curry di Lenticchie con Broccoli",en:"Lentil & Broccoli Curry",serv:4,
  ing:["olive_oil","red_onion","curry_paste","lentils","broccoli","coconut_milk","vegetable_broth","salt"],
  si:["Scaldare l'olio e soffriggere la cipolla.","Aggiungere la pasta di curry e mescolare.","Unire lenticchie, broccoli, latte di cocco e brodo.","Cuocere a fuoco lento 20–30 minuti, regolare di sale."],
  se:["Heat the oil and sauté the onion.","Add the curry paste and stir.","Add lentils, broccoli, coconut milk and broth.","Simmer 20–30 minutes, adjust salt."],
  kcal:310,fat:18,prot:14,carb:20},
-{id:32,ch:"zuppe",tag:"LO",it:"Tempeh Brasato ai Funghi",en:"Braised Tempeh with Mushrooms",serv:4,
+{id:32,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"Tempeh Brasato ai Funghi",en:"Braised Tempeh with Mushrooms",serv:4,
  ing:["tempeh","mushroom","shallot","vegetable_broth","mustard","olive_oil"],
  si:["Scaldare l'olio e soffriggere scalogni e funghi.","Aggiungere il tempeh a cubetti.","Unire brodo e senape.","Cuocere a fuoco lento 20–30 minuti fino a riduzione."],
  se:["Heat the oil and sauté the shallots and mushrooms.","Add the diced tempeh.","Add broth and mustard.","Simmer 20–30 minutes until reduced."],
  kcal:280,fat:16,prot:20,carb:10},
-{id:33,ch:"zuppe",tag:"LO",it:"Noodles di Konjac con Funghi",en:"Konjac Noodles with Mushrooms",serv:2,
+{id:33,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"Noodles di Konjac con Funghi",en:"Konjac Noodles with Mushrooms",serv:2,
  ing:["shirataki_noodles","mushroom","olive_oil","garlic"],
  si:["Sciacquare bene i noodles.","Saltare i funghi con olio e aglio.","Aggiungere i noodles e cuocere 5–7 minuti.","Condire con erbe aromatiche."],
  se:["Rinse the noodles well.","Sauté the mushrooms with oil and garlic.","Add the noodles and cook 5–7 minutes.","Season with fresh herbs."],
  kcal:180,fat:14,prot:5,carb:6},
-{id:34,ch:"zuppe",tag:"LO",it:"“Riso” di Cavolfiore Saltato",en:"Sautéed Cauliflower “Rice”",serv:2,
+{id:34,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"“Riso” di Cavolfiore Saltato",en:"Sautéed Cauliflower “Rice”",serv:2,
  ing:["cauliflower","olive_oil","red_onion","salt"],
  si:["Tritare il cavolfiore fino a consistenza di riso.","Saltarlo in padella con olio e cipolla.","Cuocere 5–8 minuti, condire e servire."],
  se:["Rice the cauliflower in a food processor.","Sauté in a pan with oil and onion.","Cook 5–8 minutes, season and serve."],
  kcal:140,fat:9,prot:4,carb:6},
-{id:35,ch:"zuppe",tag:"LO",it:"Zuppa di Verdure Miste",en:"Mixed Vegetable Soup",serv:4,
+{id:35,veg:true,vegan:true,ch:"zuppe",tag:"LO",it:"Zuppa di Verdure Miste",en:"Mixed Vegetable Soup",serv:4,
  ing:["olive_oil","red_onion","celery","cabbage","vegetable_broth"],
  si:["Soffriggere cipolla e sedano.","Aggiungere cavolo e brodo.","Cuocere 25–30 minuti, aggiungere erbe e servire."],
  se:["Sauté the onion and celery.","Add the cabbage and broth.","Simmer 25–30 minutes, add herbs and serve."],
  kcal:150,fat:10,prot:4,carb:8},
-{id:36,ch:"zuppe",tag:"EP",it:"Cozze al Forno con Erbe e Mandorle",en:"Baked Mussels with Herbs & Almonds",serv:4,
+{id:36,veg:false,vegan:false,ch:"zuppe",tag:"EP",it:"Cozze al Forno con Erbe e Mandorle",en:"Baked Mussels with Herbs & Almonds",serv:4,
  ing:["mussels","almond_flour","garlic","olive_oil"],
  si:["Pulire e aprire le cozze.","Mescolare farina di mandorle, erbe, aglio e olio.","Riempire le cozze con il composto.","Cuocere in forno a 180°C per 10–15 minuti."],
  se:["Clean and open the mussels.","Mix almond flour, herbs, garlic and oil.","Fill the mussels with the mixture.","Bake at 180°C (350°F) for 10–15 minutes."],
  kcal:260,fat:16,prot:22,carb:5},
 
-{id:37,ch:"principali",tag:"LO",it:"Gnocchi di Patata Dolce",en:"Sweet Potato Gnocchi",serv:4,
+{id:37,veg:true,vegan:false,ch:"principali",tag:"LO",it:"Gnocchi di Patata Dolce",en:"Sweet Potato Gnocchi",serv:4,
  ing:["sweet_potato","egg","cassava_flour","nutmeg","salt"],
  si:["Cuocere le patate dolci fino a renderle morbide.","Schiacciarle e lasciare raffreddare.","Mescolare con uovo, farina e noce moscata.","Formare gli gnocchi e cuocerli in acqua bollente finché salgono a galla."],
  se:["Cook the sweet potatoes until soft.","Mash and let cool.","Mix with egg, flour and nutmeg.","Shape the gnocchi and boil until they float."],
  kcal:290,fat:3,prot:6,carb:55},
-{id:38,ch:"principali",tag:"LO",it:"Burger Vegetali di Lenticchie e Noci",en:"Lentil & Walnut Veggie Burgers",serv:4,
+{id:38,veg:true,vegan:false,ch:"principali",tag:"LO",it:"Burger Vegetali di Lenticchie e Noci",en:"Lentil & Walnut Veggie Burgers",serv:4,
  ing:["lentils","walnut","mushroom","egg","cassava_flour"],
  si:["Tritare funghi e noci.","Mescolare con lenticchie, uovo e farina.","Formare i burger.","Cuocere in forno a 180°C per circa 20 minuti."],
  se:["Chop the mushrooms and walnuts.","Mix with lentils, egg and flour.","Shape into patties.","Bake at 180°C (350°F) for about 20 minutes."],
  kcal:270,fat:14,prot:12,carb:20},
-{id:39,ch:"principali",tag:"LO",it:"Curry di Verdure al Latte di Cocco",en:"Vegetable Curry with Coconut Milk",serv:4,
+{id:39,veg:true,vegan:true,ch:"principali",tag:"LO",it:"Curry di Verdure al Latte di Cocco",en:"Vegetable Curry with Coconut Milk",serv:4,
  ing:["olive_oil","red_onion","cauliflower","broccoli","coconut_milk","vegetable_broth","curry_paste"],
  si:["Soffriggere la cipolla nell'olio.","Aggiungere le verdure e il curry.","Unire latte di cocco e brodo.","Cuocere a fuoco lento 20–25 minuti."],
  se:["Sauté the onion in oil.","Add the vegetables and curry paste.","Add coconut milk and broth.","Simmer 20–25 minutes."],
  kcal:300,fat:22,prot:7,carb:15},
-{id:40,ch:"principali",tag:"KC",it:"Frittelle di Broccoli",en:"Broccoli Fritters",serv:4,
+{id:40,veg:true,vegan:false,ch:"principali",tag:"KC",it:"Frittelle di Broccoli",en:"Broccoli Fritters",serv:4,
  ing:["broccoli","egg","almond_flour","flaxseed","cheese","olive_oil"],
  si:["Tritare i broccoli.","Mescolare con uova, farine e formaggio.","Formare le frittelle.","Cuocere in padella 3–4 minuti per lato."],
  se:["Chop the broccoli.","Mix with eggs, flours and cheese.","Shape into fritters.","Cook in a pan 3–4 minutes per side."],
  kcal:300,fat:22,prot:12,carb:6},
-{id:41,ch:"principali",tag:"KC",it:"Polpette di Granchio",en:"Crab Cakes",serv:2,
+{id:41,veg:false,vegan:false,ch:"principali",tag:"KC",it:"Polpette di Granchio",en:"Crab Cakes",serv:2,
  ing:["crab","celery","red_onion","egg","coconut_flour","almond_flour","avocado_oil"],
  si:["Mescolare tutti gli ingredienti.","Formare le polpette.","Cuocere in padella 3–4 minuti per lato."],
  se:["Mix all the ingredients.","Shape into cakes.","Cook in a pan 3–4 minutes per side."],
  kcal:320,fat:20,prot:28,carb:6},
-{id:42,ch:"principali",tag:"KC",it:"Curry di Pesce al Cocco",en:"Coconut Fish Curry",serv:8,
+{id:42,veg:false,vegan:false,ch:"principali",tag:"KC",it:"Curry di Pesce al Cocco",en:"Coconut Fish Curry",serv:8,
  ing:["sesame_seed","red_onion","fennel","ginger","garlic","curry_paste","coconut_milk","vegetable_broth","mussels","shrimp","scallops","cabbage"],
  si:["Scaldare l'olio e soffriggere cipolla, finocchio, zenzero e aglio.","Aggiungere la pasta di curry e mescolare.","Unire latte di cocco e brodo.","Aggiungere pesce e cavolo, cuocere circa 15 minuti fino a cottura."],
  se:["Heat the oil and sauté onion, fennel, ginger and garlic.","Add the curry paste and stir.","Add coconut milk and broth.","Add the seafood and cabbage, cook about 15 minutes until done."],
  kcal:320,fat:22,prot:26,carb:6},
-{id:43,ch:"principali",tag:"KC",it:"Noodles con Funghi e Formaggio",en:"Noodles with Mushrooms & Cheese",serv:4,
+{id:43,veg:true,vegan:false,ch:"principali",tag:"KC",it:"Noodles con Funghi e Formaggio",en:"Noodles with Mushrooms & Cheese",serv:4,
  ing:["shirataki_noodles","mushroom","olive_oil","garlic","thyme","feta_cheese"],
  si:["Preriscaldare il forno a 200°C.","Mescolare funghi, aglio, timo e olio.","Cuocere in forno per 35–40 minuti.","Aggiungere noodles e formaggio, mescolare e servire."],
  se:["Preheat the oven to 200°C (400°F).","Toss mushrooms with garlic, thyme and oil.","Roast for 35–40 minutes.","Add the noodles and cheese, toss and serve."],
  kcal:400,fat:32,prot:12,carb:7},
-{id:44,ch:"principali",tag:"KC",it:"Cavolo Arrosto con Pesto",en:"Roasted Cabbage with Pesto",serv:4,
+{id:44,veg:true,vegan:true,ch:"principali",tag:"KC",it:"Cavolo Arrosto con Pesto",en:"Roasted Cabbage with Pesto",serv:4,
  ing:["cabbage","olive_oil","salt","mct_oil","lemon","walnut"],
  si:["Preriscaldare il forno a 220°C.","Condire il cavolo con olio e sale, cuocere 15–20 minuti fino a doratura.","Preparare il pesto con olio MCT, noci, limone ed erbe.","Servire il cavolo con il pesto sopra."],
  se:["Preheat the oven to 220°C (425°F).","Season the cabbage with oil and salt, roast 15–20 minutes until golden.","Make the pesto with MCT oil, walnuts, lemon and herbs.","Serve the cabbage topped with pesto."],
  kcal:330,fat:28,prot:5,carb:8},
-{id:45,ch:"principali",tag:"KC",it:"Tabbouleh di Semi di Canapa",en:"Hemp Seed Tabbouleh",serv:6,
+{id:45,veg:true,vegan:true,ch:"principali",tag:"KC",it:"Tabbouleh di Semi di Canapa",en:"Hemp Seed Tabbouleh",serv:6,
  ing:["hemp_seed","parsley","mint","red_onion","celery","olive_oil","lemon","salt"],
  si:["Mescolare i semi di canapa con le erbe e le verdure.","Aggiungere olio e succo di limone.","Condire con sale e mescolare bene, servire fresco."],
  se:["Mix the hemp seeds with the herbs and vegetables.","Add the oil and lemon juice.","Season with salt and toss well, serve chilled."],
  kcal:210,fat:17,prot:10,carb:3},
-{id:46,ch:"principali",tag:"KC",it:"Sformato di Crauti e Funghi",en:"Sauerkraut & Mushroom Bake",serv:6,
+{id:46,veg:true,vegan:false,ch:"principali",tag:"KC",it:"Sformato di Crauti e Funghi",en:"Sauerkraut & Mushroom Bake",serv:6,
  ing:["sauerkraut","mushroom","red_onion","coconut_milk","egg","walnut","salt","black_pepper"],
  si:["Preriscaldare il forno a 180°C.","Soffriggere cipolla e funghi.","Mescolare con crauti, uova, latte di cocco e noci.","Versare in una teglia e cuocere 35–40 minuti fino a doratura."],
  se:["Preheat the oven to 180°C (350°F).","Sauté the onion and mushrooms.","Mix with sauerkraut, eggs, coconut milk and walnuts.","Pour into a baking dish and bake 35–40 minutes until golden."],
  kcal:320,fat:24,prot:10,carb:8},
-{id:47,ch:"principali",tag:"KC",it:"Costine di Maiale con Finocchio",en:"Pork Chops with Fennel",serv:4,
+{id:47,veg:false,vegan:false,ch:"principali",tag:"KC",it:"Costine di Maiale con Finocchio",en:"Pork Chops with Fennel",serv:4,
  ing:["pork","fennel","olive_oil","orange_zest","red_wine","salt"],
  si:["Scaldare l'olio in padella.","Cuocere le costolette fino a doratura.","Aggiungere finocchio e scorza d'arancia.","Sfumare con vino e cuocere fino a riduzione, servire caldo."],
  se:["Heat the oil in a pan.","Cook the chops until browned.","Add the fennel and orange zest.","Deglaze with wine and reduce, serve hot."],
  kcal:450,fat:34,prot:30,carb:5},
-{id:48,ch:"principali",tag:null,it:"Pollo Ruspante con Asparagi e Salsa al Tahini",en:"Pastured Chicken with Asparagus & Tahini Sauce",serv:4,
+{id:48,veg:false,vegan:false,ch:"principali",tag:null,it:"Pollo Ruspante con Asparagi e Salsa al Tahini",en:"Pastured Chicken with Asparagus & Tahini Sauce",serv:4,
  ing:["chicken","asparagus","tahini","lemon","garlic","olive_oil","coconut_aminos","ginger","parsley","salt"],
  si:["Marinare il pollo: mescolare aminos di cocco, metà del succo di limone, zenzero e un filo d'olio. Tagliare il pollo a strisce e marinare 15 minuti.","Preparare la salsa: mescolare il tahini con il restante succo di limone, aglio grattugiato e acqua tiepida fino a salsa fluida, salare.","Cuocere il pollo 4–5 minuti per lato; cuocere gli asparagi in padella o al vapore 5–6 minuti.","Impiattare gli asparagi, adagiare il pollo, versare la salsa al tahini e guarnire con prezzemolo."],
  se:["Marinate the chicken: mix coconut aminos, half the lemon juice, ginger and a drizzle of oil. Slice the chicken and marinate 15 minutes.","Make the sauce: mix tahini with the remaining lemon juice, grated garlic and warm water until fluid, season with salt.","Cook the chicken 4–5 minutes per side; steam or pan-cook the asparagus 5–6 minutes.","Plate the asparagus, top with chicken, spoon over the tahini sauce and garnish with parsley."],
  kcal:469,fat:28.7,prot:39.4,carb:11.1},
 
-{id:49,ch:"dolci",tag:null,it:"Brownies Keto al Cacao",en:"Keto Cocoa Brownies",serv:8,
+{id:49,veg:true,vegan:false,ch:"dolci",tag:null,it:"Brownies Keto al Cacao",en:"Keto Cocoa Brownies",serv:8,
  ing:["almond_flour","cocoa","sweetener","egg","mct_oil","walnut","vanilla"],
  si:["Mescolare tutti gli ingredienti in una ciotola.","Versare in una teglia.","Cuocere a 180°C per 20–25 minuti.","Lasciare raffreddare e tagliare."],
  se:["Mix all the ingredients in a bowl.","Pour into a baking pan.","Bake at 180°C (350°F) for 20–25 minutes.","Let cool and slice."],
  kcal:210,fat:18,prot:6,carb:5},
-{id:50,ch:"dolci",tag:null,it:"Mousse al Cioccolato e Avocado con Lamponi",en:"Chocolate-Avocado Mousse with Raspberries",serv:4,
+{id:50,veg:true,vegan:true,ch:"dolci",tag:null,it:"Mousse al Cioccolato e Avocado con Lamponi",en:"Chocolate-Avocado Mousse with Raspberries",serv:4,
  ing:["avocado","cocoa","coconut_milk","sweetener","vanilla","raspberry","pistachio","salt"],
  si:["Frullare gli avocado con cacao, latte di cocco, dolcificante, vaniglia e sale.","Frullare ad alta velocità 1–2 minuti fino a crema liscia e lucida.","Trasferire in coppette e raffreddare in frigo almeno 20 minuti.","Guarnire con lamponi freschi e pistacchi tritati."],
  se:["Blend the avocados with cocoa, coconut milk, sweetener, vanilla and salt.","Blend on high for 1–2 minutes until smooth and glossy.","Spoon into bowls and chill for at least 20 minutes.","Garnish with fresh raspberries and chopped pistachios."],
  kcal:328,fat:27.7,prot:7.1,carb:12.9},
-{id:51,ch:"dolci",tag:"KC",it:"Gelato al Cocco",en:"Coconut Ice Cream",serv:4,
+{id:51,veg:true,vegan:true,ch:"dolci",tag:"KC",it:"Gelato al Cocco",en:"Coconut Ice Cream",serv:4,
  ing:["coconut_milk","sweetener","vanilla"],
  si:["Mescolare tutti gli ingredienti.","Congelare mescolando ogni 30 minuti.","Servire cremoso."],
  se:["Mix all the ingredients.","Freeze, stirring every 30 minutes.","Serve creamy."],
  kcal:250,fat:22,prot:3,carb:5},
-{id:52,ch:"dolci",tag:null,it:"Gelato al Cioccolato",en:"Chocolate Ice Pops",serv:6,
+{id:52,veg:true,vegan:true,ch:"dolci",tag:null,it:"Gelato al Cioccolato",en:"Chocolate Ice Pops",serv:6,
  ing:["coconut_milk","shredded_coconut","dark_chocolate","coconut_oil","sweetener"],
  si:["A fuoco basso, mescolare latte di cocco, cocco grattugiato e dolcificante fino a composto omogeneo.","Aggiungere tre quarti del cioccolato tritato e mescolare fino a scioglimento completo.","Versare negli stampini per ghiaccioli.","Congelare almeno 3 ore, poi decorare con il cioccolato fuso rimanente."],
  se:["Over low heat, mix coconut milk, shredded coconut and sweetener until smooth.","Add three-quarters of the chopped chocolate and stir until fully melted.","Pour into popsicle molds.","Freeze at least 3 hours, then drizzle with the remaining melted chocolate."],
  kcal:375,fat:34,prot:3,carb:8},
-{id:53,ch:"dolci",tag:"KC",it:"Barrette Keto di Frutta Secca",en:"Keto Nut & Seed Bars",serv:6,
+{id:53,veg:true,vegan:true,ch:"dolci",tag:"KC",it:"Barrette Keto di Frutta Secca",en:"Keto Nut & Seed Bars",serv:6,
  ing:["almond_butter","shredded_coconut","flaxseed","sweetener"],
  si:["Mescolare tutti gli ingredienti.","Versare in uno stampo.","Refrigerare fino a solidificazione.","Tagliare a barrette."],
  se:["Mix all the ingredients.","Pour into a mold.","Chill until set.","Cut into bars."],
  kcal:260,fat:22,prot:7,carb:4},
-{id:54,ch:"dolci",tag:null,it:"Pane alle Noci",en:"Walnut Bread",serv:10,
+{id:54,veg:true,vegan:false,ch:"dolci",tag:null,it:"Pane alle Noci",en:"Walnut Bread",serv:10,
  ing:["olive_oil","almond_flour","hazelnut","arrowroot","flaxseed","walnut","tapioca_starch","egg","coconut_milk","yacon_syrup"],
  si:["Preriscaldare il forno a 175°C. Ungere una teglia da plumcake.","Mescolare le farine, l'amido, i semi di lino, le noci e gli amidi in una ciotola.","In un'altra ciotola mescolare olio, uova, latte di cocco e sciroppo di yacón.","Unire i liquidi ai secchi senza mescolare troppo.","Versare nella teglia e cuocere 40–45 minuti finché uno stuzzicadenti esce pulito."],
  se:["Preheat the oven to 175°C (350°F). Grease a loaf pan.","Mix the flours, arrowroot, flaxseed, walnuts and tapioca starch in a bowl.","In another bowl mix the oil, eggs, coconut milk and yacon syrup.","Combine the wet and dry ingredients without overmixing.","Pour into the pan and bake 40–45 minutes until a toothpick comes out clean."],
  kcal:325,fat:27,prot:9,carb:11},
 
-{id:55,ch:"salse",tag:null,it:"Salsa Avocado",en:"Avocado Sauce",serv:2,
+{id:55,veg:true,vegan:true,ch:"salse",tag:null,it:"Salsa Avocado",en:"Avocado Sauce",serv:2,
  ing:["avocado","lemon","olive_oil","salt"],
  si:["Frullare tutti gli ingredienti.","Regolare di sale e limone.","Servire come salsa o dressing."],
  se:["Blend all the ingredients.","Adjust salt and lemon.","Serve as a sauce or dressing."],
  kcal:250,fat:23,prot:3,carb:4},
-{id:56,ch:"salse",tag:null,it:"Dressing Olio & Limone",en:"Oil & Lemon Dressing",serv:2,
+{id:56,veg:true,vegan:true,ch:"salse",tag:null,it:"Dressing Olio & Limone",en:"Oil & Lemon Dressing",serv:2,
  ing:["olive_oil","lemon"],
  si:["Mescolare olio e succo di limone."],
  se:["Whisk together the oil and lemon juice."],
  kcal:180,fat:20,prot:0,carb:0},
-{id:57,ch:"salse",tag:null,it:"Salsa Sesamo",en:"Sesame Sauce",serv:2,
+{id:57,veg:true,vegan:true,ch:"salse",tag:null,it:"Salsa Sesamo",en:"Sesame Sauce",serv:2,
  ing:["sesame_seed","red_wine_vinegar","coconut_aminos"],
  si:["Mescolare olio di sesamo, aceto e aminos di cocco."],
  se:["Whisk together sesame oil, vinegar and coconut aminos."],
  kcal:120,fat:10,prot:0,carb:2},
 
-{id:58,ch:"mediterranea",tag:"MED",kid:true,it:"Bocconcini di Pollo alle Mandorle",en:"Almond Chicken Bites",serv:3,
+{id:58,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Bocconcini di Pollo alle Mandorle",en:"Almond Chicken Bites",serv:3,
  ing:["chicken","almond_flour","egg","parmesan","salt","olive_oil"],
  si:["Taglia il pollo a bocconcini.","Passa i pezzi nell'uovo sbattuto, poi nella farina di mandorle mescolata al parmigiano.","Cuoci in padella con un filo d'olio, 3–4 minuti per lato, finché dorati e cotti."],
  se:["Cut the chicken into bite-size pieces.","Dip in beaten egg, then coat in almond flour mixed with parmesan.","Pan-fry in a little oil, 3–4 minutes per side, until golden and cooked through."],
  kcal:310,fat:20,prot:30,carb:4},
-{id:59,ch:"mediterranea",tag:"MED",kid:true,it:"Cotoletta di Pollo alla Milanese (senza lectine)",en:"Almond-Crusted Chicken Cutlet",serv:2,
+{id:59,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Cotoletta di Pollo alla Milanese (senza lectine)",en:"Almond-Crusted Chicken Cutlet",serv:2,
  ing:["chicken","almond_flour","egg","parmesan","olive_oil","lemon"],
  si:["Appiattisci leggermente il petto di pollo.","Passalo nell'uovo, poi nella farina di mandorle mescolata al parmigiano.","Cuoci in padella con olio, 3–4 minuti per lato.","Servi con una spruzzata di limone."],
  se:["Gently flatten the chicken breast.","Dip in egg, then coat in almond flour mixed with parmesan.","Pan-fry in oil, 3–4 minutes per side.","Serve with a squeeze of lemon."],
  kcal:340,fat:22,prot:32,carb:5},
-{id:60,ch:"mediterranea",tag:"MED",kid:true,it:"Polpette di Pollo e Cavolfiore al Forno",en:"Baked Chicken & Cauliflower Meatballs",serv:4,
+{id:60,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Polpette di Pollo e Cavolfiore al Forno",en:"Baked Chicken & Cauliflower Meatballs",serv:4,
  ing:["chicken","cauliflower","egg","parmesan","parsley","salt"],
  si:["Cuoci a vapore il cavolfiore e schiaccialo grossolanamente.","Mescolalo con pollo macinato, uovo, parmigiano, prezzemolo e sale.","Forma le polpette e disponile su una teglia.","Cuoci in forno a 200°C per 18–20 minuti."],
  se:["Steam the cauliflower and mash it coarsely.","Mix with ground chicken, egg, parmesan, parsley and salt.","Shape into meatballs and place on a baking tray.","Bake at 200°C (400°F) for 18–20 minutes."],
  kcal:250,fat:14,prot:26,carb:5},
-{id:61,ch:"mediterranea",tag:"MED",kid:true,it:"Purè di Cavolfiore al Parmigiano",en:"Creamy Parmesan Cauliflower Mash",serv:4,
+{id:61,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Purè di Cavolfiore al Parmigiano",en:"Creamy Parmesan Cauliflower Mash",serv:4,
  ing:["cauliflower","parmesan","olive_oil","garlic","salt"],
  si:["Cuoci il cavolfiore a vapore finché tenero.","Frullalo con olio, uno spicchio d'aglio e sale fino a crema liscia.","Manteca con il parmigiano e servi caldo."],
  se:["Steam the cauliflower until tender.","Blend with oil, a garlic clove and salt until smooth.","Stir in the parmesan and serve warm."],
  kcal:190,fat:14,prot:7,carb:8},
-{id:62,ch:"mediterranea",tag:"MED",kid:true,it:"Polpettine di Pesce alla Ligure",en:"Ligurian-Style Fish Cakes",serv:3,
+{id:62,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Polpettine di Pesce alla Ligure",en:"Ligurian-Style Fish Cakes",serv:3,
  ing:["white_fish","almond_flour","egg","parsley","lemon","olive_oil"],
  si:["Trita finemente il pesce.","Mescolalo con uovo, farina di mandorle, prezzemolo e scorza di limone.","Forma delle polpettine e cuocile in padella con olio, 3 minuti per lato."],
  se:["Finely chop the fish.","Mix with egg, almond flour, parsley and lemon zest.","Shape into small cakes and pan-fry in oil, 3 minutes per side."],
  kcal:260,fat:14,prot:24,carb:6},
-{id:63,ch:"mediterranea",tag:"MED",kid:true,it:"Frittata al Forno con Spinaci e Formaggio di Capra",en:"Baked Spinach & Goat Cheese Frittata",serv:4,
+{id:63,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Frittata al Forno con Spinaci e Formaggio di Capra",en:"Baked Spinach & Goat Cheese Frittata",serv:4,
  ing:["egg","spinach","goat_cheese","olive_oil","salt"],
  si:["Preriscalda il forno a 180°C.","Sbatti le uova con sale, unisci gli spinaci saltati e il formaggio a pezzetti.","Versa in una teglia oliata e cuoci 20–22 minuti finché soda."],
  se:["Preheat the oven to 180°C (350°F).","Whisk the eggs with salt, fold in the sautéed spinach and cheese chunks.","Pour into an oiled baking dish and bake 20–22 minutes until set."],
  kcal:280,fat:22,prot:18,carb:3},
-{id:64,ch:"mediterranea",tag:"MED",kid:false,it:"Involtini di Pollo al Prosciutto e Salvia",en:"Chicken, Prosciutto & Sage Rolls",serv:4,
+{id:64,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:false,it:"Involtini di Pollo al Prosciutto e Salvia",en:"Chicken, Prosciutto & Sage Rolls",serv:4,
  ing:["chicken","prosciutto","sage","olive_oil","lemon"],
  si:["Appiattisci le fettine di pollo, adagia una fetta di prosciutto e una foglia di salvia su ciascuna.","Arrotola e ferma con uno stecchino.","Rosola in padella con olio, 3–4 minuti per lato, finché dorati.","Sfuma con un filo di limone prima di servire."],
  se:["Flatten the chicken slices, lay a slice of prosciutto and a sage leaf on each.","Roll up and secure with a toothpick.","Brown in a pan with oil, 3–4 minutes per side, until golden.","Finish with a splash of lemon before serving."],
  kcal:330,fat:20,prot:34,carb:1},
-{id:65,ch:"mediterranea",tag:"MED",kid:true,it:"Cavolfiore Mantecato al Parmigiano (“Risotto”)",en:"Creamy Parmesan Cauliflower “Risotto”",serv:3,
+{id:65,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Cavolfiore Mantecato al Parmigiano (“Risotto”)",en:"Creamy Parmesan Cauliflower “Risotto”",serv:3,
  ing:["cauliflower","parmesan","olive_oil","shallot","vegetable_broth"],
  si:["Trita il cavolfiore a grana di riso.","Soffriggi lo scalogno nell'olio, aggiungi il cavolfiore.","Bagna con un po' di brodo e cuoci mescolando 8–10 minuti.","Manteca fuori dal fuoco con il parmigiano."],
  se:["Rice the cauliflower in a food processor.","Sauté the shallot in oil, add the riced cauliflower.","Moisten with a little broth and cook, stirring, 8–10 minutes.","Off the heat, stir in the parmesan to finish."],
  kcal:210,fat:14,prot:8,carb:9},
-{id:66,ch:"mediterranea",tag:"MED",kid:true,it:"Gnocchi di Cavolfiore al Forno alla Romana",en:"Baked Cauliflower Gnocchi, Roman-Style",serv:4,
+{id:66,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Gnocchi di Cavolfiore al Forno alla Romana",en:"Baked Cauliflower Gnocchi, Roman-Style",serv:4,
  ing:["cauliflower","almond_flour","egg","parmesan","olive_oil"],
  si:["Cuoci a vapore il cavolfiore e schiaccialo finché asciutto.","Mescola con uovo, farina di mandorle e metà del parmigiano fino a impasto compatto.","Forma piccoli dischi, disponili in teglia oliata.","Cospargi con il resto del parmigiano e gratina in forno a 200°C per 15 minuti."],
  se:["Steam the cauliflower and mash until dry.","Mix with egg, almond flour and half the parmesan into a firm dough.","Shape into small discs and arrange in an oiled baking dish.","Sprinkle with the remaining parmesan and bake at 200°C (400°F) for 15 minutes."],
  kcal:260,fat:17,prot:12,carb:9},
-{id:67,ch:"mediterranea",tag:"MED",kid:true,it:"Torta Salata di Spinaci e Formaggio di Capra",en:"Spinach & Goat Cheese Savory Pie",serv:6,
+{id:67,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Torta Salata di Spinaci e Formaggio di Capra",en:"Spinach & Goat Cheese Savory Pie",serv:6,
  ing:["almond_flour","egg","spinach","goat_cheese","olive_oil","salt"],
  si:["Prepara la base mescolando farina di mandorle, un uovo e un filo d'olio; stendila in una teglia.","Cuoci la base in forno a 180°C per 10 minuti.","Mescola spinaci saltati, uova rimanenti e formaggio, versa sulla base.","Cuoci ancora 20–25 minuti finché soda."],
  se:["Make the base by mixing almond flour, one egg and a little oil; press into a tart pan.","Bake the base at 180°C (350°F) for 10 minutes.","Mix the sautéed spinach, remaining eggs and cheese, pour over the base.","Bake another 20–25 minutes until set."],
  kcal:300,fat:24,prot:15,carb:6},
-{id:68,ch:"mediterranea",tag:"MED",kid:true,it:"Zuppa di Porri e Patate Dolci",en:"Leek & Sweet Potato Soup",serv:4,
+{id:68,veg:true,vegan:true,ch:"mediterranea",tag:"MED",kid:true,it:"Zuppa di Porri e Patate Dolci",en:"Leek & Sweet Potato Soup",serv:4,
  ing:["leek","sweet_potato","vegetable_broth","olive_oil","salt"],
  si:["Soffriggi i porri nell'olio finché appassiti.","Aggiungi le patate dolci a cubetti e il brodo.","Cuoci 20 minuti, poi frulla fino a crema liscia."],
  se:["Sauté the leeks in oil until softened.","Add the diced sweet potato and the broth.","Simmer 20 minutes, then blend until smooth."],
  kcal:210,fat:8,prot:4,carb:30},
-{id:69,ch:"mediterranea",tag:"MED",kid:false,it:"Insalata di Arance, Finocchi e Olive",en:"Sicilian Orange, Fennel & Olive Salad",serv:2,
+{id:69,veg:true,vegan:true,ch:"mediterranea",tag:"MED",kid:false,it:"Insalata di Arance, Finocchi e Olive",en:"Sicilian Orange, Fennel & Olive Salad",serv:2,
  ing:["orange","fennel","olives","olive_oil","black_pepper"],
  si:["Affetta sottilmente finocchio e arancia pelata a vivo.","Disponi a strati con le olive.","Condisci con olio e una macinata di pepe."],
  se:["Thinly slice the fennel and peeled orange.","Layer with the olives.","Dress with oil and a crack of pepper."],
  kcal:190,fat:12,prot:2,carb:18},
-{id:70,ch:"mediterranea",tag:"MED",kid:true,it:"Torta di Mele alle Mandorle",en:"Almond Apple Cake",serv:8,
+{id:70,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Torta di Mele alle Mandorle",en:"Almond Apple Cake",serv:8,
  ing:["almond_flour","egg","apple","sweetener","coconut_oil","cinnamon"],
  si:["Mescola farina di mandorle, uova, dolcificante, olio di cocco e cannella.","Incorpora le mele tagliate a fettine sottili.","Versa in uno stampo e cuoci a 175°C per 35–40 minuti."],
  se:["Mix the almond flour, eggs, sweetener, coconut oil and cinnamon.","Fold in the thinly sliced apples.","Pour into a baking pan and bake at 175°C (350°F) for 35–40 minutes."],
  kcal:260,fat:18,prot:7,carb:15},
-{id:71,ch:"mediterranea",tag:"MED",kid:true,it:"Biscotti al Limone e Mandorle",en:"Lemon Almond Cookies",serv:10,
+{id:71,veg:true,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Biscotti al Limone e Mandorle",en:"Lemon Almond Cookies",serv:10,
  ing:["almond_flour","egg","lemon","sweetener","coconut_oil"],
  si:["Mescola tutti gli ingredienti fino a impasto morbido.","Forma delle palline e schiacciale leggermente su una teglia.","Cuoci a 170°C per 10–12 minuti fino a bordi dorati."],
  se:["Mix all the ingredients into a soft dough.","Shape into small balls and flatten slightly on a tray.","Bake at 170°C (340°F) for 10–12 minutes until the edges are golden."],
  kcal:150,fat:11,prot:4,carb:6},
-{id:72,ch:"mediterranea",tag:"MED",kid:true,it:"Pesce al Forno con Olive e Rosmarino",en:"Baked Fish with Olives & Rosemary",serv:3,
+{id:72,veg:false,vegan:false,ch:"mediterranea",tag:"MED",kid:true,it:"Pesce al Forno con Olive e Rosmarino",en:"Baked Fish with Olives & Rosemary",serv:3,
  ing:["white_fish","olives","rosemary","olive_oil","lemon"],
  si:["Disponi il pesce in una teglia oliata.","Cospargi con olive, rosmarino e scorza di limone.","Cuoci in forno a 190°C per 15–18 minuti."],
  se:["Arrange the fish in an oiled baking dish.","Scatter with olives, rosemary and lemon zest.","Bake at 190°C (375°F) for 15–18 minutes."],
  kcal:240,fat:14,prot:26,carb:2},
-{id:73,ch:"mediterranea",tag:"MED",kid:true,it:"Crema di Broccoli con Basilico",en:"Broccoli Cream Soup with Basil",serv:4,
+{id:73,veg:true,vegan:true,ch:"mediterranea",tag:"MED",kid:true,it:"Crema di Broccoli con Basilico",en:"Broccoli Cream Soup with Basil",serv:4,
  ing:["broccoli","vegetable_broth","olive_oil","garlic","basil"],
  si:["Soffriggi l'aglio nell'olio, aggiungi i broccoli.","Copri con il brodo e cuoci 15 minuti finché teneri.","Frulla con foglie di basilico fresco fino a crema liscia."],
  se:["Sauté the garlic in oil, add the broccoli.","Cover with the broth and simmer 15 minutes until tender.","Blend with fresh basil leaves until smooth."],
  kcal:170,fat:11,prot:6,carb:10},
-{id:74,ch:"mediterranea",tag:"MED",kid:false,it:"Mozzarella di Bufala, Basilico e Olive",en:"Buffalo Mozzarella, Basil & Olives",serv:2,
+{id:74,ch:"mediterranea",tag:"MED",kid:false,veg:true,vegan:false,it:"Mozzarella di Bufala, Basilico e Olive",en:"Buffalo Mozzarella, Basil & Olives",serv:2,
  ing:["buffalo_mozzarella","basil","olives","olive_oil"],
  si:["Affetta la mozzarella di bufala.","Disponila con le olive e foglie di basilico fresco.","Condisci con un filo d'olio extravergine."],
  se:["Slice the buffalo mozzarella.","Arrange with the olives and fresh basil leaves.","Drizzle with extra virgin olive oil."],
- kcal:260,fat:20,prot:15,carb:2}
+ kcal:260,fat:20,prot:15,carb:2},
+
+{id:75,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Cavolo Riccio Saltato all'Aglio",en:"Sautéed Kale with Garlic",serv:2,
+ ing:["kale","garlic","olive_oil","salt"],
+ si:["Scalda l'olio con l'aglio in padella.","Aggiungi il cavolo riccio e saltalo 3–4 minuti finché appassito.","Regola di sale e servi."],
+ se:["Heat the oil with the garlic in a pan.","Add the kale and sauté 3–4 minutes until wilted.","Season with salt and serve."],
+ kcal:120,fat:9,prot:3,carb:6},
+{id:76,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Insalata di Carote Crude al Limone",en:"Raw Carrot & Lemon Salad",serv:2,
+ ing:["carrot","lemon","olive_oil","salt"],
+ si:["Taglia le carote a julienne o grattugiale.","Condisci con succo di limone, olio e sale.","Lascia riposare 5 minuti prima di servire."],
+ se:["Cut the carrots into julienne or grate them.","Dress with lemon juice, oil and salt.","Let rest 5 minutes before serving."],
+ kcal:110,fat:7,prot:1,carb:10},
+{id:77,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Asparagi al Forno con Limone",en:"Baked Asparagus with Lemon",serv:3,
+ ing:["asparagus","olive_oil","lemon","salt"],
+ si:["Preriscalda il forno a 200°C.","Condisci gli asparagi con olio e sale, disponili in teglia.","Cuoci 12–15 minuti, servi con una spruzzata di limone."],
+ se:["Preheat the oven to 200°C (400°F).","Toss the asparagus with oil and salt, arrange on a tray.","Bake 12–15 minutes, finish with a squeeze of lemon."],
+ kcal:130,fat:10,prot:4,carb:6},
+{id:78,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Broccoli al Vapore con Limone",en:"Steamed Broccoli with Lemon",serv:3,
+ ing:["broccoli","lemon","olive_oil","salt"],
+ si:["Cuoci i broccoli a vapore per 5–6 minuti.","Condisci con olio, limone e sale.","Servi caldo."],
+ se:["Steam the broccoli for 5–6 minutes.","Dress with oil, lemon and salt.","Serve warm."],
+ kcal:120,fat:9,prot:4,carb:7},
+{id:79,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:false,it:"Finocchi Gratinati al Parmigiano",en:"Fennel Gratin with Parmesan",serv:4,
+ ing:["fennel","parmesan","olive_oil","salt"],
+ si:["Cuoci i finocchi a spicchi in acqua bollente per 8 minuti, scola.","Disponili in una teglia oliata, cospargi di parmigiano.","Gratina in forno a 200°C per 10 minuti finché dorato."],
+ se:["Boil the fennel wedges for 8 minutes, drain.","Arrange in an oiled baking dish, sprinkle with parmesan.","Broil at 200°C (400°F) for 10 minutes until golden."],
+ kcal:150,fat:10,prot:6,carb:9},
+{id:80,ch:"mediterranea",tag:"MED",kid:false,veg:true,vegan:true,it:"Carciofi Trifolati con Prezzemolo",en:"Sautéed Artichokes with Garlic & Parsley",serv:3,
+ ing:["artichoke","garlic","parsley","olive_oil","lemon"],
+ si:["Pulisci i carciofi e tagliali a spicchi sottili.","Soffriggili in padella con olio e aglio per 8–10 minuti.","Aggiungi il prezzemolo e un filo di limone prima di servire."],
+ se:["Clean the artichokes and slice thinly.","Sauté in a pan with oil and garlic for 8–10 minutes.","Add parsley and a squeeze of lemon before serving."],
+ kcal:140,fat:10,prot:3,carb:9},
+{id:81,ch:"mediterranea",tag:"MED",kid:false,veg:true,vegan:true,it:"Insalata di Rucola, Pere e Noci",en:"Arugula, Pear & Walnut Salad",serv:2,
+ ing:["arugula","pear","walnut","olive_oil","lemon"],
+ si:["Disponi la rucola su un piatto.","Aggiungi la pera tagliata a fettine sottili e le noci.","Condisci con olio e limone."],
+ se:["Arrange the arugula on a plate.","Add the thinly sliced pear and walnuts.","Dress with oil and lemon."],
+ kcal:210,fat:16,prot:4,carb:14},
+{id:82,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Vellutata di Sedano Rapa e Porri",en:"Celeriac & Leek Velouté",serv:4,
+ ing:["leek","celeriac","vegetable_broth","olive_oil","salt"],
+ si:["Soffriggi i porri nell'olio finché appassiti.","Aggiungi il sedano rapa a cubetti e il brodo.","Cuoci 20 minuti, poi frulla fino a crema liscia."],
+ se:["Sauté the leeks in oil until softened.","Add the diced celeriac and the broth.","Simmer 20 minutes, then blend until smooth."],
+ kcal:150,fat:8,prot:3,carb:16},
+{id:83,ch:"mediterranea",tag:"MED",kid:true,veg:false,vegan:false,it:"Salmone al Forno con Finocchi e Limone",en:"Baked Salmon with Fennel & Lemon",serv:3,
+ ing:["salmon","fennel","lemon","olive_oil","rosemary"],
+ si:["Preriscalda il forno a 190°C.","Disponi il salmone e i finocchi affettati in una teglia oliata.","Cospargi di rosmarino e scorza di limone, cuoci 15–18 minuti."],
+ se:["Preheat the oven to 190°C (375°F).","Arrange the salmon and sliced fennel in an oiled baking dish.","Scatter with rosemary and lemon zest, bake 15–18 minutes."],
+ kcal:320,fat:22,prot:28,carb:4},
+{id:84,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Purea di Sedano Rapa",en:"Creamy Celeriac Puree",serv:4,
+ ing:["celeriac","olive_oil","garlic","salt"],
+ si:["Cuoci il sedano rapa a cubetti in acqua bollente finché tenero, 15 minuti.","Scola e frulla con olio, aglio e sale fino a crema liscia."],
+ se:["Boil the diced celeriac until tender, 15 minutes.","Drain and blend with oil, garlic and salt until smooth."],
+ kcal:140,fat:9,prot:2,carb:12}
 ];
 
 /* ============================= APP STATE ============================= */
@@ -1164,8 +1308,15 @@ var state = {
   chapterFilter: "all",
   tagFilter: null,
   kidOnly: false,
+  vegOnly: false,
+  veganOnly: false,
+  favOnly: false,
   foodQuery: "",
-  shoppingList: []
+  shoppingList: [],
+  favorites: [],
+  plan: {},
+  planDay: "mon",
+  pickerTarget: null
 };
 
 function loadState(){
@@ -1188,6 +1339,22 @@ function loadState(){
     var savedShop = localStorage.getItem("pp_shopping");
     if(savedShop) state.shoppingList = JSON.parse(savedShop);
   }catch(e){ state.shoppingList = []; }
+  try{
+    var savedFav = localStorage.getItem("pp_favorites");
+    if(savedFav) state.favorites = JSON.parse(savedFav);
+  }catch(e){ state.favorites = []; }
+  try{
+    var savedPlan = localStorage.getItem("pp_plan");
+    if(savedPlan) state.plan = JSON.parse(savedPlan);
+  }catch(e){ state.plan = {}; }
+  ensurePlanShape();
+}
+function ensurePlanShape(){
+  DAYS.forEach(function(d){
+    if(!state.plan[d.key]) state.plan[d.key] = {};
+    if(state.plan[d.key].eatStart===undefined) state.plan[d.key].eatStart = "12:00";
+    if(state.plan[d.key].eatEnd===undefined) state.plan[d.key].eatEnd = "20:00";
+  });
 }
 function saveIngredients(){
   try{ localStorage.setItem("pp_ingredients", JSON.stringify(state.ingredients)); }catch(e){}
@@ -1197,6 +1364,12 @@ function saveLang(){
 }
 function saveShoppingList(){
   try{ localStorage.setItem("pp_shopping", JSON.stringify(state.shoppingList)); }catch(e){}
+}
+function saveFavorites(){
+  try{ localStorage.setItem("pp_favorites", JSON.stringify(state.favorites)); }catch(e){}
+}
+function savePlan(){
+  try{ localStorage.setItem("pp_plan", JSON.stringify(state.plan)); }catch(e){}
 }
 
 /* ============================= HELPERS ============================= */
@@ -1373,6 +1546,185 @@ function renderShoppingList(){
   wrap.appendChild(ul);
 }
 
+/* ============================= FAVORITES ============================= */
+function isFavorite(id){ return state.favorites.indexOf(id)!==-1; }
+function toggleFavorite(id){
+  if(isFavorite(id)) state.favorites = state.favorites.filter(function(x){return x!==id;});
+  else state.favorites.push(id);
+  saveFavorites();
+  renderRecipes();
+  renderPlanner();
+}
+function getRecipeById(id){
+  return RECIPES.filter(function(r){return r.id===id;})[0];
+}
+
+/* ============================= PLANNER ============================= */
+function setPlanSlot(dayKey, mealKey, recipeId){
+  state.plan[dayKey][mealKey] = recipeId;
+  savePlan();
+  renderPlanner();
+}
+function clearPlanSlot(dayKey, mealKey){
+  delete state.plan[dayKey][mealKey];
+  savePlan();
+  renderPlanner();
+}
+function setFastField(dayKey, field, value){
+  state.plan[dayKey][field] = value;
+  savePlan();
+  renderPlanner();
+}
+function clearWholePlan(){
+  state.plan = {};
+  ensurePlanShape();
+  savePlan();
+  renderPlanner();
+}
+function fastingHoursFor(dayKey){
+  var d = state.plan[dayKey];
+  var toMin = function(s){ var p=s.split(":"); return (+p[0])*60 + (+p[1]); };
+  var start = toMin(d.eatStart), end = toMin(d.eatEnd);
+  var eatingMin = end - start;
+  if(eatingMin < 0) eatingMin += 24*60;
+  var fastMin = 24*60 - eatingMin;
+  return Math.round(fastMin/60*10)/10;
+}
+
+function renderPlanner(){
+  var daysWrap = document.getElementById("plannerDays");
+  var slotsWrap = document.getElementById("plannerSlots");
+  if(!daysWrap) return;
+
+  daysWrap.innerHTML = "";
+  DAYS.forEach(function(d){
+    var b = document.createElement("button");
+    b.className = "day-pill" + (state.planDay===d.key ? " active":"");
+    b.textContent = label(d);
+    b.addEventListener("click", function(){ state.planDay = d.key; renderPlanner(); });
+    daysWrap.appendChild(b);
+  });
+
+  var dayKey = state.planDay;
+  var dayPlan = state.plan[dayKey];
+  slotsWrap.innerHTML = "";
+
+  var fastCard = document.createElement("div");
+  fastCard.className = "meal-slot";
+  var fh = fastingHoursFor(dayKey);
+  fastCard.innerHTML =
+    '<div class="meal-slot-label">'+t("fastLabel")+'</div>'+
+    '<div class="meal-slot-body" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'+
+      '<input type="time" class="picker-search" style="width:auto;margin:0;padding:8px 10px;" id="eatStart_'+dayKey+'" value="'+dayPlan.eatStart+'">'+
+      '<span style="color:var(--muted);font-size:13px;">'+t("fastTo")+'</span>'+
+      '<input type="time" class="picker-search" style="width:auto;margin:0;padding:8px 10px;" id="eatEnd_'+dayKey+'" value="'+dayPlan.eatEnd+'">'+
+      '<span class="kid-badge">'+fh+'h '+t("fastHoursSuffix")+'</span>'+
+    '</div>';
+  slotsWrap.appendChild(fastCard);
+  document.getElementById("eatStart_"+dayKey).addEventListener("change", function(e){ setFastField(dayKey,"eatStart",e.target.value); });
+  document.getElementById("eatEnd_"+dayKey).addEventListener("change", function(e){ setFastField(dayKey,"eatEnd",e.target.value); });
+
+  MEALS.forEach(function(m){
+    var slot = document.createElement("div");
+    slot.className = "meal-slot";
+    var recId = dayPlan[m.key];
+    var recipe = recId!=null ? getRecipeById(recId) : null;
+
+    var labelEl = document.createElement("div");
+    labelEl.className = "meal-slot-label";
+    labelEl.textContent = label(m);
+    slot.appendChild(labelEl);
+
+    var body = document.createElement("div");
+    body.className = "meal-slot-body";
+    if(recipe){
+      body.innerHTML =
+        '<div class="meal-slot-filled">'+
+          '<span class="meal-slot-name">'+label(recipe)+'</span>'+
+          '<span class="meal-slot-kcal">'+recipe.kcal+' '+t("kcal")+'</span>'+
+          '<button class="meal-slot-remove" type="button">×</button>'+
+        '</div>';
+      body.querySelector(".meal-slot-name").addEventListener("click", function(){ openDetail(recipe); });
+      body.querySelector(".meal-slot-remove").addEventListener("click", function(){ clearPlanSlot(dayKey, m.key); });
+    } else {
+      var addBtn = document.createElement("button");
+      addBtn.className = "meal-slot-empty";
+      addBtn.type = "button";
+      addBtn.textContent = t("addToSlot");
+      addBtn.addEventListener("click", function(){ openPicker(dayKey, m.key); });
+      body.appendChild(addBtn);
+    }
+    slot.appendChild(body);
+    slotsWrap.appendChild(slot);
+  });
+}
+
+function openPicker(dayKey, mealKey){
+  state.pickerTarget = {day:dayKey, meal:mealKey};
+  var overlay=document.getElementById("overlay");
+  var card=document.getElementById("detailCard");
+  card.innerHTML =
+    '<div class="detail-head">'+
+      '<button class="detail-close" id="detailCloseBtn" aria-label="Close">×</button>'+
+      '<h2>'+t("addToSlot").replace("+ ","")+'</h2>'+
+    '</div>'+
+    '<div class="detail-body">'+
+      '<input type="text" class="picker-search" id="pickerSearch" placeholder="'+t("pickerSearchPh")+'">'+
+      '<ul class="picker-list" id="pickerList"></ul>'+
+    '</div>';
+  document.getElementById("detailCloseBtn").addEventListener("click", closeDetail);
+  var searchInput = document.getElementById("pickerSearch");
+  searchInput.addEventListener("input", function(){ renderPickerList(searchInput.value); });
+  renderPickerList("");
+  overlay.classList.add("open");
+  searchInput.focus();
+}
+function renderPickerList(query){
+  var listEl = document.getElementById("pickerList");
+  if(!listEl) return;
+  var n = normalize(query);
+  var items = RECIPES.filter(function(r){ return !n || normalize(label(r)).indexOf(n)!==-1; }).slice(0,60);
+  listEl.innerHTML = "";
+  items.forEach(function(r){
+    var li = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.type="button"; btn.className="picker-item";
+    btn.innerHTML = '<span class="name">'+label(r)+'</span><span class="kcal">'+r.kcal+' '+t("kcal")+'</span>';
+    btn.addEventListener("click", function(){
+      setPlanSlot(state.pickerTarget.day, state.pickerTarget.meal, r.id);
+      closeDetail();
+    });
+    li.appendChild(btn);
+    listEl.appendChild(li);
+  });
+}
+
+function generateShoppingFromPlan(){
+  var ids = [];
+  DAYS.forEach(function(d){
+    MEALS.forEach(function(m){
+      var rid = state.plan[d.key][m.key];
+      if(rid!=null && ids.indexOf(rid)===-1) ids.push(rid);
+    });
+  });
+  var btn = document.getElementById("genShoppingFromPlanBtn");
+  if(ids.length===0){
+    btn.textContent = t("planEmptyNote");
+    setTimeout(function(){ btn.textContent = t("genShopping"); },2200);
+    return;
+  }
+  var haveSet = {};
+  state.ingredients.forEach(function(k){haveSet[k]=true;});
+  PANTRY.forEach(function(k){haveSet[k]=true;});
+  ids.forEach(function(id){
+    var r = getRecipeById(id);
+    if(!r) return;
+    r.ing.forEach(function(k){ if(!haveSet[k]) addToShoppingList(k); });
+  });
+  btn.textContent = t("planUpdated");
+  setTimeout(function(){ btn.textContent = t("genShopping"); },2200);
+}
+
 /* ============================= FOODS VIEW ============================= */
 function slug(s){ return normalize(s).replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
 
@@ -1475,6 +1827,27 @@ function buildFilterRows(){
   kidBtn.textContent = t("kidFilter");
   kidBtn.addEventListener("click", function(){ state.kidOnly = !state.kidOnly; buildFilterRows(); renderRecipes(); });
   tagWrap.appendChild(kidBtn);
+
+  var vegBtn = document.createElement("button");
+  vegBtn.className = "filter-chip" + (state.vegOnly ? " active" : "");
+  vegBtn.setAttribute("data-diet", "veg");
+  vegBtn.textContent = t("vegFilter");
+  vegBtn.addEventListener("click", function(){ state.vegOnly = !state.vegOnly; buildFilterRows(); renderRecipes(); });
+  tagWrap.appendChild(vegBtn);
+
+  var veganBtn = document.createElement("button");
+  veganBtn.className = "filter-chip" + (state.veganOnly ? " active" : "");
+  veganBtn.setAttribute("data-diet", "vegan");
+  veganBtn.textContent = t("veganFilter");
+  veganBtn.addEventListener("click", function(){ state.veganOnly = !state.veganOnly; buildFilterRows(); renderRecipes(); });
+  tagWrap.appendChild(veganBtn);
+
+  var favBtn = document.createElement("button");
+  favBtn.className = "filter-chip" + (state.favOnly ? " active" : "");
+  favBtn.setAttribute("data-diet", "fav");
+  favBtn.textContent = t("favFilter");
+  favBtn.addEventListener("click", function(){ state.favOnly = !state.favOnly; buildFilterRows(); renderRecipes(); });
+  tagWrap.appendChild(favBtn);
 }
 
 function renderRecipes(){
@@ -1486,6 +1859,9 @@ function renderRecipes(){
     if(state.chapterFilter!=="all" && r.ch!==state.chapterFilter) return false;
     if(state.tagFilter && r.tag!==state.tagFilter) return false;
     if(state.kidOnly && !r.kid) return false;
+    if(state.veganOnly && !r.vegan) return false;
+    if(state.vegOnly && !r.veg) return false;
+    if(state.favOnly && !isFavorite(r.id)) return false;
     return true;
   });
 
@@ -1512,24 +1888,33 @@ function renderRecipes(){
 
   scored.forEach(function(s){
     var r=s.r, m=s.m;
-    var card=document.createElement("button");
-    card.type="button";
+    var card=document.createElement("div");
     card.className="recipe-card";
+    card.tabIndex=0;
+    card.setAttribute("role","button");
     var pct = m.total? Math.round(100*m.matched/m.total):0;
     var chipClass = m.total && m.matched===m.total ? "full" : (m.matched>0? "partial":"");
     var previewLabels = r.ing.slice(0,4).map(function(k){ return ING[k]? label(ING[k]) : k; }).join(", ");
+    var dietBadges = (r.kid?'<span class="kid-badge">'+t("kidBadge")+'</span>':'') +
+      (r.vegan?'<span class="kid-badge">'+t("veganBadge")+'</span>':(r.veg?'<span class="kid-badge">'+t("vegBadge")+'</span>':''));
 
     card.innerHTML =
       '<div class="card-top">'+
         (r.tag? '<span class="tag-badge '+r.tag+'">'+label(TAGS[r.tag])+'</span>' : '<span></span>')+
-        '<span class="match-chip '+chipClass+'">'+m.matched+'/'+m.total+'</span>'+
+        '<span style="display:flex;align-items:center;gap:8px;">'+
+          '<span class="match-chip '+chipClass+'">'+m.matched+'/'+m.total+'</span>'+
+          '<button type="button" class="fav-toggle'+(isFavorite(r.id)?' active':'')+'" data-fav-id="'+r.id+'">'+(isFavorite(r.id)?'★':'☆')+'</button>'+
+        '</span>'+
       '</div>'+
       '<div class="recipe-name">'+label(r)+'</div>'+
       '<div class="match-bar"><div style="width:'+pct+'%"></div></div>'+
       '<div class="card-ing-preview">'+previewLabels+(r.ing.length>4?"…":"")+'</div>'+
-      '<div class="card-bottom"><span>'+CHAPTERS[r.ch][state.lang]+(r.kid?' · <span class="kid-badge">'+t("kidBadge")+'</span>':'')+'</span><span class="kcal-tag">'+r.kcal+' '+t("kcal")+'</span></div>';
+      '<div class="card-bottom"><span class="card-bottom-left">'+CHAPTERS[r.ch][state.lang]+(dietBadges?' '+dietBadges:'')+'</span><span class="kcal-tag">'+r.kcal+' '+t("kcal")+'</span></div>';
 
     card.addEventListener("click", function(){ openDetail(r); });
+    card.addEventListener("keydown", function(e){ if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openDetail(r); } });
+    var favBtnEl = card.querySelector(".fav-toggle");
+    favBtnEl.addEventListener("click", function(e){ e.stopPropagation(); toggleFavorite(r.id); });
     grid.appendChild(card);
   });
 }
@@ -1552,8 +1937,10 @@ function openDetail(r){
   card.innerHTML =
     '<div class="detail-head">'+
       '<button class="detail-close" id="detailCloseBtn" aria-label="Close">×</button>'+
+      '<button type="button" class="detail-fav'+(isFavorite(r.id)?' active':'')+'" id="detailFavBtn">'+(isFavorite(r.id)?'★':'☆')+'</button>'+
       (r.tag? '<span class="tag-badge '+r.tag+'">'+label(TAGS[r.tag])+'</span>' : '')+
       (r.kid? ' <span class="kid-badge">'+t("kidBadge")+'</span>' : '')+
+      (r.vegan? ' <span class="kid-badge">'+t("veganBadge")+'</span>' : (r.veg? ' <span class="kid-badge">'+t("vegBadge")+'</span>' : ''))+
       '<h2>'+label(r)+'</h2>'+
       '<div class="serv-note">'+r.serv+' '+t("servings")+'</div>'+
     '</div>'+
@@ -1573,6 +1960,12 @@ function openDetail(r){
     '</div>';
 
   document.getElementById("detailCloseBtn").addEventListener("click", closeDetail);
+  document.getElementById("detailFavBtn").addEventListener("click", function(){
+    toggleFavorite(r.id);
+    var fb = document.getElementById("detailFavBtn");
+    fb.classList.toggle("active", isFavorite(r.id));
+    fb.textContent = isFavorite(r.id) ? "★" : "☆";
+  });
   var addMissingBtn = document.getElementById("addMissingBtn");
   if(addMissingBtn){
     addMissingBtn.addEventListener("click", function(){
@@ -1608,6 +2001,7 @@ function renderAll(){
   renderFoods();
   renderRecipes();
   renderShoppingList();
+  renderPlanner();
 }
 
 /* ============================= EVENTS ============================= */
@@ -1731,6 +2125,8 @@ shopInput.addEventListener("blur", function(){ setTimeout(function(){ shopAcCurr
 
 document.getElementById("moveToFridgeBtn").addEventListener("click", moveCheckedToFridge);
 document.getElementById("clearShoppingBtn").addEventListener("click", clearShoppingList);
+document.getElementById("genShoppingFromPlanBtn").addEventListener("click", generateShoppingFromPlan);
+document.getElementById("clearPlanBtn").addEventListener("click", clearWholePlan);
 
 document.getElementById("overlay").addEventListener("click", function(e){
   if(e.target.id==="overlay") closeDetail();
