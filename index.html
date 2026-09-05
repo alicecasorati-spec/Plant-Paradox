@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plant Paradox</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Plant Paradox">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#3B6B45">
+<link rel="apple-touch-icon" id="appleTouchIcon">
+<link rel="icon" id="faviconLink">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,680&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1E6;
+  --surface:#FBFAF3;
+  --surface-2:#F2F0E4;
+  --ink:#202A1F;
+  --ink-soft:#3C4838;
+  --muted:#66735F;
+  --border:#D9DFC9;
+  --accent:#3B6B45;
+  --accent-strong:#274F2F;
+  --accent-soft:#DCE7D2;
+  --accent-ink:#1E3A22;
+  --gold:#9C6B22;
+  --gold-soft:#F0E3C6;
+  --forbidden:#9C3B2E;
+  --forbidden-soft:#F3DCD5;
+  --shadow: 0 1px 2px rgba(32,42,31,.06), 0 6px 20px -8px rgba(32,42,31,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12160E;
+    --surface:#191F14;
+    --surface-2:#1E2518;
+    --ink:#E9EEE0;
+    --ink-soft:#C7D0BB;
+    --muted:#93A187;
+    --border:#2B3323;
+    --accent:#86C989;
+    --accent-strong:#A7DBA8;
+    --accent-soft:#233022;
+    --accent-ink:#BFE7C0;
+    --gold:#D9A45B;
+    --gold-soft:#332812;
+    --forbidden:#E2897A;
+    --forbidden-soft:#332019;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px -12px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12160E;
+  --surface:#191F14;
+  --surface-2:#1E2518;
+  --ink:#E9EEE0;
+  --ink-soft:#C7D0BB;
+  --muted:#93A187;
+  --border:#2B3323;
+  --accent:#86C989;
+  --accent-strong:#A7DBA8;
+  --accent-soft:#233022;
+  --accent-ink:#BFE7C0;
+  --gold:#D9A45B;
+  --gold-soft:#332812;
+  --forbidden:#E2897A;
+  --forbidden-soft:#332019;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px -12px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Work Sans",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-soft);color:var(--accent-ink);}
+h1,h2,h3,.display{
+  font-family:"Fraunces",Georgia,serif;
+  text-wrap:balance;
+  letter-spacing:-0.01em;
+  color:var(--ink);
+  margin:0;
+}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+a{color:inherit;}
+button{font:inherit;color:inherit;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+.app{max-width:1180px;margin:0 auto;padding:28px 24px 80px;}
+
+/* ---------- Header ---------- */
+.hero{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+  padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.hero-left{display:flex;align-items:center;gap:16px;}
+.mark{
+  width:52px;height:52px;flex:none;border-radius:14px;
+  background:linear-gradient(155deg,var(--accent) 0%, var(--accent-strong) 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow);
+}
+.mark svg{width:28px;height:28px;}
+.title-block h1{font-size:clamp(28px,3.4vw,38px);font-weight:680;line-height:1.02;}
+.tagline{margin-top:4px;font-size:13.5px;color:var(--muted);letter-spacing:.01em;max-width:46ch;}
+.hero-right{display:flex;align-items:center;gap:10px;}
+.lang-toggle{
+  display:flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface);
+}
+.lang-toggle button{
+  padding:7px 14px;font-size:12.5px;font-weight:600;letter-spacing:.03em;background:none;border:none;cursor:pointer;color:var(--muted);
+}
+.lang-toggle button.active{background:var(--accent);color:#fff;}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:6px;margin-bottom:26px;}
+.tab-btn{
+  padding:10px 18px;border-radius:11px;border:1px solid transparent;background:none;cursor:pointer;
+  font-size:14.5px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;
+}
+.tab-btn .n{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:500;opacity:.7;}
+.tab-btn.active{background:var(--surface);border-color:var(--border);color:var(--ink);box-shadow:var(--shadow);}
+.view{display:none;}
+.view.active{display:block;}
+
+/* ---------- Foods view ---------- */
+.foods-layout{display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:start;}
+@media (max-width:760px){.foods-layout{grid-template-columns:1fr;}}
+.index-panel{
+  position:sticky;top:20px;display:flex;flex-direction:column;gap:2px;
+  max-height:calc(100vh - 40px);overflow:auto;padding-right:6px;
+}
+@media (max-width:760px){.index-panel{position:static;max-height:none;display:none;}}
+.index-group-label{
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  margin:14px 0 6px;
+}
+.index-group-label:first-child{margin-top:0;}
+.index-link{
+  text-align:left;background:none;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;
+  font-size:13px;color:var(--ink-soft);line-height:1.3;
+}
+.index-link:hover{background:var(--surface-2);}
+.index-link.forbidden-link{color:var(--forbidden);}
+
+.food-search{
+  width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);color:var(--ink);font-size:14.5px;margin-bottom:22px;
+}
+.food-search::placeholder{color:var(--muted);}
+
+.food-section-title{
+  display:flex;align-items:center;gap:10px;margin:34px 0 14px;
+}
+.food-section-title:first-child{margin-top:0;}
+.food-section-title .bar{width:5px;height:22px;border-radius:3px;background:var(--accent);}
+.food-section-title.forbidden .bar{background:var(--forbidden);}
+.food-section-title h2{font-size:20px;font-weight:680;}
+
+.cat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;margin-bottom:12px;
+}
+.cat-card.forbidden{background:var(--forbidden-soft);border-color:color-mix(in srgb, var(--forbidden) 35%, var(--border));}
+.cat-card h3{font-size:14px;font-weight:600;font-family:"Work Sans";letter-spacing:.01em;margin-bottom:8px;color:var(--ink-soft);}
+.cat-card.forbidden h3{color:var(--forbidden);}
+.cat-items{display:flex;flex-wrap:wrap;gap:7px;}
+.cat-chip{
+  font-size:12.5px;padding:5px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);
+  border:1px solid transparent;
+}
+.cat-card.forbidden .cat-chip{background:transparent;color:var(--forbidden);border-color:color-mix(in srgb, var(--forbidden) 40%, transparent);}
+.cat-chip.hide{display:none;}
+
+/* ---------- Recipes view ---------- */
+.finder{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:20px 22px;box-shadow:var(--shadow);margin-bottom:22px;
+}
+.finder-label{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.chip-input-row{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  border:1px solid var(--border);border-radius:12px;padding:9px 10px;background:var(--bg);
+  position:relative;
+}
+.ing-chip{
+  display:flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
+  padding:6px 6px 6px 12px;border-radius:999px;font-size:13.5px;font-weight:500;
+}
+.ing-chip button{background:rgba(255,255,255,.22);border:none;color:#fff;width:19px;height:19px;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;}
+.chip-text-input{
+  flex:1;min-width:160px;border:none;background:none;font-size:14.5px;padding:6px 4px;color:var(--ink);
+}
+.chip-text-input:focus{outline:none;}
+.example-note{font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:8px;}
+.example-note button{background:none;border:1px solid var(--border);border-radius:8px;padding:3px 9px;cursor:pointer;font-size:11.5px;color:var(--muted);}
+.autocomplete{
+  position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;box-shadow:var(--shadow);z-index:5;max-height:220px;overflow:auto;
+}
+.autocomplete button{
+  display:block;width:100%;text-align:left;padding:9px 14px;background:none;border:none;cursor:pointer;font-size:13.5px;color:var(--ink);
+}
+.autocomplete button:hover, .autocomplete button.sel{background:var(--accent-soft);}
+
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px;}
+.filter-chip{
+  padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);cursor:pointer;
+  font-size:12.5px;font-weight:600;color:var(--muted);
+}
+.filter-chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+.filter-chip[data-tag="KC"].active{background:var(--gold);border-color:var(--gold);color:#241a08;}
+.filter-chip[data-tag="LO"].active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.filter-chip[data-tag="EP"].active{background:#4B6E86;border-color:#4B6E86;color:#fff;}
+
+.results-count{font-size:12.5px;color:var(--muted);margin-bottom:14px;letter-spacing:.02em;}
+.results-count .mono{color:var(--ink-soft);}
+
+.recipe-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;
+}
+.recipe-card{
+  text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:16px 17px;cursor:pointer;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .15s ease, transform .15s ease;
+}
+.recipe-card:hover{border-color:var(--accent);transform:translateY(-1px);}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.tag-badge{
+  font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;
+}
+.tag-badge.KC{background:var(--gold-soft);color:var(--gold);}
+.tag-badge.LO{background:var(--accent-soft);color:var(--accent-ink);}
+.tag-badge.EP{background:#DCE7EF;color:#2E5570;}
+:root[data-theme="dark"] .tag-badge.EP{background:#1B2A33;color:#9CC6DE;}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .tag-badge.EP{background:#1B2A33;color:#9CC6DE;}
+}
+.tag-badge.MED{background:#F0E0DC;color:#8A4433;}
+:root[data-theme="dark"] .tag-badge.MED{background:#332420;color:#E3AC9B;}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .tag-badge.MED{background:#332420;color:#E3AC9B;}
+}
+.kid-badge{
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:3px 9px;border-radius:999px;
+  background:var(--surface-2);color:var(--muted);border:1px solid var(--border);
+}
+.filter-chip[data-kid="1"].active{background:#8A4433;border-color:#8A4433;color:#fff;}
+.match-chip{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:8px;
+  background:var(--surface-2);color:var(--muted);white-space:nowrap;
+}
+.match-chip.full{background:var(--accent);color:#fff;}
+.match-chip.partial{background:var(--accent-soft);color:var(--accent-ink);}
+.recipe-name{font-family:"Fraunces";font-size:17.5px;font-weight:600;line-height:1.15;}
+.match-bar{height:4px;border-radius:3px;background:var(--surface-2);overflow:hidden;}
+.match-bar>div{height:100%;background:var(--accent);}
+.card-ing-preview{font-size:12.5px;color:var(--muted);line-height:1.5;}
+.card-ing-preview b{color:var(--ink-soft);font-weight:600;}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:auto;}
+.kcal-tag{font-family:"JetBrains Mono";font-weight:600;color:var(--ink-soft);}
+
+.empty-state{padding:50px 20px;text-align:center;color:var(--muted);}
+.empty-state h3{font-size:18px;margin-bottom:6px;color:var(--ink-soft);}
+
+/* ---------- Detail overlay ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(18,22,14,.5);backdrop-filter:blur(2px);
+  display:none;align-items:flex-start;justify-content:center;padding:32px 16px;z-index:50;overflow:auto;
+}
+.overlay.open{display:flex;}
+.detail-card{
+  background:var(--surface);border-radius:20px;max-width:640px;width:100%;box-shadow:var(--shadow);
+  border:1px solid var(--border);
+}
+.detail-head{padding:26px 28px 18px;border-bottom:1px solid var(--border);position:relative;}
+.detail-close{
+  position:absolute;top:20px;right:20px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface-2);cursor:pointer;font-size:16px;color:var(--muted);
+}
+.detail-head .tag-badge{margin-bottom:10px;}
+.detail-head h2{font-size:25px;font-weight:680;padding-right:40px;}
+.detail-body{padding:22px 28px 28px;display:flex;flex-direction:column;gap:22px;}
+.nutri-row{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.nutri-cell{flex:1;text-align:center;padding:10px 4px;border-right:1px solid var(--border);}
+.nutri-cell:last-child{border-right:none;}
+.nutri-cell .v{font-family:"JetBrains Mono";font-weight:600;font-size:15px;color:var(--ink);}
+.nutri-cell .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.detail-block h4{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.ing-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.ing-list li{display:flex;align-items:center;gap:9px;font-size:14px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex:none;}
+.dot.have{background:var(--accent);}
+.ing-list li.have{color:var(--ink);font-weight:500;}
+.ing-list li.miss{color:var(--muted);}
+.steps-list{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:10px;counter-reset:step;}
+.steps-list li{display:flex;gap:12px;font-size:14px;line-height:1.5;}
+.steps-list li::before{
+  counter-increment:step;content:counter(step);flex:none;width:24px;height:24px;border-radius:50%;
+  background:var(--accent-soft);color:var(--accent-ink);font-family:"JetBrains Mono";font-size:11.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+}
+.serv-note{font-size:12.5px;color:var(--muted);}
+
+footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* ---------- Shopping list ---------- */
+.detail-block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.detail-block-head h4{margin:0;}
+.add-missing-btn{
+  font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:8px;border:1px solid var(--accent);
+  background:var(--accent-soft);color:var(--accent-ink);cursor:pointer;white-space:nowrap;
+}
+.add-missing-btn:disabled{opacity:.55;cursor:default;}
+#shopActions{display:none;}
+
+.shop-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.shop-item{
+  display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+}
+.shop-checkbox{
+  width:22px;height:22px;border-radius:7px;border:2px solid var(--border);background:none;flex:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+}
+.shop-checkbox.checked{background:var(--accent);border-color:var(--accent);}
+.shop-label{flex:1;font-size:14.5px;}
+.shop-item.checked .shop-label{color:var(--muted);text-decoration:line-through;}
+.shop-remove{
+  background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;width:28px;height:28px;border-radius:50%;flex:none;
+}
+.shop-remove:hover{background:var(--surface-2);}
+
+.shop-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+.shop-btn{
+  flex:1;min-width:160px;padding:13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);
+  font-weight:600;font-size:14px;cursor:pointer;color:var(--ink-soft);
+}
+.shop-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.shop-btn:disabled{opacity:.5;cursor:default;}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+
+  <div class="hero">
+    <div class="hero-left">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 5 16.5 5 10.2C5 6.4 8 4 11 4.6C11.4 2.6 13.4 1.6 15.2 2.4C17 3.2 17.4 5.4 16.2 7C19 7.4 20.5 10.4 19 13C17.8 15 12 21 12 21Z" fill="white" fill-opacity="0.95"/><path d="M12 21V9.5" stroke="#274F2F" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <div class="title-block">
+        <h1>Plant Paradox</h1>
+        <div class="tagline" data-i="tagline">Alimenti ammessi e ricette senza lectine, ispirate al metodo del Dr. Gundry.</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="lang-toggle">
+        <button data-lang="it" class="active">IT</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-view="foods"><span data-i="tabFoods">Alimenti</span></button>
+    <button class="tab-btn" data-view="recipes"><span data-i="tabRecipes">Ricette</span></button>
+    <button class="tab-btn" data-view="shopping"><span data-i="tabShopping">Lista spesa</span><span class="n" id="shoppingCount"></span></button>
+  </div>
+
+  <!-- ================= FOODS VIEW ================= -->
+  <div class="view active" id="view-foods">
+    <input type="text" class="food-search" id="foodSearch" data-i-ph="foodSearchPh" placeholder="Cerca un alimento (es. mandorle, pomodori, cocco...)">
+    <div class="foods-layout">
+      <nav class="index-panel" id="indexPanel"></nav>
+      <div id="foodsContent"></div>
+    </div>
+  </div>
+
+  <!-- ================= RECIPES VIEW ================= -->
+  <div class="view" id="view-recipes">
+    <div class="finder">
+      <div class="finder-label" data-i="finderLabel">Cosa hai in frigo?</div>
+      <div class="chip-input-row" id="chipRow">
+        <input type="text" class="chip-text-input" id="ingInput" data-i-ph="ingPh" placeholder="Scrivi un ingrediente e premi Invio…" autocomplete="off">
+        <div class="autocomplete" id="autocomplete" style="display:none;"></div>
+      </div>
+      <div class="example-note" id="exampleNote">
+        <span data-i="exampleNote">Ingredienti di esempio — modifica pure</span>
+        <button id="clearAllIng" data-i="clearAll">Svuota</button>
+      </div>
+    </div>
+
+    <div class="filter-row" id="chapterFilters"></div>
+    <div class="filter-row" id="tagFilters"></div>
+
+    <div class="results-count" id="resultsCount"></div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+
+  <!-- ================= SHOPPING LIST VIEW ================= -->
+  <div class="view" id="view-shopping">
+    <div class="finder">
+      <div class="finder-label" data-i="shoppingLabel">Aggiungi un ingrediente alla lista</div>
+      <div class="chip-input-row" id="shopRow">
+        <input type="text" class="chip-text-input" id="shopInput" data-i-ph="shopPh" placeholder="Scrivi un ingrediente e premi Invio…" autocomplete="off">
+        <div class="autocomplete" id="shopAutocomplete" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div id="shoppingListWrap"></div>
+
+    <div class="shop-actions" id="shopActions">
+      <button class="shop-btn primary" id="moveToFridgeBtn" data-i="moveToFridge">Sposta i selezionati nel frigo</button>
+      <button class="shop-btn" id="clearShoppingBtn" data-i="clearShopping">Svuota lista</button>
+    </div>
+  </div>
+
+  <footer class="app-footer" data-i="footer">
+    Contenuti tratti da «Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Ricettario Completo» (Dr. Steven Gundry), liste alimenti pag. 3–6 e 28. App non ufficiale, solo a scopo informativo: non sostituisce il parere medico.
+  </footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="detail-card" id="detailCard"></div>
+</div>
+
+<script>
+/* ============================= I18N ============================= */
+var I18N = {
+  it: {
+    tagline: "Alimenti ammessi e ricette senza lectine, ispirate al metodo del Dr. Gundry.",
+    tabFoods: "Alimenti", tabRecipes: "Ricette", tabShopping: "Lista spesa",
+    foodSearchPh: "Cerca un alimento (es. mandorle, pomodori, cocco...)",
+    allowedTitle: "Alimenti ammessi", forbiddenTitle: "Alimenti non ammessi",
+    finderLabel: "Cosa hai in frigo?",
+    ingPh: "Scrivi un ingrediente e premi Invio…",
+    exampleNote: "Ingredienti di esempio — modifica pure",
+    clearAll: "Svuota",
+    filterAll: "Tutte le ricette",
+    resultsCount: function(n,total){return n + " di " + total + " ricette";},
+    resultsMatch: " · ordinate per ingredienti disponibili",
+    servings: "porzioni", ingredients: "Ingredienti", steps: "Procedimento",
+    kcal:"kcal", fat:"grassi", protein:"proteine", carbs:"carb netti",
+    have:"in frigo", missing:"da comprare",
+    noResults:"Nessuna ricetta trovata", noResultsSub:"Prova a rimuovere qualche filtro o ad aggiungere altri ingredienti.",
+    kidFilter:"Adatto ai bambini", kidBadge:"Bambini",
+    shoppingLabel:"Aggiungi un ingrediente alla lista", shopPh:"Scrivi un ingrediente e premi Invio…",
+    moveToFridge:"Sposta i selezionati nel frigo", clearShopping:"Svuota lista",
+    addMissing:"Aggiungi mancanti alla lista", added:"Aggiunti ✓",
+    shoppingEmpty:"La lista della spesa è vuota", shoppingEmptySub:"Aggiungi ingredienti a mano, oppure apri una ricetta e tocca «Aggiungi mancanti alla lista».",
+    itemsInList:"nella lista",
+    footer: "Contenuti tratti da «Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Ricettario Completo» (Dr. Steven Gundry), liste alimenti pag. 3–6 e 28, più una raccolta di ricette mediterranee/italiane a basso contenuto di spezie, adatte ai bambini, composte con soli ingredienti ammessi. App non ufficiale, solo a scopo informativo: non sostituisce il parere medico."
+  },
+  en: {
+    tagline: "Lectin-free approved foods and recipes, inspired by Dr. Gundry's method.",
+    tabFoods: "Foods", tabRecipes: "Recipes", tabShopping: "Shopping list",
+    foodSearchPh: "Search a food (e.g. almonds, tomatoes, coconut...)",
+    allowedTitle: "Allowed foods", forbiddenTitle: "Foods to avoid",
+    finderLabel: "What's in your fridge?",
+    ingPh: "Type an ingredient and press Enter…",
+    exampleNote: "Example ingredients — feel free to change them",
+    clearAll: "Clear",
+    filterAll: "All recipes",
+    resultsCount: function(n,total){return n + " of " + total + " recipes";},
+    resultsMatch: " · sorted by available ingredients",
+    servings: "servings", ingredients: "Ingredients", steps: "Method",
+    kcal:"kcal", fat:"fat", protein:"protein", carbs:"net carbs",
+    have:"in fridge", missing:"to buy",
+    noResults:"No recipes found", noResultsSub:"Try removing a filter or adding more ingredients.",
+    kidFilter:"Kid-friendly", kidBadge:"Kids",
+    shoppingLabel:"Add an ingredient to the list", shopPh:"Type an ingredient and press Enter…",
+    moveToFridge:"Move checked items to fridge", clearShopping:"Clear list",
+    addMissing:"Add missing to list", added:"Added ✓",
+    shoppingEmpty:"Your shopping list is empty", shoppingEmptySub:"Add ingredients by hand, or open a recipe and tap “Add missing to list”.",
+    itemsInList:"in list",
+    footer: "Content drawn from “Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Complete Cookbook” (Dr. Steven Gundry), food lists p. 3–6 and 28, plus a collection of low-spice Mediterranean/Italian, kid-friendly recipes built only from approved ingredients. Unofficial app, for information only — not a substitute for medical advice."
+  }
+};
+
+var CHAPTERS = {
+  colazioni: {it:"Colazioni", en:"Breakfast"},
+  leggeri: {it:"Insalate & Leggeri", en:"Salads & Light"},
+  zuppe: {it:"Zuppe & Caldi", en:"Soups & Warm"},
+  principali: {it:"Piatti Principali", en:"Main Dishes"},
+  dolci: {it:"Dolci & Snack", en:"Desserts & Snacks"},
+  salse: {it:"Salse & Base", en:"Sauces & Basics"},
+  mediterranea: {it:"Mediterranea & Bambini", en:"Mediterranean & Kids"}
+};
+var TAGS = {
+  KC: {it:"Keto Code", en:"Keto Code"},
+  LO: {it:"Longevity", en:"Longevity"},
+  EP: {it:"Energy Paradox", en:"Energy Paradox"},
+  MED: {it:"Mediterranea", en:"Mediterranean"}
+};
+
+/* ============================= INGREDIENT DICTIONARY ============================= */
+var ING = {
+  coffee:{it:"caffè",en:"coffee"},
+  mct_oil:{it:"olio MCT",en:"MCT oil"},
+  cream:{it:"panna fresca",en:"heavy cream",a:["panna","cream"]},
+  goat_milk:{it:"latte di capra",en:"goat milk"},
+  sweetener:{it:"dolcificante (stevia/eritritolo/monk fruit)",en:"sweetener (stevia/erythritol/monk fruit)",a:["stevia","eritritolo","erythritol","monk fruit","allulosio","allulose","xilitolo","xylitol","dolcificante","sweetener"]},
+  coconut_milk:{it:"latte di cocco",en:"coconut milk",a:["crema di cocco","coconut cream"]},
+  cauliflower:{it:"cavolfiore",en:"cauliflower"},
+  cocoa:{it:"cacao amaro",en:"unsweetened cocoa",a:["cacao","cocoa"]},
+  egg:{it:"uova",en:"eggs",a:["uovo","egg"]},
+  almond_flour:{it:"farina di mandorle",en:"almond flour"},
+  vanilla:{it:"estratto di vaniglia",en:"vanilla extract",a:["vaniglia","vanilla"]},
+  coconut_oil:{it:"olio di cocco",en:"coconut oil"},
+  raspberry:{it:"lamponi",en:"raspberries",a:["lampone","raspberry"]},
+  coconut_yogurt:{it:"yogurt di cocco",en:"coconut yogurt"},
+  salt:{it:"sale marino",en:"sea salt",a:["sale","salt"],pantry:true},
+  basil_seeds:{it:"semi di basilico",en:"basil seeds"},
+  shredded_coconut:{it:"cocco essiccato/grattugiato",en:"shredded coconut",a:["cocco essiccato","cocco grattugiato","shredded coconut","desiccated coconut"]},
+  kiwi:{it:"kiwi",en:"kiwi"},
+  coconut_flour:{it:"farina di cocco",en:"coconut flour"},
+  hazelnut:{it:"nocciole",en:"hazelnuts",a:["nocciola","hazelnut"]},
+  flaxseed:{it:"semi di lino",en:"flaxseed",a:["seme di lino","flax seed","flaxseeds"]},
+  sesame_seed:{it:"semi di sesamo",en:"sesame seeds",a:["sesamo","sesame"]},
+  cinnamon:{it:"cannella",en:"cinnamon"},
+  spinach:{it:"spinaci",en:"spinach"},
+  olive_oil:{it:"olio extravergine d'oliva",en:"extra virgin olive oil",a:["olio evo","evo","olive oil","olio d'oliva"],pantry:true},
+  lettuce:{it:"lattuga",en:"lettuce",a:["lattuga romana","romaine","lattuga burro","butter lettuce"]},
+  hemp_seed:{it:"semi di canapa",en:"hemp seeds",a:["canapa","hemp"]},
+  lemon:{it:"succo di limone",en:"lemon juice",a:["limone","lemon"]},
+  goat_cheese:{it:"formaggio di capra",en:"goat cheese",a:["caprino","formaggio caprino","goat cheese"]},
+  baking_powder:{it:"lievito per dolci",en:"baking powder",a:["lievito","baking powder"]},
+  rosemary:{it:"rosmarino",en:"rosemary"},
+  berries:{it:"frutti di bosco",en:"mixed berries",a:["frutti di bosco","berries","mixed berries"]},
+  avocado:{it:"avocado",en:"avocado"},
+  cheese:{it:"formaggio",en:"cheese"},
+  almond_butter:{it:"burro di mandorle",en:"almond butter"},
+  gorgonzola:{it:"gorgonzola stagionato",en:"aged gorgonzola",a:["gorgonzola"]},
+  red_wine_vinegar:{it:"aceto di vino rosso",en:"red wine vinegar",a:["aceto"]},
+  walnut:{it:"noci",en:"walnuts",a:["noce","walnut"]},
+  mustard:{it:"senape",en:"mustard"},
+  radicchio:{it:"radicchio",en:"radicchio"},
+  endive:{it:"indivia / scarola",en:"endive / escarole",a:["indivia","scarola","endive","escarole"]},
+  red_onion:{it:"cipolla rossa",en:"red onion"},
+  black_pepper:{it:"pepe nero",en:"black pepper",a:["pepe","pepper"],pantry:true},
+  nori:{it:"alga nori",en:"nori seaweed",a:["nori","alga"]},
+  cucumber:{it:"cetriolo",en:"cucumber"},
+  carrot:{it:"carota",en:"carrot"},
+  broccoli:{it:"broccoli",en:"broccoli"},
+  avocado_oil:{it:"olio di avocado",en:"avocado oil"},
+  cabbage:{it:"cavolo",en:"cabbage",a:["cavolo verde","green cabbage","verza"]},
+  pistachio:{it:"pistacchi",en:"pistachios",a:["pistacchio","pistachio"]},
+  leek:{it:"porri",en:"leeks",a:["porro","leek"]},
+  celery:{it:"sedano",en:"celery"},
+  garlic:{it:"aglio",en:"garlic"},
+  thyme:{it:"timo",en:"thyme"},
+  lemon_zest:{it:"scorza di limone",en:"lemon zest"},
+  nutmeg:{it:"noce moscata",en:"nutmeg"},
+  vegetable_broth:{it:"brodo vegetale",en:"vegetable broth",a:["brodo"]},
+  bay_leaf:{it:"foglia di alloro",en:"bay leaf",a:["alloro"]},
+  chives:{it:"erba cipollina",en:"chives"},
+  shallot:{it:"scalogno",en:"shallot"},
+  mushroom:{it:"funghi",en:"mushrooms",a:["funghi shiitake","shiitake","fungo","mushroom"]},
+  miso:{it:"miso",en:"miso",a:["miso rosso","miso bianco","red miso","white miso"]},
+  lentils:{it:"lenticchie cotte",en:"cooked lentils",a:["lenticchie","lentils"]},
+  kale:{it:"cavolo riccio (kale)",en:"kale"},
+  coconut_aminos:{it:"aminos di cocco",en:"coconut aminos"},
+  parmesan:{it:"parmigiano",en:"parmesan"},
+  tahini:{it:"tahini",en:"tahini"},
+  curry_paste:{it:"pasta di curry",en:"curry paste"},
+  tempeh:{it:"tempeh",en:"tempeh"},
+  shirataki_noodles:{it:"noodles di konjac (shirataki)",en:"konjac / shirataki noodles",a:["shirataki","konjac","noodles di konjac"]},
+  mussels:{it:"cozze",en:"mussels"},
+  sweet_potato:{it:"patate dolci",en:"sweet potatoes",a:["patata dolce","sweet potato"]},
+  cassava_flour:{it:"farina di manioca",en:"cassava flour",a:["manioca"]},
+  crab:{it:"polpa di granchio",en:"crab meat",a:["granchio","crab"]},
+  fennel:{it:"finocchio",en:"fennel"},
+  ginger:{it:"zenzero fresco",en:"fresh ginger",a:["zenzero","ginger"]},
+  shrimp:{it:"gamberi",en:"shrimp",a:["gambero","prawn"]},
+  scallops:{it:"capesante",en:"scallops"},
+  feta_cheese:{it:"formaggio feta",en:"feta cheese",a:["feta"]},
+  sauerkraut:{it:"crauti",en:"sauerkraut"},
+  pork:{it:"costolette di maiale",en:"pork chops",a:["maiale","pork","costine"]},
+  orange_zest:{it:"scorza d'arancia",en:"orange zest"},
+  red_wine:{it:"vino rosso",en:"red wine"},
+  chicken:{it:"petto di pollo ruspante",en:"free-range chicken breast",a:["pollo","chicken"]},
+  asparagus:{it:"asparagi",en:"asparagus"},
+  parsley:{it:"prezzemolo",en:"parsley"},
+  mint:{it:"menta",en:"mint"},
+  chia_seed:{it:"semi di chia",en:"chia seeds",a:["chia"]},
+  arrowroot:{it:"amido di maranta (arrowroot)",en:"arrowroot starch"},
+  tapioca_starch:{it:"amido di tapioca",en:"tapioca starch",a:["tapioca"]},
+  yacon_syrup:{it:"sciroppo di yacón",en:"yacon syrup",a:["yacon"]},
+  dark_chocolate:{it:"cioccolato fondente ≥70%",en:"dark chocolate ≥70%",a:["cioccolato fondente","dark chocolate"]},
+  basil:{it:"basilico fresco",en:"fresh basil",a:["basilico","basil"]},
+  sage:{it:"salvia",en:"sage"},
+  orange:{it:"arancia",en:"orange"},
+  apple:{it:"mele",en:"apples",a:["mela","apple"]},
+  olives:{it:"olive",en:"olives",a:["oliva","olive","olives"]},
+  prosciutto:{it:"prosciutto crudo",en:"cured ham (prosciutto)",a:["prosciutto","ham"]},
+  buffalo_mozzarella:{it:"mozzarella di bufala",en:"buffalo mozzarella",a:["mozzarella"]},
+  white_fish:{it:"merluzzo (o altro pesce bianco)",en:"cod (or other white fish)",a:["merluzzo","cod","nasello"]}
+};
+var PANTRY = Object.keys(ING).filter(function(k){return ING[k].pantry;});
+
+/* ============================= FOOD LIST (pag. 3–6 e 28) ============================= */
+var FOOD_LIST = {
+  allowed: [
+    {it:"Verdure crocifere", en:"Cruciferous vegetables", items:[
+      {it:"Rucola",en:"Arugula"},{it:"Bok choy",en:"Bok choy"},{it:"Broccoli",en:"Broccoli"},{it:"Cavoletti di Bruxelles",en:"Brussels sprouts"},
+      {it:"Cavolo verde e rosso",en:"Green & red cabbage"},{it:"Cavolfiore",en:"Cauliflower"},{it:"Cavolo collard",en:"Collard greens"},
+      {it:"Cavolo riccio (kale)",en:"Kale"},{it:"Kimchi",en:"Kimchi"},{it:"Kohlrabi (cavolo rapa)",en:"Kohlrabi"},
+      {it:"Cavolo cinese (napa)",en:"Napa cabbage"},{it:"Crauti (crudi)",en:"Sauerkraut (raw)"},{it:"Bietola svizzera",en:"Swiss chard"},{it:"Crescione",en:"Watercress"}
+    ]},
+    {it:"Verdure a foglia verde", en:"Leafy greens", items:[
+      {it:"Alghe",en:"Seaweed"},{it:"Basilico",en:"Basil"},{it:"Lattuga burro",en:"Butter lettuce"},{it:"Coriandolo",en:"Cilantro"},
+      {it:"Tarassaco",en:"Dandelion greens"},{it:"Indivia",en:"Endive"},{it:"Scarola",en:"Escarole"},{it:"Finocchio",en:"Fennel"},
+      {it:"Frisée",en:"Frisée"},{it:"Mesclun (insalatina mista)",en:"Mesclun mix"},{it:"Menta",en:"Mint"},{it:"Mizuna",en:"Mizuna"},
+      {it:"Senape (foglie)",en:"Mustard greens"},{it:"Prezzemolo",en:"Parsley"},{it:"Perilla",en:"Perilla"},{it:"Portulaca",en:"Purslane"},
+      {it:"Lattuga rossa e verde",en:"Red & green leaf lettuce"},{it:"Lattuga romana",en:"Romaine lettuce"},{it:"Verdure di mare",en:"Sea vegetables"},{it:"Spinaci",en:"Spinach"}
+    ]},
+    {it:"Altre verdure (postbiotiche)", en:"Other vegetables (postbiotic)", items:[
+      {it:"Carciofi",en:"Artichokes"},{it:"Asparagi",en:"Asparagus"},{it:"Germogli di bambù",en:"Bamboo shoots"},{it:"Barbabietole (crude)",en:"Beets (raw)"},
+      {it:"Foglie di carota",en:"Carrot greens"},{it:"Carote (crude)",en:"Carrots (raw)"},{it:"Sedano",en:"Celery"},{it:"Cicoria",en:"Chicory"},
+      {it:"Erba cipollina",en:"Chives"},{it:"Ravanello daikon",en:"Daikon radish"},{it:"Felci (fiddlehead)",en:"Fiddlehead ferns"},
+      {it:"Aglio",en:"Garlic"},{it:"Scapi d'aglio",en:"Garlic scapes"},{it:"Zenzero",en:"Ginger"},{it:"Cuori di palma",en:"Hearts of palm"},
+      {it:"Rafano",en:"Horseradish"},{it:"Topinambur",en:"Jerusalem artichoke"},{it:"Porri",en:"Leeks"},{it:"Citronella",en:"Lemongrass"},
+      {it:"Funghi (tutti)",en:"Mushrooms (all)"},{it:"Nopales (cactus)",en:"Nopales cactus"},{it:"Okra",en:"Okra"},{it:"Cipolle",en:"Onions"},
+      {it:"Pastinache",en:"Parsnips"},{it:"Puntarelle",en:"Puntarelle"},{it:"Radicchio",en:"Radicchio"},{it:"Ravanelli",en:"Radishes"},
+      {it:"Rutabaga",en:"Rutabaga"},{it:"Cipollotti",en:"Scallions"},{it:"Scalogno",en:"Shallots"},{it:"Castagne d'acqua",en:"Water chestnuts"}
+    ]},
+    {it:"Frutti che si comportano come grassi", en:"Fruits that act like fats", items:[
+      {it:"Avocado (fino a uno intero al giorno)",en:"Avocado (up to one whole/day)"},{it:"Olive (tutti i tipi)",en:"Olives (all kinds)"}
+    ]},
+    {it:"Oli", en:"Oils", items:[
+      {it:"Olio MCT",en:"MCT oil"},{it:"Olio di perilla",en:"Perilla oil"},{it:"Olio di semi di lino",en:"Flaxseed oil"},
+      {it:"Olio di sesamo",en:"Sesame oil"},{it:"Olio di crusca di riso",en:"Rice bran oil"},{it:"Olio di macadamia",en:"Macadamia oil"},
+      {it:"Olio di cumino nero",en:"Black cumin oil"},{it:"Olio di canola (non-OGM, bio)",en:"Canola oil (non-GMO, organic)"},
+      {it:"Olio extravergine di oliva",en:"Extra virgin olive oil"},{it:"Olio di fegato di merluzzo",en:"Cod liver oil"},
+      {it:"Olio di cocco",en:"Coconut oil"},{it:"Olio di palma rosso",en:"Red palm oil"},{it:"Olio di noci",en:"Walnut oil"},{it:"Olio di avocado",en:"Avocado oil"}
+    ]},
+    {it:"Frutta secca e semi (max ½ tazza/die)", en:"Nuts & seeds (max ½ cup/day)", items:[
+      {it:"Noci barùkas",en:"Baru nuts"},{it:"Pistacchi",en:"Pistachios"},{it:"Semi di basilico",en:"Basil seeds"},
+      {it:"Noci del Brasile (limitate)",en:"Brazil nuts (limited)"},{it:"Pinoli",en:"Pine nuts"},{it:"Noci",en:"Walnuts"},{it:"Semi di sesamo",en:"Sesame seeds"},
+      {it:"Tahini",en:"Tahini"},{it:"Latte di cocco",en:"Coconut milk"},{it:"Crema di cocco",en:"Coconut cream"},{it:"Polpa di cocco",en:"Coconut meat"},
+      {it:"Noci pili",en:"Pili nuts"},{it:"Semi di lino",en:"Flaxseed"},{it:"Nocciole",en:"Hazelnuts"},{it:"Proteine di canapa in polvere",en:"Hemp protein powder"},
+      {it:"Semi di canapa",en:"Hemp seeds"},{it:"Noci di macadamia",en:"Macadamia nuts"},{it:"Burri di frutta secca (mandorle spellate)",en:"Nut butters (blanched almond)"},
+      {it:"Noci pecan",en:"Pecans"},{it:"Semi/polvere di psillio",en:"Psyllium seeds/powder"},{it:"Semi di sacha inchi",en:"Sacha inchi seeds"},
+      {it:"Castagne",en:"Chestnuts"},{it:"Mandorle (solo spellate o marcona)",en:"Almonds (blanched or Marcona only)"}
+    ]},
+    {it:"Farine", en:"Flours", items:[
+      {it:"Mandorle (spellate)",en:"Almond (blanched)"},{it:"Arrowroot",en:"Arrowroot"},{it:"Manioca (cassava)",en:"Cassava"},
+      {it:"Castagne",en:"Chestnut"},{it:"Cocco",en:"Coconut"},{it:"Frutto del caffè",en:"Coffee fruit"},{it:"Semi d'uva",en:"Grapeseed"},
+      {it:"Banana verde",en:"Green banana"},{it:"Nocciole",en:"Hazelnut"},{it:"Miglio",en:"Millet"},{it:"Sesamo",en:"Sesame"},
+      {it:"Sorgo",en:"Sorghum"},{it:"Patata dolce",en:"Sweet potato"},{it:"Tigernuts",en:"Tigernut"}
+    ]},
+    {it:"Amidi resistenti (con moderazione)", en:"Resistant starches (in moderation)", items:[
+      {it:"Frutto del baobab",en:"Baobab fruit"},{it:"Manioca (tapioca)",en:"Cassava (tapioca)"},{it:"Sedano rapa",en:"Celeriac"},
+      {it:"Glucomannano (konjac)",en:"Glucomannan (konjac root)"},{it:"Banane verdi",en:"Green bananas"},{it:"Mango verde",en:"Green mango"},
+      {it:"Papaya verde",en:"Green papaya"},{it:"Plantani verdi",en:"Green plantains"},{it:"Jicama",en:"Jicama"},{it:"Miglio",en:"Millet"},
+      {it:"Pastinache",en:"Parsnips"},{it:"Cachi",en:"Persimmons"},{it:"Rutabaga",en:"Rutabaga"},{it:"Sorgo",en:"Sorghum"},
+      {it:"Patate dolci o yam",en:"Sweet potatoes / yams"},{it:"Radice di taro",en:"Taro root"},{it:"Tigernuts",en:"Tigernuts"},{it:"Rape",en:"Turnips"},{it:"Yucca",en:"Yuca"}
+    ]},
+    {it:"“Foodles” (pasta accettabile)", en:"“Foodles” (acceptable pasta)", items:[
+      {it:"Pasta di miglio e sorgo",en:"Millet & sorghum pasta"},{it:"Pasta di manioca",en:"Cassava pasta"},{it:"Noodles di alga kelp",en:"Kelp noodles"},
+      {it:"Noodles di konjac",en:"Konjac noodles"},{it:"Riso di konjac",en:"Konjac rice"},{it:"Spaghetti/lasagne di cuori di palma",en:"Hearts of palm pasta"},{it:"Shirataki noodles",en:"Shirataki noodles"}
+    ]},
+    {it:"Pesce selvatico (con cautela; max 120 g/die)", en:"Wild fish (with caution; max 120 g/day)", items:[
+      {it:"Salmone selvaggio dell'Alaska",en:"Wild Alaskan salmon"},{it:"Acciughe",en:"Anchovies"},{it:"Calamari",en:"Calamari"},{it:"Tonno in scatola",en:"Canned tuna"},
+      {it:"Vongole",en:"Clams"},{it:"Granchio",en:"Crab"},{it:"Merluzzo",en:"Cod"},{it:"Branzino d'acqua dolce",en:"Freshwater bass"},{it:"Halibut",en:"Halibut"},
+      {it:"Pesci hawaiani (mahi-mahi, ono, opah)",en:"Hawaiian fish (mahi-mahi, ono, opah)"},{it:"Aragosta",en:"Lobster"},{it:"Cozze",en:"Mussels"},
+      {it:"Ostriche",en:"Oysters"},{it:"Sardine",en:"Sardines"},{it:"Capesante",en:"Scallops"},{it:"Gamberi (solo selvaggi)",en:"Shrimp (wild only)"},
+      {it:"Steelhead",en:"Steelhead trout"},{it:"Trota",en:"Trout"},{it:"Coregone del Lago Superiore",en:"Lake Superior whitefish"}
+    ]},
+    {it:"Pollame ruspante (max 120 g/die)", en:"Pastured poultry (max 120 g/day)", items:[
+      {it:"Pollo ruspante",en:"Pastured chicken"},{it:"Tacchino jerky ruspante",en:"Pastured turkey jerky"},{it:"Anatra",en:"Duck"},
+      {it:"Uccelli selvatici (fagiano, gallo cedrone, colomba, quaglia)",en:"Game birds (pheasant, grouse, dove, quail)"},{it:"Oca",en:"Goose"},
+      {it:"Struzzo",en:"Ostrich"},{it:"Uova ruspanti/omega-3 (fino a 4/die)",en:"Pastured/omega-3 eggs (up to 4/day)"},{it:"Tacchino heritage o ruspante",en:"Heritage/pastured turkey"}
+    ]},
+    {it:"Carne (100% grass-fed; max 120 g/settimana)", en:"Meat (100% grass-fed; max 120 g/week)", items:[
+      {it:"Manzo",en:"Beef"},{it:"Bisonte",en:"Bison"},{it:"Cinghiale",en:"Wild boar"},{it:"Alce",en:"Elk"},
+      {it:"Maiale allevato umanamente",en:"Humanely raised pork"},{it:"Salumi tradizionalmente fermentati",en:"Traditionally fermented cured meats"}
+    ]},
+    {it:"Proteine e “carni” vegetali", en:"Plant proteins & “meats”", items:[
+      {it:"Polvere di lenticchia d'acqua (duckweed)",en:"Duckweed powder"},{it:"Tofu di canapa",en:"Hemp tofu"},{it:"Burger vegetale Hilary's",en:"Hilary's veggie burger"},
+      {it:"Legumi in pentola a pressione",en:"Pressure-cooked legumes"},{it:"Prodotti Quorn (senza lectine/glutine)",en:"Quorn products (lectin/gluten-free)"},
+      {it:"Proteine di soia testurizzata (TVP)",en:"Textured soy protein (TVP)"},{it:"Proteine di canapa/lino in polvere",en:"Hemp/flax protein powder"},
+      {it:"Isolati proteici di piselli/soia/legumi",en:"Pea/soy/legume protein isolates"},{it:"Gundry MD ProPlant",en:"Gundry MD ProPlant shakes"},
+      {it:"JUST plant-based egg",en:"JUST plant-based egg"},{it:"Perfect Day vegan whey e caseina",en:"Perfect Day vegan whey & casein"}
+    ]},
+    {it:"Frutta ricca di polifenoli (weekend, di stagione)", en:"Polyphenol-rich fruit (weekends, seasonal)", items:[
+      {it:"More",en:"Blackberries"},{it:"Lamponi",en:"Raspberries"},{it:"Frutto della passione",en:"Passion fruit"},{it:"Melagrane",en:"Pomegranate"},
+      {it:"Mirtilli rossi freschi",en:"Fresh cranberries"},{it:"Agrumi (no succhi)",en:"Citrus (no juice)"},{it:"Mirtilli",en:"Blueberries"},
+      {it:"Fragole",en:"Strawberries"},{it:"Kiwi",en:"Kiwi"},{it:"Ciliegie",en:"Cherries"},{it:"Albicocche",en:"Apricots"},
+      {it:"Pere croccanti",en:"Crisp pears"},{it:"Guava",en:"Guava"},{it:"Nettarine",en:"Nectarines"},{it:"Papaya",en:"Papaya"},
+      {it:"Pesche",en:"Peaches"},{it:"Cachi",en:"Persimmons"},{it:"Prugne",en:"Plums"},{it:"Carambola",en:"Starfruit"},{it:"Mele",en:"Apples"}
+    ]},
+    {it:"Latticini e sostituti", en:"Dairy & substitutes", items:[
+      {it:"Formaggi svizzeri stagionati",en:"Aged Swiss cheeses"},{it:"Formaggi 'raw' francesi/italiani",en:"French/Italian raw-milk cheeses"},
+      {it:"Formaggi di capra (feta, brie, mozzarella, cheddar)",en:"Goat cheeses (feta, brie, mozzarella, cheddar)"},
+      {it:"Formaggi di pecora (pecorino, feta, manchego)",en:"Sheep cheeses (pecorino, feta, manchego)"},{it:"Kefir di capra e pecora",en:"Goat & sheep kefir"},
+      {it:"Yogurt di capra/pecora/cocco",en:"Goat/sheep/coconut yogurt"},{it:"Lavva yogurt vegetale",en:"Lavva plant yogurt"},{it:"Kite Hill ricotta",en:"Kite Hill ricotta"},
+      {it:"Parmigiano-Reggiano",en:"Parmigiano-Reggiano"},{it:"Mozzarella di bufala",en:"Buffalo mozzarella"},{it:"Burro francese/italiano (limitato)",en:"French/Italian butter (limited)"},
+      {it:"Ghee di capra / grass-fed (limitato)",en:"Goat/grass-fed ghee (limited)"},{it:"Panna fresca/acida biologica",en:"Organic fresh/sour cream"}
+    ]},
+    {it:"Erbe, spezie e condimenti", en:"Herbs, spices & condiments", items:[
+      {it:"Tutte le erbe e spezie (tranne peperoncino in fiocchi)",en:"All herbs & spices (except chili flakes)"},{it:"Lievito alimentare",en:"Nutritional yeast"},
+      {it:"Sale marino iodato",en:"Iodized sea salt"},{it:"Pasta di miso",en:"Miso paste"},{it:"Senape",en:"Mustard"},{it:"Maionese MCT o all'avocado",en:"MCT or avocado mayo"},
+      {it:"Aminos di cocco",en:"Coconut aminos"},{it:"Salsa di pesce",en:"Fish sauce"},{it:"Estratto di vaniglia puro",en:"Pure vanilla extract"},
+      {it:"Tahini",en:"Tahini"},{it:"Aceti (mele e altri)",en:"Vinegars (apple & others)"},{it:"Wasabi",en:"Wasabi"}
+    ]},
+    {it:"Dolcificanti consentiti", en:"Approved sweeteners", items:[
+      {it:"Allulosio",en:"Allulose"},{it:"Eritritolo",en:"Erythritol"},{it:"Inulina",en:"Inulin"},{it:"Miele locale/manuka (molto limitato)",en:"Local/manuka honey (very limited)"},
+      {it:"Frutto del monaco",en:"Monk fruit"},{it:"Stevia",en:"Stevia"},{it:"Xilitolo",en:"Xylitol"},{it:"Yacón",en:"Yacon"}
+    ]},
+    {it:"Cioccolato e dolci surgelati", en:"Chocolate & frozen desserts", items:[
+      {it:"Gelati a base di latte di cocco (basso zucchero)",en:"Coconut-milk ice creams (low sugar)"},{it:"Cioccolato fondente ≥72% (max 30 g/die)",en:"Dark chocolate ≥72% (max 30 g/day)"},
+      {it:"Cacao in polvere non alcalinizzato",en:"Non-alkalized cocoa powder"},{it:"Perfect Day vegan whey/casein",en:"Perfect Day vegan whey/casein"}
+    ]},
+    {it:"Bevande", en:"Drinks", items:[
+      {it:"Champagne (max 180 ml/die)",en:"Champagne (max 180 ml/day)"},{it:"Caffè",en:"Coffee"},{it:"Superalcolici scuri (max 30 ml/die)",en:"Dark spirits (max 30 ml/day)"},
+      {it:"Acqua all'idrogeno",en:"Hydrogen water"},{it:"Kombucha a basso zucchero",en:"Low-sugar kombucha"},{it:"San Pellegrino o Panna",en:"San Pellegrino / Panna water"},
+      {it:"Vino rosso (max 180 ml/die)",en:"Red wine (max 180 ml/day)"},{it:"Tè (tutti i tipi)",en:"Tea (all kinds)"}
+    ]}
+  ],
+  forbidden: [
+    {it:"Cibi amidacei raffinati", en:"Refined starchy foods", items:[
+      {it:"Pane",en:"Bread"},{it:"Cereali da colazione",en:"Breakfast cereal"},{it:"Biscotti",en:"Cookies"},{it:"Crackers",en:"Crackers"},
+      {it:"Pasta",en:"Pasta"},{it:"Pasticcini",en:"Pastries"},{it:"Patatine",en:"Chips"},{it:"Patate",en:"Potatoes"},{it:"Riso",en:"Rice"},
+      {it:"Tortillas",en:"Tortillas"},{it:"Farina di grano",en:"Wheat flour"}
+    ]},
+    {it:"Cereali, pseudo-cereali ed erbe", en:"Grains, pseudo-grains & grasses", items:[
+      {it:"Orzo",en:"Barley"},{it:"Erba d'orzo",en:"Barley grass"},{it:"Riso integrale",en:"Brown rice"},{it:"Grano saraceno",en:"Buckwheat"},
+      {it:"Bulgur",en:"Bulgur"},{it:"Mais e derivati",en:"Corn & corn products"},{it:"Sciroppo di mais",en:"Corn syrup"},{it:"Einkorn",en:"Einkorn"},
+      {it:"Kamut",en:"Kamut"},{it:"Kasha",en:"Kasha"},{it:"Avena",en:"Oats"},{it:"Popcorn",en:"Popcorn"},{it:"Quinoa",en:"Quinoa"},
+      {it:"Segale",en:"Rye"},{it:"Farro",en:"Spelt"},{it:"Grano",en:"Wheat"},{it:"Erba di grano",en:"Wheatgrass"},
+      {it:"Riso bianco (eccetto basmati indiano pressurizzato)",en:"White rice (except pressure-cooked Indian basmati)"},{it:"Riso selvatico",en:"Wild rice"}
+    ]},
+    {it:"Zuccheri e dolcificanti non ammessi", en:"Sugars & sweeteners to avoid", items:[
+      {it:"Agave",en:"Agave"},{it:"Zucchero di cocco",en:"Coconut sugar"},{it:"Bevande dietetiche",en:"Diet sodas"},{it:"Zucchero granulato (anche di canna bio)",en:"Granulated sugar (incl. organic cane)"},
+      {it:"Maltodestrina",en:"Maltodextrin"},{it:"Aspartame",en:"Aspartame"},{it:"Splenda",en:"Splenda"},{it:"Acesulfame-K",en:"Acesulfame-K"},{it:"Saccarina",en:"Saccharin"}
+    ]},
+    {it:"Legumi non trattati a pressione", en:"Legumes (not pressure-cooked)", items:[
+      {it:"Fagioli*",en:"Beans*"},{it:"Ceci* (anche hummus)",en:"Chickpeas* (incl. hummus)"},{it:"Edamame*",en:"Edamame*"},{it:"Fagiolini*",en:"Green beans*"},
+      {it:"Legumi*",en:"Legumes*"},{it:"Lenticchie*",en:"Lentils*"},{it:"Proteine di pisello non isolate",en:"Non-isolated pea protein"},
+      {it:"Piselli*",en:"Peas*"},{it:"Soia*",en:"Soy*"},{it:"Proteine di soia non isolate",en:"Non-isolated soy protein"},{it:"Taccole",en:"Snow peas"},{it:"Tofu*",en:"Tofu*"}
+    ]},
+    {it:"Frutta secca e semi non consentiti", en:"Nuts & seeds not allowed", items:[
+      {it:"Mandorle con la buccia",en:"Almonds with skin"},{it:"Anacardi",en:"Cashews"},{it:"Semi di chia",en:"Chia seeds"},
+      {it:"Arachidi",en:"Peanuts"},{it:"Semi di zucca",en:"Pumpkin seeds"},{it:"Semi di girasole",en:"Sunflower seeds"}
+    ]},
+    {it:"Verdure problematiche (lectine)", en:"Problem “vegetables” (lectins)", items:[
+      {it:"Peperoni",en:"Bell peppers"},{it:"Peperoncini",en:"Chili peppers"},{it:"Cetrioli",en:"Cucumbers"},{it:"Melanzane",en:"Eggplant"},
+      {it:"Bacche di goji",en:"Goji berries"},{it:"Meloni (tutti)",en:"Melons (all)"},{it:"Zucche",en:"Pumpkin/squash"},{it:"Zucchine",en:"Zucchini"},
+      {it:"Tomatillos",en:"Tomatillos"},{it:"Pomodori",en:"Tomatoes"}
+    ]},
+    {it:"Latticini contenenti A1", en:"A1 dairy", items:[
+      {it:"Burro (tranne A2, pecora o capra)",en:"Butter (except A2, sheep or goat)"},{it:"Fiocchi di latte",en:"Cottage cheese"},
+      {it:"Yogurt gelato",en:"Frozen yogurt"},{it:"La maggior parte dei gelati",en:"Most ice creams"},{it:"Kefir da mucche americane",en:"American-cow kefir"},
+      {it:"Latte di mucca",en:"Cow's milk"},{it:"Formaggi di latte di mucca americane",en:"American-cow cheeses"},{it:"Ricotta",en:"Ricotta"},{it:"Yogurt (incluso greco)",en:"Yogurt (incl. Greek)"}
+    ]},
+    {it:"Oli raffinati", en:"Refined oils", items:[
+      {it:"Oli parzialmente idrogenati",en:"Partially hydrogenated oils"},{it:"Olio di mais",en:"Corn oil"},{it:"Olio di cotone",en:"Cottonseed oil"},
+      {it:"Olio di vinaccioli",en:"Grapeseed oil"},{it:"Olio di arachidi",en:"Peanut oil"},{it:"Olio di cartamo",en:"Safflower oil"},
+      {it:"Olio di soia",en:"Soybean oil"},{it:"Olio di girasole",en:"Sunflower oil"},{it:"Oli “vegetali” generici",en:"Generic “vegetable” oils"}
+    ]},
+    {it:"Condimenti da evitare", en:"Condiments to avoid", items:[
+      {it:"Ketchup",en:"Ketchup"},{it:"Maionese comune",en:"Regular mayonnaise"},{it:"Peperoncino in fiocchi",en:"Chili flakes"},
+      {it:"Salsa di soia",en:"Soy sauce"},{it:"Salsa per bistecca",en:"Steak sauce"},{it:"Worcestershire (tranne senza glutine)",en:"Worcestershire (except gluten-free)"}
+    ]}
+  ]
+};
+
+/* ============================= RECIPES (Ricettario Completo Gundry) ============================= */
+var RECIPES = [
+{id:1,ch:"colazioni",tag:"KC",it:"Uncoupling Cappuccino",en:"Uncoupling Cappuccino",serv:1,
+ ing:["coffee","mct_oil","cream","sweetener"],
+ si:["Preparare il caffè caldo.","Aggiungere olio MCT e panna.","Frullare 20–30 secondi.","Servire cremoso."],
+ se:["Brew the hot coffee.","Add MCT oil and cream.","Blend for 20–30 seconds.","Serve creamy."],
+ kcal:145,fat:14,prot:1,carb:1},
+{id:2,ch:"colazioni",tag:"KC",it:"Smoothie Cioccolato & Cocco",en:"Chocolate & Coconut Smoothie",serv:1,
+ ing:["coconut_milk","cauliflower","cocoa","mct_oil","sweetener"],
+ si:["Inserire tutto nel frullatore.","Frullare fino a crema liscia.","Servire freddo."],
+ se:["Put everything in the blender.","Blend until smooth.","Serve chilled."],
+ kcal:220,fat:18,prot:3,carb:6},
+{id:3,ch:"colazioni",tag:null,it:"Pancakes di Mandorle e Uova con Lamponi",en:"Almond & Egg Pancakes with Raspberries",serv:2,
+ ing:["egg","almond_flour","coconut_milk","vanilla","coconut_oil","raspberry","coconut_yogurt","sweetener","salt"],
+ si:["Sbatti le uova con farina di mandorle, latte di cocco, vaniglia, dolcificante e sale.","Scalda l'olio di cocco in padella antiaderente e versa dischetti di impasto.","Cuoci 2–3 minuti per lato finché dorati.","Servi con yogurt di cocco e lamponi freschi."],
+ se:["Whisk the eggs with almond flour, coconut milk, vanilla, sweetener and salt.","Heat coconut oil in a nonstick pan and pour small rounds of batter.","Cook 2–3 minutes per side until golden.","Serve with coconut yogurt and fresh raspberries."],
+ kcal:349,fat:28.6,prot:16.5,carb:7},
+{id:4,ch:"colazioni",tag:"KC",it:"Budino ai Semi di Basilico",en:"Basil Seed Pudding",serv:2,
+ ing:["coconut_milk","basil_seeds","shredded_coconut","sweetener","kiwi"],
+ si:["Mescolare latte e semi.","Lasciare riposare 3 ore in frigo.","Aggiungere il topping."],
+ se:["Mix the milk and seeds.","Let rest in the fridge for 3 hours.","Add the topping."],
+ kcal:190,fat:15,prot:3,carb:5},
+{id:5,ch:"colazioni",tag:null,it:"Waffle di Cavolfiore",en:"Cauliflower Waffles",serv:2,
+ ing:["cauliflower","egg","almond_flour","coconut_flour"],
+ si:["Frullare il cavolfiore.","Mescolare con gli altri ingredienti.","Cuocere in waffle maker per 5 minuti."],
+ se:["Blend the cauliflower.","Mix with the remaining ingredients.","Cook in a waffle maker for 5 minutes."],
+ kcal:280,fat:20,prot:15,carb:7},
+{id:6,ch:"colazioni",tag:null,it:"Granola Keto Croccante",en:"Crunchy Keto Granola",serv:4,
+ ing:["hazelnut","shredded_coconut","flaxseed","sesame_seed","coconut_oil","sweetener","cinnamon"],
+ si:["Tritare grossolanamente la frutta secca.","Mescolare con olio e dolcificante.","Cuocere a 150°C per 25 minuti.","Raffreddare fino a croccantezza."],
+ se:["Roughly chop the nuts.","Mix with oil and sweetener.","Bake at 150°C (300°F) for 25 minutes.","Let cool until crisp."],
+ kcal:320,fat:28,prot:6,carb:5},
+{id:7,ch:"colazioni",tag:null,it:"Uova Strapazzate con Spinaci",en:"Scrambled Eggs with Spinach",serv:1,
+ ing:["egg","spinach","olive_oil","salt"],
+ si:["Saltare gli spinaci.","Aggiungere le uova.","Mescolare fino a cremoso."],
+ se:["Sauté the spinach.","Add the eggs.","Stir until creamy."],
+ kcal:290,fat:23,prot:18,carb:3},
+{id:8,ch:"colazioni",tag:null,it:"Smoothie Verde Detox",en:"Green Detox Smoothie",serv:1,
+ ing:["lettuce","spinach","hemp_seed","lemon"],
+ si:["Frullare tutto fino a consistenza liquida."],
+ se:["Blend everything until liquid."],
+ kcal:180,fat:12,prot:9,carb:5},
+{id:9,ch:"colazioni",tag:null,it:"Muffin Salati di Cavolfiore",en:"Savory Cauliflower Muffins",serv:12,
+ ing:["cauliflower","egg","goat_cheese","almond_flour","baking_powder","rosemary"],
+ si:["Preriscaldare il forno a 190°C.","Mescolare tutti gli ingredienti.","Versare negli stampini.","Cuocere 20–25 minuti fino a doratura."],
+ se:["Preheat the oven to 190°C (375°F).","Mix all ingredients.","Pour into muffin tins.","Bake 20–25 minutes until golden."],
+ kcal:120,fat:9,prot:5,carb:3},
+{id:10,ch:"colazioni",tag:null,it:"“Gelato” Keto ai Frutti di Bosco",en:"Keto Berry “Ice Cream”",serv:2,
+ ing:["berries","coconut_milk","sweetener"],
+ si:["Frullare fino a consistenza cremosa."],
+ se:["Blend until creamy."],
+ kcal:160,fat:12,prot:2,carb:7},
+{id:11,ch:"colazioni",tag:null,it:"Avocado Bowl Salato",en:"Savory Avocado Bowl",serv:1,
+ ing:["avocado","olive_oil","sesame_seed","salt"],
+ si:["Tagliare l'avocado.","Condire con olio e semi.","Servire."],
+ se:["Cut the avocado.","Dress with oil and seeds.","Serve."],
+ kcal:320,fat:29,prot:4,carb:4},
+{id:12,ch:"colazioni",tag:null,it:"Pancake di Farina di Mandorle",en:"Almond Flour Pancakes",serv:2,
+ ing:["almond_flour","egg","coconut_milk","sweetener"],
+ si:["Cuocere in padella 2–3 minuti per lato."],
+ se:["Cook in a pan 2–3 minutes per side."],
+ kcal:290,fat:24,prot:10,carb:5},
+{id:13,ch:"colazioni",tag:null,it:"Omelette al Formaggio di Capra",en:"Goat Cheese Omelette",serv:1,
+ ing:["egg","goat_cheese","olive_oil"],
+ si:["Sbattere le uova.","Cuocere in padella.","Aggiungere il formaggio."],
+ se:["Beat the eggs.","Cook in a pan.","Add the cheese."],
+ kcal:330,fat:26,prot:20,carb:2},
+{id:14,ch:"colazioni",tag:null,it:"Latte di Cocco + MCT (shot energetico)",en:"Coconut Milk + MCT Energy Shot",serv:1,
+ ing:["coconut_milk","mct_oil"],
+ si:["Mescolare e bere subito."],
+ se:["Mix and drink right away."],
+ kcal:180,fat:18,prot:1,carb:2},
+{id:15,ch:"colazioni",tag:null,it:"Yogurt di Cocco + Frutti di Bosco",en:"Coconut Yogurt + Berries",serv:1,
+ ing:["coconut_yogurt","berries","chia_seed"],
+ si:["Mescolare tutto."],
+ se:["Mix everything together."],
+ kcal:200,fat:15,prot:3,carb:7},
+{id:16,ch:"colazioni",tag:null,it:"Frullato Avocado Vaniglia",en:"Avocado Vanilla Smoothie",serv:1,
+ ing:["avocado","coconut_milk","vanilla","sweetener"],
+ si:["Frullare fino a cremoso."],
+ se:["Blend until creamy."],
+ kcal:240,fat:21,prot:2,carb:5},
+{id:17,ch:"colazioni",tag:null,it:"Uova Sode + Olio EVO",en:"Hard-Boiled Eggs + Olive Oil",serv:1,
+ ing:["egg","olive_oil"],
+ si:["Lessare le uova e condire."],
+ se:["Boil the eggs and dress."],
+ kcal:250,fat:20,prot:14,carb:1},
+{id:18,ch:"colazioni",tag:null,it:"Crema Keto Cacao",en:"Keto Cocoa Spread",serv:1,
+ ing:["cocoa","almond_butter","coconut_milk"],
+ si:["Mescolare fino a crema."],
+ se:["Mix until creamy."],
+ kcal:210,fat:18,prot:5,carb:6},
+
+{id:19,ch:"leggeri",tag:"LO",it:"Insalata di Verdure Amare con Salsa al Gorgonzola e Noci",en:"Bitter Greens Salad with Gorgonzola-Walnut Dressing",serv:2,
+ ing:["gorgonzola","red_wine_vinegar","olive_oil","walnut","mustard","radicchio","arugula","endive","red_onion","black_pepper"],
+ si:["Mescolare gorgonzola, aceto e senape.","Aggiungere lentamente l'olio per emulsionare.","Unire le noci tritate.","Condire l'insalata e mescolare."],
+ se:["Mix the gorgonzola, vinegar and mustard.","Slowly whisk in the oil to emulsify.","Fold in the chopped walnuts.","Dress the salad and toss."],
+ kcal:420,fat:38,prot:10,carb:6},
+{id:20,ch:"leggeri",tag:"LO",it:"Insalata di Lattuga Romana con Avocado",en:"Romaine & Avocado Salad",serv:2,
+ ing:["lettuce","avocado","olive_oil","lemon","salt","black_pepper"],
+ si:["Tagliare lattuga e avocado.","Condire con olio, limone, sale e pepe.","Mescolare delicatamente."],
+ se:["Cut the lettuce and avocado.","Dress with oil, lemon, salt and pepper.","Toss gently."],
+ kcal:300,fat:26,prot:3,carb:7},
+{id:21,ch:"leggeri",tag:"LO",it:"Wrap di Alghe con Avocado e Verdure",en:"Nori Wrap with Avocado & Vegetables",serv:2,
+ ing:["nori","avocado","cucumber","carrot","olive_oil","lemon"],
+ si:["Tagliare avocado, cetriolo e carota.","Disporre sui fogli d'alga.","Condire e arrotolare."],
+ se:["Cut the avocado, cucumber and carrot.","Arrange on the nori sheets.","Dress and roll up."],
+ kcal:260,fat:20,prot:4,carb:9},
+{id:22,ch:"leggeri",tag:"LO",it:"Broccoli Arrosto con Olio di Avocado",en:"Roasted Broccoli with Avocado Oil",serv:2,
+ ing:["broccoli","avocado_oil","salt","black_pepper"],
+ si:["Preriscaldare il forno a 180°C.","Condire i broccoli.","Cuocere 15–20 minuti."],
+ se:["Preheat the oven to 180°C (350°F).","Season the broccoli.","Roast for 15–20 minutes."],
+ kcal:210,fat:14,prot:6,carb:8},
+{id:23,ch:"leggeri",tag:"LO",it:"Cavolo Saltato al Limone",en:"Sautéed Cabbage with Lemon",serv:2,
+ ing:["cabbage","olive_oil","lemon","salt"],
+ si:["Saltare il cavolo in padella.","Condire con limone e sale."],
+ se:["Sauté the cabbage in a pan.","Dress with lemon and salt."],
+ kcal:180,fat:13,prot:4,carb:7},
+{id:24,ch:"leggeri",tag:"KC",it:"Insalata Caprino e Pistacchi",en:"Goat Cheese & Pistachio Salad",serv:4,
+ ing:["goat_cheese","pistachio","almond_flour","olive_oil","mct_oil","lemon","arugula","avocado"],
+ si:["Impanare il formaggio con la farina di mandorle.","Rosolare leggermente in padella.","Preparare l'insalata con rucola e avocado.","Aggiungere formaggio e pistacchi, condire con olio e limone."],
+ se:["Coat the cheese in almond flour.","Lightly sear in a pan.","Prepare the salad with arugula and avocado.","Add the cheese and pistachios, dress with oil and lemon."],
+ kcal:450,fat:38,prot:12,carb:6},
+{id:25,ch:"leggeri",tag:"LO",it:"Insalata Tiepida di Cavolo e Cipolla",en:"Warm Cabbage & Onion Salad",serv:2,
+ ing:["cabbage","red_onion","olive_oil","lemon","salt"],
+ si:["Saltare cavolo e cipolla in padella con olio.","Cuocere fino a tenero.","Condire con limone e sale, servire tiepido."],
+ se:["Sauté the cabbage and onion in oil.","Cook until tender.","Dress with lemon and salt, serve warm."],
+ kcal:190,fat:13,prot:4,carb:9},
+
+{id:26,ch:"zuppe",tag:null,it:"Zuppa di Porri della Longevità",en:"Longevity Leek Soup",serv:5,
+ ing:["olive_oil","leek","celery","garlic","thyme","lemon_zest","cauliflower","nutmeg","salt","black_pepper","vegetable_broth","bay_leaf","chives"],
+ si:["Scaldare l'olio in una pentola grande.","Aggiungere porri, sedano, aglio, timo, scorza di limone, cavolfiore e spezie.","Cuocere finché i porri si ammorbidiscono.","Aggiungere brodo e alloro, cuocere coperto 25–35 minuti.","Frullare fino a crema, cuocere altri 10–15 minuti e regolare di sale."],
+ se:["Heat the oil in a large pot.","Add leeks, celery, garlic, thyme, lemon zest, cauliflower and spices.","Cook until the leeks soften.","Add broth and bay leaf, simmer covered 25–35 minutes.","Blend until creamy, simmer 10–15 more minutes and adjust salt."],
+ kcal:180,fat:9,prot:5,carb:14},
+{id:27,ch:"zuppe",tag:"LO",it:"Zuppa di Lenticchie e Miso con Shiitake",en:"Lentil & Miso Soup with Shiitake",serv:4,
+ ing:["olive_oil","shallot","garlic","mushroom","thyme","rosemary","miso","vegetable_broth","lentils","kale","coconut_aminos"],
+ si:["Soffriggere scalogno e aglio nell'olio.","Aggiungere funghi, timo e rosmarino.","Unire il miso e mescolare.","Aggiungere brodo e lenticchie, cuocere coperto 20–30 minuti.","Aggiungere il cavolo e cuocere altri 20 minuti, regolare con aminos di cocco."],
+ se:["Sauté the shallot and garlic in oil.","Add the mushrooms, thyme and rosemary.","Stir in the miso.","Add broth and lentils, simmer covered 20–30 minutes.","Add the kale and cook 20 more minutes, adjust with coconut aminos."],
+ kcal:260,fat:10,prot:14,carb:28},
+{id:28,ch:"zuppe",tag:"LO",it:"Zuppa Cremosa di Cavolfiore e Parmigiano",en:"Creamy Cauliflower & Parmesan Soup",serv:6,
+ ing:["olive_oil","red_onion","celery","garlic","cauliflower","nutmeg","salt","black_pepper","miso","vegetable_broth","coconut_milk","parmesan","bay_leaf"],
+ si:["Soffriggere cipolla, sedano, aglio e cavolfiore con le spezie.","Aggiungere il miso e mescolare.","Unire brodo, latte di cocco, parmigiano e alloro.","Cuocere coperto 35–45 minuti.","Frullare fino a crema liscia, cuocere ancora 10–15 minuti."],
+ se:["Sauté the onion, celery, garlic and cauliflower with the spices.","Stir in the miso.","Add broth, coconut milk, parmesan and bay leaf.","Simmer covered 35–45 minutes.","Blend until smooth, simmer 10–15 more minutes."],
+ kcal:265,fat:20,prot:7,carb:13},
+{id:29,ch:"zuppe",tag:"EP",it:"Zuppa di Funghi 2.0",en:"Mushroom Soup 2.0",serv:7,
+ ing:["cauliflower","mushroom","shallot","garlic","tahini","miso","vegetable_broth","coconut_milk"],
+ si:["Soffriggere scalogni e aglio in una pentola.","Aggiungere i funghi e cuocere per alcuni minuti.","Unire cavolfiore, brodo e latte di cocco.","Cuocere 15–20 minuti fino a verdure tenere.","Aggiungere tahini e miso, frullare fino a crema liscia."],
+ se:["Sauté the shallots and garlic in a pot.","Add the mushrooms and cook a few minutes.","Add cauliflower, broth and coconut milk.","Simmer 15–20 minutes until vegetables are tender.","Add tahini and miso, blend until smooth."],
+ kcal:220,fat:15,prot:6,carb:10},
+{id:30,ch:"zuppe",tag:"EP",it:"Zuppa di Lenticchie, Kale, Porro e Funghi",en:"Lentil, Kale, Leek & Mushroom Soup",serv:7,
+ ing:["olive_oil","leek","shallot","garlic","mushroom","lentils","vegetable_broth","kale"],
+ si:["Scaldare l'olio e soffriggere porro, scalogni e aglio.","Aggiungere i funghi e cuocere qualche minuto.","Unire lenticchie e brodo, cuocere 15–20 minuti.","Aggiungere il cavolo riccio e cuocere ancora qualche minuto."],
+ se:["Heat the oil and sauté the leek, shallots and garlic.","Add the mushrooms and cook a few minutes.","Add lentils and broth, simmer 15–20 minutes.","Add the kale and cook a few more minutes."],
+ kcal:260,fat:14,prot:12,carb:18},
+{id:31,ch:"zuppe",tag:"LO",it:"Curry di Lenticchie con Broccoli",en:"Lentil & Broccoli Curry",serv:4,
+ ing:["olive_oil","red_onion","curry_paste","lentils","broccoli","coconut_milk","vegetable_broth","salt"],
+ si:["Scaldare l'olio e soffriggere la cipolla.","Aggiungere la pasta di curry e mescolare.","Unire lenticchie, broccoli, latte di cocco e brodo.","Cuocere a fuoco lento 20–30 minuti, regolare di sale."],
+ se:["Heat the oil and sauté the onion.","Add the curry paste and stir.","Add lentils, broccoli, coconut milk and broth.","Simmer 20–30 minutes, adjust salt."],
+ kcal:310,fat:18,prot:14,carb:20},
+{id:32,ch:"zuppe",tag:"LO",it:"Tempeh Brasato ai Funghi",en:"Braised Tempeh with Mushrooms",serv:4,
+ ing:["tempeh","mushroom","shallot","vegetable_broth","mustard","olive_oil"],
+ si:["Scaldare l'olio e soffriggere scalogni e funghi.","Aggiungere il tempeh a cubetti.","Unire brodo e senape.","Cuocere a fuoco lento 20–30 minuti fino a riduzione."],
+ se:["Heat the oil and sauté the shallots and mushrooms.","Add the diced tempeh.","Add broth and mustard.","Simmer 20–30 minutes until reduced."],
+ kcal:280,fat:16,prot:20,carb:10},
+{id:33,ch:"zuppe",tag:"LO",it:"Noodles di Konjac con Funghi",en:"Konjac Noodles with Mushrooms",serv:2,
+ ing:["shirataki_noodles","mushroom","olive_oil","garlic"],
+ si:["Sciacquare bene i noodles.","Saltare i funghi con olio e aglio.","Aggiungere i noodles e cuocere 5–7 minuti.","Condire con erbe aromatiche."],
+ se:["Rinse the noodles well.","Sauté the mushrooms with oil and garlic.","Add the noodles and cook 5–7 minutes.","Season with fresh herbs."],
+ kcal:180,fat:14,prot:5,carb:6},
+{id:34,ch:"zuppe",tag:"LO",it:"“Riso” di Cavolfiore Saltato",en:"Sautéed Cauliflower “Rice”",serv:2,
+ ing:["cauliflower","olive_oil","red_onion","salt"],
+ si:["Tritare il cavolfiore fino a consistenza di riso.","Saltarlo in padella con olio e cipolla.","Cuocere 5–8 minuti, condire e servire."],
+ se:["Rice the cauliflower in a food processor.","Sauté in a pan with oil and onion.","Cook 5–8 minutes, season and serve."],
+ kcal:140,fat:9,prot:4,carb:6},
+{id:35,ch:"zuppe",tag:"LO",it:"Zuppa di Verdure Miste",en:"Mixed Vegetable Soup",serv:4,
+ ing:["olive_oil","red_onion","celery","cabbage","vegetable_broth"],
+ si:["Soffriggere cipolla e sedano.","Aggiungere cavolo e brodo.","Cuocere 25–30 minuti, aggiungere erbe e servire."],
+ se:["Sauté the onion and celery.","Add the cabbage and broth.","Simmer 25–30 minutes, add herbs and serve."],
+ kcal:150,fat:10,prot:4,carb:8},
+{id:36,ch:"zuppe",tag:"EP",it:"Cozze al Forno con Erbe e Mandorle",en:"Baked Mussels with Herbs & Almonds",serv:4,
+ ing:["mussels","almond_flour","garlic","olive_oil"],
+ si:["Pulire e aprire le cozze.","Mescolare farina di mandorle, erbe, aglio e olio.","Riempire le cozze con il composto.","Cuocere in forno a 180°C per 10–15 minuti."],
+ se:["Clean and open the mussels.","Mix almond flour, herbs, garlic and oil.","Fill the mussels with the mixture.","Bake at 180°C (350°F) for 10–15 minutes."],
+ kcal:260,fat:16,prot:22,carb:5},
+
+{id:37,ch:"principali",tag:"LO",it:"Gnocchi di Patata Dolce",en:"Sweet Potato Gnocchi",serv:4,
+ ing:["sweet_potato","egg","cassava_flour","nutmeg","salt"],
+ si:["Cuocere le patate dolci fino a renderle morbide.","Schiacciarle e lasciare raffreddare.","Mescolare con uovo, farina e noce moscata.","Formare gli gnocchi e cuocerli in acqua bollente finché salgono a galla."],
+ se:["Cook the sweet potatoes until soft.","Mash and let cool.","Mix with egg, flour and nutmeg.","Shape the gnocchi and boil until they float."],
+ kcal:290,fat:3,prot:6,carb:55},
+{id:38,ch:"principali",tag:"LO",it:"Burger Vegetali di Lenticchie e Noci",en:"Lentil & Walnut Veggie Burgers",serv:4,
+ ing:["lentils","walnut","mushroom","egg","cassava_flour"],
+ si:["Tritare funghi e noci.","Mescolare con lenticchie, uovo e farina.","Formare i burger.","Cuocere in forno a 180°C per circa 20 minuti."],
+ se:["Chop the mushrooms and walnuts.","Mix with lentils, egg and flour.","Shape into patties.","Bake at 180°C (350°F) for about 20 minutes."],
+ kcal:270,fat:14,prot:12,carb:20},
+{id:39,ch:"principali",tag:"LO",it:"Curry di Verdure al Latte di Cocco",en:"Vegetable Curry with Coconut Milk",serv:4,
+ ing:["olive_oil","red_onion","cauliflower","broccoli","coconut_milk","vegetable_broth","curry_paste"],
+ si:["Soffriggere la cipolla nell'olio.","Aggiungere le verdure e il curry.","Unire latte di cocco e brodo.","Cuocere a fuoco lento 20–25 minuti."],
+ se:["Sauté the onion in oil.","Add the vegetables and curry paste.","Add coconut milk and broth.","Simmer 20–25 minutes."],
+ kcal:300,fat:22,prot:7,carb:15},
+{id:40,ch:"principali",tag:"KC",it:"Frittelle di Broccoli",en:"Broccoli Fritters",serv:4,
+ ing:["broccoli","egg","almond_flour","flaxseed","cheese","olive_oil"],
+ si:["Tritare i broccoli.","Mescolare con uova, farine e formaggio.","Formare le frittelle.","Cuocere in padella 3–4 minuti per lato."],
+ se:["Chop the broccoli.","Mix with eggs, flours and cheese.","Shape into fritters.","Cook in a pan 3–4 minutes per side."],
+ kcal:300,fat:22,prot:12,carb:6},
+{id:41,ch:"principali",tag:"KC",it:"Polpette di Granchio",en:"Crab Cakes",serv:2,
+ ing:["crab","celery","red_onion","egg","coconut_flour","almond_flour","avocado_oil"],
+ si:["Mescolare tutti gli ingredienti.","Formare le polpette.","Cuocere in padella 3–4 minuti per lato."],
+ se:["Mix all the ingredients.","Shape into cakes.","Cook in a pan 3–4 minutes per side."],
+ kcal:320,fat:20,prot:28,carb:6},
+{id:42,ch:"principali",tag:"KC",it:"Curry di Pesce al Cocco",en:"Coconut Fish Curry",serv:8,
+ ing:["sesame_seed","red_onion","fennel","ginger","garlic","curry_paste","coconut_milk","vegetable_broth","mussels","shrimp","scallops","cabbage"],
+ si:["Scaldare l'olio e soffriggere cipolla, finocchio, zenzero e aglio.","Aggiungere la pasta di curry e mescolare.","Unire latte di cocco e brodo.","Aggiungere pesce e cavolo, cuocere circa 15 minuti fino a cottura."],
+ se:["Heat the oil and sauté onion, fennel, ginger and garlic.","Add the curry paste and stir.","Add coconut milk and broth.","Add the seafood and cabbage, cook about 15 minutes until done."],
+ kcal:320,fat:22,prot:26,carb:6},
+{id:43,ch:"principali",tag:"KC",it:"Noodles con Funghi e Formaggio",en:"Noodles with Mushrooms & Cheese",serv:4,
+ ing:["shirataki_noodles","mushroom","olive_oil","garlic","thyme","feta_cheese"],
+ si:["Preriscaldare il forno a 200°C.","Mescolare funghi, aglio, timo e olio.","Cuocere in forno per 35–40 minuti.","Aggiungere noodles e formaggio, mescolare e servire."],
+ se:["Preheat the oven to 200°C (400°F).","Toss mushrooms with garlic, thyme and oil.","Roast for 35–40 minutes.","Add the noodles and cheese, toss and serve."],
+ kcal:400,fat:32,prot:12,carb:7},
+{id:44,ch:"principali",tag:"KC",it:"Cavolo Arrosto con Pesto",en:"Roasted Cabbage with Pesto",serv:4,
+ ing:["cabbage","olive_oil","salt","mct_oil","lemon","walnut"],
+ si:["Preriscaldare il forno a 220°C.","Condire il cavolo con olio e sale, cuocere 15–20 minuti fino a doratura.","Preparare il pesto con olio MCT, noci, limone ed erbe.","Servire il cavolo con il pesto sopra."],
+ se:["Preheat the oven to 220°C (425°F).","Season the cabbage with oil and salt, roast 15–20 minutes until golden.","Make the pesto with MCT oil, walnuts, lemon and herbs.","Serve the cabbage topped with pesto."],
+ kcal:330,fat:28,prot:5,carb:8},
+{id:45,ch:"principali",tag:"KC",it:"Tabbouleh di Semi di Canapa",en:"Hemp Seed Tabbouleh",serv:6,
+ ing:["hemp_seed","parsley","mint","red_onion","celery","olive_oil","lemon","salt"],
+ si:["Mescolare i semi di canapa con le erbe e le verdure.","Aggiungere olio e succo di limone.","Condire con sale e mescolare bene, servire fresco."],
+ se:["Mix the hemp seeds with the herbs and vegetables.","Add the oil and lemon juice.","Season with salt and toss well, serve chilled."],
+ kcal:210,fat:17,prot:10,carb:3},
+{id:46,ch:"principali",tag:"KC",it:"Sformato di Crauti e Funghi",en:"Sauerkraut & Mushroom Bake",serv:6,
+ ing:["sauerkraut","mushroom","red_onion","coconut_milk","egg","walnut","salt","black_pepper"],
+ si:["Preriscaldare il forno a 180°C.","Soffriggere cipolla e funghi.","Mescolare con crauti, uova, latte di cocco e noci.","Versare in una teglia e cuocere 35–40 minuti fino a doratura."],
+ se:["Preheat the oven to 180°C (350°F).","Sauté the onion and mushrooms.","Mix with sauerkraut, eggs, coconut milk and walnuts.","Pour into a baking dish and bake 35–40 minutes until golden."],
+ kcal:320,fat:24,prot:10,carb:8},
+{id:47,ch:"principali",tag:"KC",it:"Costine di Maiale con Finocchio",en:"Pork Chops with Fennel",serv:4,
+ ing:["pork","fennel","olive_oil","orange_zest","red_wine","salt"],
+ si:["Scaldare l'olio in padella.","Cuocere le costolette fino a doratura.","Aggiungere finocchio e scorza d'arancia.","Sfumare con vino e cuocere fino a riduzione, servire caldo."],
+ se:["Heat the oil in a pan.","Cook the chops until browned.","Add the fennel and orange zest.","Deglaze with wine and reduce, serve hot."],
+ kcal:450,fat:34,prot:30,carb:5},
+{id:48,ch:"principali",tag:null,it:"Pollo Ruspante con Asparagi e Salsa al Tahini",en:"Pastured Chicken with Asparagus & Tahini Sauce",serv:4,
+ ing:["chicken","asparagus","tahini","lemon","garlic","olive_oil","coconut_aminos","ginger","parsley","salt"],
+ si:["Marinare il pollo: mescolare aminos di cocco, metà del succo di limone, zenzero e un filo d'olio. Tagliare il pollo a strisce e marinare 15 minuti.","Preparare la salsa: mescolare il tahini con il restante succo di limone, aglio grattugiato e acqua tiepida fino a salsa fluida, salare.","Cuocere il pollo 4–5 minuti per lato; cuocere gli asparagi in padella o al vapore 5–6 minuti.","Impiattare gli asparagi, adagiare il pollo, versare la salsa al tahini e guarnire con prezzemolo."],
+ se:["Marinate the chicken: mix coconut aminos, half the lemon juice, ginger and a drizzle of oil. Slice the chicken and marinate 15 minutes.","Make the sauce: mix tahini with the remaining lemon juice, grated garlic and warm water until fluid, season with salt.","Cook the chicken 4–5 minutes per side; steam or pan-cook the asparagus 5–6 minutes.","Plate the asparagus, top with chicken, spoon over the tahini sauce and garnish with parsley."],
+ kcal:469,fat:28.7,prot:39.4,carb:11.1},
+
+{id:49,ch:"dolci",tag:null,it:"Brownies Keto al Cacao",en:"Keto Cocoa Brownies",serv:8,
+ ing:["almond_flour","cocoa","sweetener","egg","mct_oil","walnut","vanilla"],
+ si:["Mescolare tutti gli ingredienti in una ciotola.","Versare in una teglia.","Cuocere a 180°C per 20–25 minuti.","Lasciare raffreddare e tagliare."],
+ se:["Mix all the ingredients in a bowl.","Pour into a baking pan.","Bake at 180°C (350°F) for 20–25 minutes.","Let cool and slice."],
+ kcal:210,fat:18,prot:6,carb:5},
+{id:50,ch:"dolci",tag:null,it:"Mousse al Cioccolato e Avocado con Lamponi",en:"Chocolate-Avocado Mousse with Raspberries",serv:4,
+ ing:["avocado","cocoa","coconut_milk","sweetener","vanilla","raspberry","pistachio","salt"],
+ si:["Frullare gli avocado con cacao, latte di cocco, dolcificante, vaniglia e sale.","Frullare ad alta velocità 1–2 minuti fino a crema liscia e lucida.","Trasferire in coppette e raffreddare in frigo almeno 20 minuti.","Guarnire con lamponi freschi e pistacchi tritati."],
+ se:["Blend the avocados with cocoa, coconut milk, sweetener, vanilla and salt.","Blend on high for 1–2 minutes until smooth and glossy.","Spoon into bowls and chill for at least 20 minutes.","Garnish with fresh raspberries and chopped pistachios."],
+ kcal:328,fat:27.7,prot:7.1,carb:12.9},
+{id:51,ch:"dolci",tag:"KC",it:"Gelato al Cocco",en:"Coconut Ice Cream",serv:4,
+ ing:["coconut_milk","sweetener","vanilla"],
+ si:["Mescolare tutti gli ingredienti.","Congelare mescolando ogni 30 minuti.","Servire cremoso."],
+ se:["Mix all the ingredients.","Freeze, stirring every 30 minutes.","Serve creamy."],
+ kcal:250,fat:22,prot:3,carb:5},
+{id:52,ch:"dolci",tag:null,it:"Gelato al Cioccolato",en:"Chocolate Ice Pops",serv:6,
+ ing:["coconut_milk","shredded_coconut","dark_chocolate","coconut_oil","sweetener"],
+ si:["A fuoco basso, mescolare latte di cocco, cocco grattugiato e dolcificante fino a composto omogeneo.","Aggiungere tre quarti del cioccolato tritato e mescolare fino a scioglimento completo.","Versare negli stampini per ghiaccioli.","Congelare almeno 3 ore, poi decorare con il cioccolato fuso rimanente."],
+ se:["Over low heat, mix coconut milk, shredded coconut and sweetener until smooth.","Add three-quarters of the chopped chocolate and stir until fully melted.","Pour into popsicle molds.","Freeze at least 3 hours, then drizzle with the remaining melted chocolate."],
+ kcal:375,fat:34,prot:3,carb:8},
+{id:53,ch:"dolci",tag:"KC",it:"Barrette Keto di Frutta Secca",en:"Keto Nut & Seed Bars",serv:6,
+ ing:["almond_butter","shredded_coconut","flaxseed","sweetener"],
+ si:["Mescolare tutti gli ingredienti.","Versare in uno stampo.","Refrigerare fino a solidificazione.","Tagliare a barrette."],
+ se:["Mix all the ingredients.","Pour into a mold.","Chill until set.","Cut into bars."],
+ kcal:260,fat:22,prot:7,carb:4},
+{id:54,ch:"dolci",tag:null,it:"Pane alle Noci",en:"Walnut Bread",serv:10,
+ ing:["olive_oil","almond_flour","hazelnut","arrowroot","flaxseed","walnut","tapioca_starch","egg","coconut_milk","yacon_syrup"],
+ si:["Preriscaldare il forno a 175°C. Ungere una teglia da plumcake.","Mescolare le farine, l'amido, i semi di lino, le noci e gli amidi in una ciotola.","In un'altra ciotola mescolare olio, uova, latte di cocco e sciroppo di yacón.","Unire i liquidi ai secchi senza mescolare troppo.","Versare nella teglia e cuocere 40–45 minuti finché uno stuzzicadenti esce pulito."],
+ se:["Preheat the oven to 175°C (350°F). Grease a loaf pan.","Mix the flours, arrowroot, flaxseed, walnuts and tapioca starch in a bowl.","In another bowl mix the oil, eggs, coconut milk and yacon syrup.","Combine the wet and dry ingredients without overmixing.","Pour into the pan and bake 40–45 minutes until a toothpick comes out clean."],
+ kcal:325,fat:27,prot:9,carb:11},
+
+{id:55,ch:"salse",tag:null,it:"Salsa Avocado",en:"Avocado Sauce",serv:2,
+ ing:["avocado","lemon","olive_oil","salt"],
+ si:["Frullare tutti gli ingredienti.","Regolare di sale e limone.","Servire come salsa o dressing."],
+ se:["Blend all the ingredients.","Adjust salt and lemon.","Serve as a sauce or dressing."],
+ kcal:250,fat:23,prot:3,carb:4},
+{id:56,ch:"salse",tag:null,it:"Dressing Olio & Limone",en:"Oil & Lemon Dressing",serv:2,
+ ing:["olive_oil","lemon"],
+ si:["Mescolare olio e succo di limone."],
+ se:["Whisk together the oil and lemon juice."],
+ kcal:180,fat:20,prot:0,carb:0},
+{id:57,ch:"salse",tag:null,it:"Salsa Sesamo",en:"Sesame Sauce",serv:2,
+ ing:["sesame_seed","red_wine_vinegar","coconut_aminos"],
+ si:["Mescolare olio di sesamo, aceto e aminos di cocco."],
+ se:["Whisk together sesame oil, vinegar and coconut aminos."],
+ kcal:120,fat:10,prot:0,carb:2},
+
+{id:58,ch:"mediterranea",tag:"MED",kid:true,it:"Bocconcini di Pollo alle Mandorle",en:"Almond Chicken Bites",serv:3,
+ ing:["chicken","almond_flour","egg","parmesan","salt","olive_oil"],
+ si:["Taglia il pollo a bocconcini.","Passa i pezzi nell'uovo sbattuto, poi nella farina di mandorle mescolata al parmigiano.","Cuoci in padella con un filo d'olio, 3–4 minuti per lato, finché dorati e cotti."],
+ se:["Cut the chicken into bite-size pieces.","Dip in beaten egg, then coat in almond flour mixed with parmesan.","Pan-fry in a little oil, 3–4 minutes per side, until golden and cooked through."],
+ kcal:310,fat:20,prot:30,carb:4},
+{id:59,ch:"mediterranea",tag:"MED",kid:true,it:"Cotoletta di Pollo alla Milanese (senza lectine)",en:"Almond-Crusted Chicken Cutlet",serv:2,
+ ing:["chicken","almond_flour","egg","parmesan","olive_oil","lemon"],
+ si:["Appiattisci leggermente il petto di pollo.","Passalo nell'uovo, poi nella farina di mandorle mescolata al parmigiano.","Cuoci in padella con olio, 3–4 minuti per lato.","Servi con una spruzzata di limone."],
+ se:["Gently flatten the chicken breast.","Dip in egg, then coat in almond flour mixed with parmesan.","Pan-fry in oil, 3–4 minutes per side.","Serve with a squeeze of lemon."],
+ kcal:340,fat:22,prot:32,carb:5},
+{id:60,ch:"mediterranea",tag:"MED",kid:true,it:"Polpette di Pollo e Cavolfiore al Forno",en:"Baked Chicken & Cauliflower Meatballs",serv:4,
+ ing:["chicken","cauliflower","egg","parmesan","parsley","salt"],
+ si:["Cuoci a vapore il cavolfiore e schiaccialo grossolanamente.","Mescolalo con pollo macinato, uovo, parmigiano, prezzemolo e sale.","Forma le polpette e disponile su una teglia.","Cuoci in forno a 200°C per 18–20 minuti."],
+ se:["Steam the cauliflower and mash it coarsely.","Mix with ground chicken, egg, parmesan, parsley and salt.","Shape into meatballs and place on a baking tray.","Bake at 200°C (400°F) for 18–20 minutes."],
+ kcal:250,fat:14,prot:26,carb:5},
+{id:61,ch:"mediterranea",tag:"MED",kid:true,it:"Purè di Cavolfiore al Parmigiano",en:"Creamy Parmesan Cauliflower Mash",serv:4,
+ ing:["cauliflower","parmesan","olive_oil","garlic","salt"],
+ si:["Cuoci il cavolfiore a vapore finché tenero.","Frullalo con olio, uno spicchio d'aglio e sale fino a crema liscia.","Manteca con il parmigiano e servi caldo."],
+ se:["Steam the cauliflower until tender.","Blend with oil, a garlic clove and salt until smooth.","Stir in the parmesan and serve warm."],
+ kcal:190,fat:14,prot:7,carb:8},
+{id:62,ch:"mediterranea",tag:"MED",kid:true,it:"Polpettine di Pesce alla Ligure",en:"Ligurian-Style Fish Cakes",serv:3,
+ ing:["white_fish","almond_flour","egg","parsley","lemon","olive_oil"],
+ si:["Trita finemente il pesce.","Mescolalo con uovo, farina di mandorle, prezzemolo e scorza di limone.","Forma delle polpettine e cuocile in padella con olio, 3 minuti per lato."],
+ se:["Finely chop the fish.","Mix with egg, almond flour, parsley and lemon zest.","Shape into small cakes and pan-fry in oil, 3 minutes per side."],
+ kcal:260,fat:14,prot:24,carb:6},
+{id:63,ch:"mediterranea",tag:"MED",kid:true,it:"Frittata al Forno con Spinaci e Formaggio di Capra",en:"Baked Spinach & Goat Cheese Frittata",serv:4,
+ ing:["egg","spinach","goat_cheese","olive_oil","salt"],
+ si:["Preriscalda il forno a 180°C.","Sbatti le uova con sale, unisci gli spinaci saltati e il formaggio a pezzetti.","Versa in una teglia oliata e cuoci 20–22 minuti finché soda."],
+ se:["Preheat the oven to 180°C (350°F).","Whisk the eggs with salt, fold in the sautéed spinach and cheese chunks.","Pour into an oiled baking dish and bake 20–22 minutes until set."],
+ kcal:280,fat:22,prot:18,carb:3},
+{id:64,ch:"mediterranea",tag:"MED",kid:false,it:"Involtini di Pollo al Prosciutto e Salvia",en:"Chicken, Prosciutto & Sage Rolls",serv:4,
+ ing:["chicken","prosciutto","sage","olive_oil","lemon"],
+ si:["Appiattisci le fettine di pollo, adagia una fetta di prosciutto e una foglia di salvia su ciascuna.","Arrotola e ferma con uno stecchino.","Rosola in padella con olio, 3–4 minuti per lato, finché dorati.","Sfuma con un filo di limone prima di servire."],
+ se:["Flatten the chicken slices, lay a slice of prosciutto and a sage leaf on each.","Roll up and secure with a toothpick.","Brown in a pan with oil, 3–4 minutes per side, until golden.","Finish with a splash of lemon before serving."],
+ kcal:330,fat:20,prot:34,carb:1},
+{id:65,ch:"mediterranea",tag:"MED",kid:true,it:"Cavolfiore Mantecato al Parmigiano (“Risotto”)",en:"Creamy Parmesan Cauliflower “Risotto”",serv:3,
+ ing:["cauliflower","parmesan","olive_oil","shallot","vegetable_broth"],
+ si:["Trita il cavolfiore a grana di riso.","Soffriggi lo scalogno nell'olio, aggiungi il cavolfiore.","Bagna con un po' di brodo e cuoci mescolando 8–10 minuti.","Manteca fuori dal fuoco con il parmigiano."],
+ se:["Rice the cauliflower in a food processor.","Sauté the shallot in oil, add the riced cauliflower.","Moisten with a little broth and cook, stirring, 8–10 minutes.","Off the heat, stir in the parmesan to finish."],
+ kcal:210,fat:14,prot:8,carb:9},
+{id:66,ch:"mediterranea",tag:"MED",kid:true,it:"Gnocchi di Cavolfiore al Forno alla Romana",en:"Baked Cauliflower Gnocchi, Roman-Style",serv:4,
+ ing:["cauliflower","almond_flour","egg","parmesan","olive_oil"],
+ si:["Cuoci a vapore il cavolfiore e schiaccialo finché asciutto.","Mescola con uovo, farina di mandorle e metà del parmigiano fino a impasto compatto.","Forma piccoli dischi, disponili in teglia oliata.","Cospargi con il resto del parmigiano e gratina in forno a 200°C per 15 minuti."],
+ se:["Steam the cauliflower and mash until dry.","Mix with egg, almond flour and half the parmesan into a firm dough.","Shape into small discs and arrange in an oiled baking dish.","Sprinkle with the remaining parmesan and bake at 200°C (400°F) for 15 minutes."],
+ kcal:260,fat:17,prot:12,carb:9},
+{id:67,ch:"mediterranea",tag:"MED",kid:true,it:"Torta Salata di Spinaci e Formaggio di Capra",en:"Spinach & Goat Cheese Savory Pie",serv:6,
+ ing:["almond_flour","egg","spinach","goat_cheese","olive_oil","salt"],
+ si:["Prepara la base mescolando farina di mandorle, un uovo e un filo d'olio; stendila in una teglia.","Cuoci la base in forno a 180°C per 10 minuti.","Mescola spinaci saltati, uova rimanenti e formaggio, versa sulla base.","Cuoci ancora 20–25 minuti finché soda."],
+ se:["Make the base by mixing almond flour, one egg and a little oil; press into a tart pan.","Bake the base at 180°C (350°F) for 10 minutes.","Mix the sautéed spinach, remaining eggs and cheese, pour over the base.","Bake another 20–25 minutes until set."],
+ kcal:300,fat:24,prot:15,carb:6},
+{id:68,ch:"mediterranea",tag:"MED",kid:true,it:"Zuppa di Porri e Patate Dolci",en:"Leek & Sweet Potato Soup",serv:4,
+ ing:["leek","sweet_potato","vegetable_broth","olive_oil","salt"],
+ si:["Soffriggi i porri nell'olio finché appassiti.","Aggiungi le patate dolci a cubetti e il brodo.","Cuoci 20 minuti, poi frulla fino a crema liscia."],
+ se:["Sauté the leeks in oil until softened.","Add the diced sweet potato and the broth.","Simmer 20 minutes, then blend until smooth."],
+ kcal:210,fat:8,prot:4,carb:30},
+{id:69,ch:"mediterranea",tag:"MED",kid:false,it:"Insalata di Arance, Finocchi e Olive",en:"Sicilian Orange, Fennel & Olive Salad",serv:2,
+ ing:["orange","fennel","olives","olive_oil","black_pepper"],
+ si:["Affetta sottilmente finocchio e arancia pelata a vivo.","Disponi a strati con le olive.","Condisci con olio e una macinata di pepe."],
+ se:["Thinly slice the fennel and peeled orange.","Layer with the olives.","Dress with oil and a crack of pepper."],
+ kcal:190,fat:12,prot:2,carb:18},
+{id:70,ch:"mediterranea",tag:"MED",kid:true,it:"Torta di Mele alle Mandorle",en:"Almond Apple Cake",serv:8,
+ ing:["almond_flour","egg","apple","sweetener","coconut_oil","cinnamon"],
+ si:["Mescola farina di mandorle, uova, dolcificante, olio di cocco e cannella.","Incorpora le mele tagliate a fettine sottili.","Versa in uno stampo e cuoci a 175°C per 35–40 minuti."],
+ se:["Mix the almond flour, eggs, sweetener, coconut oil and cinnamon.","Fold in the thinly sliced apples.","Pour into a baking pan and bake at 175°C (350°F) for 35–40 minutes."],
+ kcal:260,fat:18,prot:7,carb:15},
+{id:71,ch:"mediterranea",tag:"MED",kid:true,it:"Biscotti al Limone e Mandorle",en:"Lemon Almond Cookies",serv:10,
+ ing:["almond_flour","egg","lemon","sweetener","coconut_oil"],
+ si:["Mescola tutti gli ingredienti fino a impasto morbido.","Forma delle palline e schiacciale leggermente su una teglia.","Cuoci a 170°C per 10–12 minuti fino a bordi dorati."],
+ se:["Mix all the ingredients into a soft dough.","Shape into small balls and flatten slightly on a tray.","Bake at 170°C (340°F) for 10–12 minutes until the edges are golden."],
+ kcal:150,fat:11,prot:4,carb:6},
+{id:72,ch:"mediterranea",tag:"MED",kid:true,it:"Pesce al Forno con Olive e Rosmarino",en:"Baked Fish with Olives & Rosemary",serv:3,
+ ing:["white_fish","olives","rosemary","olive_oil","lemon"],
+ si:["Disponi il pesce in una teglia oliata.","Cospargi con olive, rosmarino e scorza di limone.","Cuoci in forno a 190°C per 15–18 minuti."],
+ se:["Arrange the fish in an oiled baking dish.","Scatter with olives, rosemary and lemon zest.","Bake at 190°C (375°F) for 15–18 minutes."],
+ kcal:240,fat:14,prot:26,carb:2},
+{id:73,ch:"mediterranea",tag:"MED",kid:true,it:"Crema di Broccoli con Basilico",en:"Broccoli Cream Soup with Basil",serv:4,
+ ing:["broccoli","vegetable_broth","olive_oil","garlic","basil"],
+ si:["Soffriggi l'aglio nell'olio, aggiungi i broccoli.","Copri con il brodo e cuoci 15 minuti finché teneri.","Frulla con foglie di basilico fresco fino a crema liscia."],
+ se:["Sauté the garlic in oil, add the broccoli.","Cover with the broth and simmer 15 minutes until tender.","Blend with fresh basil leaves until smooth."],
+ kcal:170,fat:11,prot:6,carb:10},
+{id:74,ch:"mediterranea",tag:"MED",kid:false,it:"Mozzarella di Bufala, Basilico e Olive",en:"Buffalo Mozzarella, Basil & Olives",serv:2,
+ ing:["buffalo_mozzarella","basil","olives","olive_oil"],
+ si:["Affetta la mozzarella di bufala.","Disponila con le olive e foglie di basilico fresco.","Condisci con un filo d'olio extravergine."],
+ se:["Slice the buffalo mozzarella.","Arrange with the olives and fresh basil leaves.","Drizzle with extra virgin olive oil."],
+ kcal:260,fat:20,prot:15,carb:2}
+];
+
+/* ============================= APP STATE ============================= */
+var state = {
+  lang: "it",
+  view: "foods",
+  ingredients: [],
+  exampleMode: false,
+  chapterFilter: "all",
+  tagFilter: null,
+  kidOnly: false,
+  foodQuery: "",
+  shoppingList: []
+};
+
+function loadState(){
+  try{
+    var savedLang = localStorage.getItem("pp_lang");
+    if(savedLang === "it" || savedLang === "en") state.lang = savedLang;
+    var savedIng = localStorage.getItem("pp_ingredients");
+    if(savedIng){
+      state.ingredients = JSON.parse(savedIng);
+      state.exampleMode = false;
+    } else {
+      state.ingredients = ["egg","spinach","avocado"];
+      state.exampleMode = true;
+    }
+  }catch(e){
+    state.ingredients = ["egg","spinach","avocado"];
+    state.exampleMode = true;
+  }
+  try{
+    var savedShop = localStorage.getItem("pp_shopping");
+    if(savedShop) state.shoppingList = JSON.parse(savedShop);
+  }catch(e){ state.shoppingList = []; }
+}
+function saveIngredients(){
+  try{ localStorage.setItem("pp_ingredients", JSON.stringify(state.ingredients)); }catch(e){}
+}
+function saveLang(){
+  try{ localStorage.setItem("pp_lang", state.lang); }catch(e){}
+}
+function saveShoppingList(){
+  try{ localStorage.setItem("pp_shopping", JSON.stringify(state.shoppingList)); }catch(e){}
+}
+
+/* ============================= HELPERS ============================= */
+function normalize(s){
+  return (s||"").toString().toLowerCase().normalize("NFD").replace(new RegExp("[̀-ͯ]","g"),"").trim();
+}
+function t(key){
+  return I18N[state.lang][key];
+}
+function label(entry){ return entry[state.lang] || entry.it; }
+
+function resolveIngredient(token){
+  var n = normalize(token);
+  if(!n) return null;
+  var best=null, bestScore=-1;
+  Object.keys(ING).forEach(function(key){
+    var entry = ING[key];
+    var labels = [entry.it, entry.en].concat(entry.a||[]);
+    labels.forEach(function(lbl){
+      var nl = normalize(lbl);
+      if(!nl) return;
+      var score=-1;
+      if(nl===n) score=3;
+      else if(n.length>=3 && nl.indexOf(n)!==-1) score=2;
+      else if(nl.length>=3 && n.indexOf(nl)!==-1) score=1;
+      if(score>bestScore){bestScore=score;best=key;}
+    });
+  });
+  return best;
+}
+
+function suggestIngredients(query, excludeKeys){
+  excludeKeys = excludeKeys || state.ingredients;
+  var n = normalize(query);
+  if(n.length<2) return [];
+  var out=[];
+  Object.keys(ING).forEach(function(key){
+    if(excludeKeys.indexOf(key)!==-1) return;
+    var entry = ING[key];
+    var labels = [entry.it, entry.en].concat(entry.a||[]);
+    var hit = labels.some(function(lbl){ var nl=normalize(lbl); return nl.indexOf(n)!==-1; });
+    if(hit) out.push(key);
+  });
+  out.sort(function(a,b){ return label(ING[a]).length - label(ING[b]).length; });
+  return out.slice(0,8);
+}
+
+/* ============================= INGREDIENT CHIPS ============================= */
+function addIngredient(key, rawLabel){
+  if(state.exampleMode){ state.ingredients=[]; state.exampleMode=false; }
+  if(state.ingredients.indexOf(key)===-1) state.ingredients.push(key);
+  if(!ING[key] && rawLabel) ING[key] = {it:rawLabel, en:rawLabel, custom:true};
+  saveIngredients();
+  renderChips();
+  renderRecipes();
+}
+function removeIngredient(key){
+  state.ingredients = state.ingredients.filter(function(k){return k!==key;});
+  saveIngredients();
+  renderChips();
+  renderRecipes();
+}
+function clearIngredients(){
+  state.ingredients=[]; state.exampleMode=false;
+  saveIngredients(); renderChips(); renderRecipes();
+}
+
+function renderChips(){
+  var row = document.getElementById("chipRow");
+  var input = document.getElementById("ingInput");
+  Array.prototype.slice.call(row.querySelectorAll(".ing-chip")).forEach(function(el){el.remove();});
+  state.ingredients.forEach(function(key){
+    var entry = ING[key] || {it:key,en:key};
+    var chip = document.createElement("div");
+    chip.className="ing-chip";
+    var span=document.createElement("span");
+    span.textContent = label(entry);
+    var btn=document.createElement("button");
+    btn.type="button"; btn.textContent="×";
+    btn.addEventListener("click", function(){ removeIngredient(key); });
+    chip.appendChild(span); chip.appendChild(btn);
+    row.insertBefore(chip, input);
+  });
+  document.getElementById("exampleNote").style.display = state.exampleMode ? "flex":"none";
+}
+
+/* ============================= SHOPPING LIST ============================= */
+function addToShoppingList(key, rawLabel){
+  if(!ING[key] && rawLabel) ING[key] = {it:rawLabel, en:rawLabel, custom:true};
+  var existing = state.shoppingList.filter(function(it){return it.key===key;})[0];
+  if(!existing){
+    state.shoppingList.push({key:key, checked:false});
+  }
+  saveShoppingList();
+  renderShoppingList();
+}
+function addMissingToShoppingList(recipe, m){
+  recipe.ing.forEach(function(k){
+    if(!m.haveSet[k]) addToShoppingList(k);
+  });
+}
+function toggleShoppingItem(key){
+  state.shoppingList.forEach(function(it){ if(it.key===key) it.checked = !it.checked; });
+  saveShoppingList();
+  renderShoppingList();
+}
+function removeShoppingItem(key){
+  state.shoppingList = state.shoppingList.filter(function(it){return it.key!==key;});
+  saveShoppingList();
+  renderShoppingList();
+}
+function clearShoppingList(){
+  state.shoppingList = [];
+  saveShoppingList();
+  renderShoppingList();
+}
+function moveCheckedToFridge(){
+  var checked = state.shoppingList.filter(function(it){return it.checked;});
+  checked.forEach(function(it){
+    var entry = ING[it.key];
+    if(state.exampleMode){ state.ingredients=[]; state.exampleMode=false; }
+    if(state.ingredients.indexOf(it.key)===-1) state.ingredients.push(it.key);
+  });
+  saveIngredients();
+  state.shoppingList = state.shoppingList.filter(function(it){return !it.checked;});
+  saveShoppingList();
+  renderChips();
+  renderRecipes();
+  renderShoppingList();
+}
+
+function renderShoppingList(){
+  var wrap = document.getElementById("shoppingListWrap");
+  var countEl = document.getElementById("shoppingCount");
+  var actions = document.getElementById("shopActions");
+  if(!wrap) return;
+  countEl.textContent = state.shoppingList.length ? "("+state.shoppingList.length+")" : "";
+
+  if(state.shoppingList.length===0){
+    wrap.innerHTML = '<div class="empty-state"><h3>'+t("shoppingEmpty")+'</h3><div>'+t("shoppingEmptySub")+'</div></div>';
+    actions.style.display = "none";
+    return;
+  }
+  actions.style.display = "flex";
+
+  var anyChecked = state.shoppingList.some(function(it){return it.checked;});
+  document.getElementById("moveToFridgeBtn").disabled = !anyChecked;
+
+  var ul = document.createElement("ul");
+  ul.className = "shop-list";
+  state.shoppingList.forEach(function(it){
+    var entry = ING[it.key] || {it:it.key,en:it.key};
+    var li = document.createElement("li");
+    li.className = "shop-item" + (it.checked?" checked":"");
+
+    var cb = document.createElement("button");
+    cb.className = "shop-checkbox" + (it.checked?" checked":"");
+    cb.type = "button";
+    cb.innerHTML = it.checked ? "✓" : "";
+    cb.addEventListener("click", function(){ toggleShoppingItem(it.key); });
+
+    var span = document.createElement("span");
+    span.className = "shop-label";
+    span.textContent = label(entry);
+
+    var rm = document.createElement("button");
+    rm.className = "shop-remove"; rm.type="button"; rm.textContent = "×";
+    rm.addEventListener("click", function(){ removeShoppingItem(it.key); });
+
+    li.appendChild(cb); li.appendChild(span); li.appendChild(rm);
+    ul.appendChild(li);
+  });
+  wrap.innerHTML = "";
+  wrap.appendChild(ul);
+}
+
+/* ============================= FOODS VIEW ============================= */
+function slug(s){ return normalize(s).replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
+
+function matchesQuery(entry, q){
+  if(!q) return true;
+  var n = normalize(q);
+  return normalize(entry.it).indexOf(n)!==-1 || normalize(entry.en).indexOf(n)!==-1;
+}
+
+function renderFoods(){
+  var content = document.getElementById("foodsContent");
+  var index = document.getElementById("indexPanel");
+  content.innerHTML=""; index.innerHTML="";
+  var q = state.foodQuery;
+
+  function buildGroup(list, forbidden){
+    var titleWrap = document.createElement("div");
+    titleWrap.className = "food-section-title" + (forbidden?" forbidden":"");
+    titleWrap.innerHTML = '<div class="bar"></div><h2></h2>';
+    titleWrap.querySelector("h2").textContent = forbidden ? t("forbiddenTitle") : t("allowedTitle");
+    content.appendChild(titleWrap);
+
+    var idxLabel = document.createElement("div");
+    idxLabel.className="index-group-label";
+    idxLabel.textContent = forbidden ? t("forbiddenTitle") : t("allowedTitle");
+    index.appendChild(idxLabel);
+
+    list.forEach(function(cat, i){
+      var items = cat.items.filter(function(it){ return matchesQuery(it,q); });
+      var catMatches = matchesQuery(cat, q);
+      if(q && items.length===0 && !catMatches) return;
+      var shownItems = (q && !catMatches) ? items : cat.items;
+      var id = (forbidden?"cat-f-":"cat-a-")+i;
+
+      var card = document.createElement("div");
+      card.className = "cat-card" + (forbidden?" forbidden":"");
+      card.id = id;
+      var h3 = document.createElement("h3"); h3.textContent = label(cat);
+      var itemsWrap = document.createElement("div"); itemsWrap.className="cat-items";
+      shownItems.forEach(function(it){
+        var chip = document.createElement("span"); chip.className="cat-chip";
+        chip.textContent = label(it);
+        itemsWrap.appendChild(chip);
+      });
+      card.appendChild(h3); card.appendChild(itemsWrap);
+      content.appendChild(card);
+
+      var link = document.createElement("button");
+      link.className="index-link"+(forbidden?" forbidden-link":"");
+      link.textContent = label(cat);
+      link.addEventListener("click", function(){ document.getElementById(id).scrollIntoView({behavior:"smooth", block:"start"}); });
+      index.appendChild(link);
+    });
+  }
+
+  buildGroup(FOOD_LIST.allowed, false);
+  buildGroup(FOOD_LIST.forbidden, true);
+}
+
+/* ============================= RECIPES VIEW ============================= */
+function computeMatch(recipe){
+  var haveSet={};
+  state.ingredients.forEach(function(k){haveSet[k]=true;});
+  PANTRY.forEach(function(k){haveSet[k]=true;});
+  var total = recipe.ing.length;
+  var matched = recipe.ing.filter(function(k){return haveSet[k];}).length;
+  return {matched:matched, total:total, haveSet:haveSet};
+}
+
+function buildFilterRows(){
+  var chapWrap = document.getElementById("chapterFilters");
+  chapWrap.innerHTML="";
+  var allBtn = document.createElement("button");
+  allBtn.className="filter-chip"+(state.chapterFilter==="all"?" active":"");
+  allBtn.textContent = t("filterAll");
+  allBtn.addEventListener("click", function(){ state.chapterFilter="all"; buildFilterRows(); renderRecipes(); });
+  chapWrap.appendChild(allBtn);
+  Object.keys(CHAPTERS).forEach(function(ch){
+    var b=document.createElement("button");
+    b.className="filter-chip"+(state.chapterFilter===ch?" active":"");
+    b.textContent = label(CHAPTERS[ch]);
+    b.addEventListener("click", function(){ state.chapterFilter = (state.chapterFilter===ch?"all":ch); buildFilterRows(); renderRecipes(); });
+    chapWrap.appendChild(b);
+  });
+
+  var tagWrap = document.getElementById("tagFilters");
+  tagWrap.innerHTML="";
+  Object.keys(TAGS).forEach(function(tag){
+    var b=document.createElement("button");
+    b.className="filter-chip"+(state.tagFilter===tag?" active":"");
+    b.setAttribute("data-tag", tag);
+    b.textContent = label(TAGS[tag]);
+    b.addEventListener("click", function(){ state.tagFilter = (state.tagFilter===tag?null:tag); buildFilterRows(); renderRecipes(); });
+    tagWrap.appendChild(b);
+  });
+
+  var kidBtn = document.createElement("button");
+  kidBtn.className = "filter-chip" + (state.kidOnly ? " active" : "");
+  kidBtn.setAttribute("data-kid", "1");
+  kidBtn.textContent = t("kidFilter");
+  kidBtn.addEventListener("click", function(){ state.kidOnly = !state.kidOnly; buildFilterRows(); renderRecipes(); });
+  tagWrap.appendChild(kidBtn);
+}
+
+function renderRecipes(){
+  var grid = document.getElementById("recipeGrid");
+  var countEl = document.getElementById("resultsCount");
+  grid.innerHTML="";
+
+  var list = RECIPES.filter(function(r){
+    if(state.chapterFilter!=="all" && r.ch!==state.chapterFilter) return false;
+    if(state.tagFilter && r.tag!==state.tagFilter) return false;
+    if(state.kidOnly && !r.kid) return false;
+    return true;
+  });
+
+  var scored = list.map(function(r){
+    var m = computeMatch(r);
+    return {r:r, m:m, ratio: m.total? m.matched/m.total : 0};
+  });
+  scored.sort(function(a,b){
+    if(b.ratio!==a.ratio) return b.ratio-a.ratio;
+    if(b.m.matched!==a.m.matched) return b.m.matched-a.m.matched;
+    return label(a.r).localeCompare(label(b.r));
+  });
+
+  var countText = I18N[state.lang].resultsCount(list.length, RECIPES.length);
+  countEl.innerHTML = countText.replace(String(list.length), '<span class="mono">'+list.length+'</span>') + (state.ingredients.length? t("resultsMatch"):"");
+
+  if(scored.length===0){
+    var empty=document.createElement("div");
+    empty.className="empty-state";
+    empty.innerHTML="<h3>"+t("noResults")+"</h3><div>"+t("noResultsSub")+"</div>";
+    grid.appendChild(empty);
+    return;
+  }
+
+  scored.forEach(function(s){
+    var r=s.r, m=s.m;
+    var card=document.createElement("button");
+    card.type="button";
+    card.className="recipe-card";
+    var pct = m.total? Math.round(100*m.matched/m.total):0;
+    var chipClass = m.total && m.matched===m.total ? "full" : (m.matched>0? "partial":"");
+    var previewLabels = r.ing.slice(0,4).map(function(k){ return ING[k]? label(ING[k]) : k; }).join(", ");
+
+    card.innerHTML =
+      '<div class="card-top">'+
+        (r.tag? '<span class="tag-badge '+r.tag+'">'+label(TAGS[r.tag])+'</span>' : '<span></span>')+
+        '<span class="match-chip '+chipClass+'">'+m.matched+'/'+m.total+'</span>'+
+      '</div>'+
+      '<div class="recipe-name">'+label(r)+'</div>'+
+      '<div class="match-bar"><div style="width:'+pct+'%"></div></div>'+
+      '<div class="card-ing-preview">'+previewLabels+(r.ing.length>4?"…":"")+'</div>'+
+      '<div class="card-bottom"><span>'+CHAPTERS[r.ch][state.lang]+(r.kid?' · <span class="kid-badge">'+t("kidBadge")+'</span>':'')+'</span><span class="kcal-tag">'+r.kcal+' '+t("kcal")+'</span></div>';
+
+    card.addEventListener("click", function(){ openDetail(r); });
+    grid.appendChild(card);
+  });
+}
+
+/* ============================= DETAIL OVERLAY ============================= */
+function openDetail(r){
+  var overlay=document.getElementById("overlay");
+  var card=document.getElementById("detailCard");
+  var m=computeMatch(r);
+
+  var ingHtml = r.ing.map(function(k){
+    var have = m.haveSet[k];
+    var entry = ING[k] || {it:k,en:k};
+    return '<li class="'+(have?"have":"miss")+'"><span class="dot '+(have?"have":"")+'"></span>'+label(entry)+'</li>';
+  }).join("");
+
+  var stepsArr = state.lang==="en" ? r.se : r.si;
+  var stepsHtml = stepsArr.map(function(s){ return "<li>"+s+"</li>"; }).join("");
+
+  card.innerHTML =
+    '<div class="detail-head">'+
+      '<button class="detail-close" id="detailCloseBtn" aria-label="Close">×</button>'+
+      (r.tag? '<span class="tag-badge '+r.tag+'">'+label(TAGS[r.tag])+'</span>' : '')+
+      (r.kid? ' <span class="kid-badge">'+t("kidBadge")+'</span>' : '')+
+      '<h2>'+label(r)+'</h2>'+
+      '<div class="serv-note">'+r.serv+' '+t("servings")+'</div>'+
+    '</div>'+
+    '<div class="detail-body">'+
+      '<div class="nutri-row">'+
+        '<div class="nutri-cell"><div class="v">'+r.kcal+'</div><div class="l">'+t("kcal")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+r.fat+'g</div><div class="l">'+t("fat")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+r.prot+'g</div><div class="l">'+t("protein")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+r.carb+'g</div><div class="l">'+t("carbs")+'</div></div>'+
+      '</div>'+
+      '<div class="detail-block">'+
+        '<div class="detail-block-head"><h4>'+t("ingredients")+' · '+m.matched+'/'+m.total+' '+t("have")+'</h4>'+
+        (m.matched<m.total? '<button class="add-missing-btn" id="addMissingBtn">'+t("addMissing")+'</button>' : '')+
+        '</div>'+
+        '<ul class="ing-list">'+ingHtml+'</ul></div>'+
+      '<div class="detail-block"><h4>'+t("steps")+'</h4><ol class="steps-list">'+stepsHtml+'</ol></div>'+
+    '</div>';
+
+  document.getElementById("detailCloseBtn").addEventListener("click", closeDetail);
+  var addMissingBtn = document.getElementById("addMissingBtn");
+  if(addMissingBtn){
+    addMissingBtn.addEventListener("click", function(){
+      addMissingToShoppingList(r, m);
+      addMissingBtn.textContent = t("added");
+      addMissingBtn.disabled = true;
+    });
+  }
+  overlay.classList.add("open");
+}
+function closeDetail(){ document.getElementById("overlay").classList.remove("open"); }
+
+/* ============================= I18N APPLY ============================= */
+function applyI18n(){
+  document.querySelectorAll("[data-i]").forEach(function(el){
+    var key=el.getAttribute("data-i");
+    var v=I18N[state.lang][key];
+    el.textContent = typeof v==="function" ? "" : v;
+  });
+  document.querySelectorAll("[data-i-ph]").forEach(function(el){
+    var key=el.getAttribute("data-i-ph");
+    el.setAttribute("placeholder", I18N[state.lang][key]);
+  });
+  document.querySelectorAll(".lang-toggle button").forEach(function(b){
+    b.classList.toggle("active", b.getAttribute("data-lang")===state.lang);
+  });
+}
+
+function renderAll(){
+  applyI18n();
+  renderChips();
+  buildFilterRows();
+  renderFoods();
+  renderRecipes();
+  renderShoppingList();
+}
+
+/* ============================= EVENTS ============================= */
+document.querySelectorAll(".lang-toggle button").forEach(function(b){
+  b.addEventListener("click", function(){
+    state.lang = b.getAttribute("data-lang");
+    saveLang();
+    closeDetail();
+    renderAll();
+  });
+});
+
+document.querySelectorAll(".tab-btn").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".tab-btn").forEach(function(x){x.classList.remove("active");});
+    document.querySelectorAll(".view").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active");
+    document.getElementById("view-"+b.getAttribute("data-view")).classList.add("active");
+    state.view = b.getAttribute("data-view");
+  });
+});
+
+document.getElementById("foodSearch").addEventListener("input", function(e){
+  state.foodQuery = e.target.value;
+  renderFoods();
+});
+
+var ingInput = document.getElementById("ingInput");
+var autocompleteEl = document.getElementById("autocomplete");
+var acSelIndex = -1, acCurrent = [];
+
+function renderAutocomplete(){
+  if(acCurrent.length===0){ autocompleteEl.style.display="none"; autocompleteEl.innerHTML=""; return; }
+  autocompleteEl.innerHTML = acCurrent.map(function(key,i){
+    return '<button type="button" data-idx="'+i+'" class="'+(i===acSelIndex?"sel":"")+'">'+label(ING[key])+'</button>';
+  }).join("");
+  autocompleteEl.style.display="block";
+  Array.prototype.slice.call(autocompleteEl.querySelectorAll("button")).forEach(function(btn,i){
+    btn.addEventListener("click", function(){
+      addIngredient(acCurrent[i]);
+      ingInput.value=""; acCurrent=[]; acSelIndex=-1; renderAutocomplete();
+      ingInput.focus();
+    });
+  });
+}
+
+ingInput.addEventListener("input", function(){
+  acCurrent = suggestIngredients(ingInput.value);
+  acSelIndex = -1;
+  renderAutocomplete();
+});
+
+ingInput.addEventListener("keydown", function(e){
+  if(e.key==="ArrowDown" && acCurrent.length){ e.preventDefault(); acSelIndex=Math.min(acSelIndex+1, acCurrent.length-1); renderAutocomplete(); return; }
+  if(e.key==="ArrowUp" && acCurrent.length){ e.preventDefault(); acSelIndex=Math.max(acSelIndex-1, 0); renderAutocomplete(); return; }
+  if(e.key==="Enter"){
+    e.preventDefault();
+    var val = ingInput.value.trim();
+    if(acSelIndex>=0 && acCurrent[acSelIndex]){
+      addIngredient(acCurrent[acSelIndex]);
+    } else if(val){
+      var resolved = resolveIngredient(val);
+      if(resolved) addIngredient(resolved);
+      else addIngredient("free:"+normalize(val), val);
+    }
+    ingInput.value=""; acCurrent=[]; acSelIndex=-1; renderAutocomplete();
+    return;
+  }
+  if(e.key==="Backspace" && ingInput.value===""){
+    if(state.ingredients.length){ removeIngredient(state.ingredients[state.ingredients.length-1]); }
+  }
+  if(e.key==="Escape"){ ingInput.value=""; acCurrent=[]; acSelIndex=-1; renderAutocomplete(); }
+});
+ingInput.addEventListener("blur", function(){ setTimeout(function(){ acCurrent=[]; renderAutocomplete(); },150); });
+
+document.getElementById("clearAllIng").addEventListener("click", clearIngredients);
+
+var shopInput = document.getElementById("shopInput");
+var shopAutocompleteEl = document.getElementById("shopAutocomplete");
+var shopAcSelIndex = -1, shopAcCurrent = [];
+
+function renderShopAutocomplete(){
+  if(shopAcCurrent.length===0){ shopAutocompleteEl.style.display="none"; shopAutocompleteEl.innerHTML=""; return; }
+  shopAutocompleteEl.innerHTML = shopAcCurrent.map(function(key,i){
+    return '<button type="button" data-idx="'+i+'" class="'+(i===shopAcSelIndex?"sel":"")+'">'+label(ING[key])+'</button>';
+  }).join("");
+  shopAutocompleteEl.style.display="block";
+  Array.prototype.slice.call(shopAutocompleteEl.querySelectorAll("button")).forEach(function(btn,i){
+    btn.addEventListener("click", function(){
+      addToShoppingList(shopAcCurrent[i]);
+      shopInput.value=""; shopAcCurrent=[]; shopAcSelIndex=-1; renderShopAutocomplete();
+      shopInput.focus();
+    });
+  });
+}
+shopInput.addEventListener("input", function(){
+  var shopKeys = state.shoppingList.map(function(it){return it.key;});
+  shopAcCurrent = suggestIngredients(shopInput.value, shopKeys);
+  shopAcSelIndex = -1;
+  renderShopAutocomplete();
+});
+shopInput.addEventListener("keydown", function(e){
+  if(e.key==="ArrowDown" && shopAcCurrent.length){ e.preventDefault(); shopAcSelIndex=Math.min(shopAcSelIndex+1, shopAcCurrent.length-1); renderShopAutocomplete(); return; }
+  if(e.key==="ArrowUp" && shopAcCurrent.length){ e.preventDefault(); shopAcSelIndex=Math.max(shopAcSelIndex-1, 0); renderShopAutocomplete(); return; }
+  if(e.key==="Enter"){
+    e.preventDefault();
+    var val = shopInput.value.trim();
+    if(shopAcSelIndex>=0 && shopAcCurrent[shopAcSelIndex]){
+      addToShoppingList(shopAcCurrent[shopAcSelIndex]);
+    } else if(val){
+      var resolved = resolveIngredient(val);
+      if(resolved) addToShoppingList(resolved);
+      else addToShoppingList("free:"+normalize(val), val);
+    }
+    shopInput.value=""; shopAcCurrent=[]; shopAcSelIndex=-1; renderShopAutocomplete();
+    return;
+  }
+  if(e.key==="Escape"){ shopInput.value=""; shopAcCurrent=[]; shopAcSelIndex=-1; renderShopAutocomplete(); }
+});
+shopInput.addEventListener("blur", function(){ setTimeout(function(){ shopAcCurrent=[]; renderShopAutocomplete(); },150); });
+
+document.getElementById("moveToFridgeBtn").addEventListener("click", moveCheckedToFridge);
+document.getElementById("clearShoppingBtn").addEventListener("click", clearShoppingList);
+
+document.getElementById("overlay").addEventListener("click", function(e){
+  if(e.target.id==="overlay") closeDetail();
+});
+document.addEventListener("keydown", function(e){
+  if(e.key==="Escape") closeDetail();
+});
+
+/* ============================= HOME SCREEN ICON ============================= */
+function generateAppIcon(){
+  var size = 512;
+  var canvas = document.createElement("canvas");
+  canvas.width = size; canvas.height = size;
+  var ctx = canvas.getContext("2d");
+
+  var grad = ctx.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,"#4C8058");
+  grad.addColorStop(1,"#243F29");
+  var r = size*0.22;
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(r,0);
+  ctx.arcTo(size,0,size,size,r);
+  ctx.arcTo(size,size,0,size,r);
+  ctx.arcTo(0,size,0,0,r);
+  ctx.arcTo(0,0,size,0,r);
+  ctx.closePath();
+  ctx.fill();
+
+  var s = size/24;
+  ctx.save();
+  ctx.translate(0,0);
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.beginPath();
+  ctx.moveTo(12*s,21*s);
+  ctx.bezierCurveTo(12*s,21*s,5*s,16.5*s,5*s,10.2*s);
+  ctx.bezierCurveTo(5*s,6.4*s,8*s,4*s,11*s,4.6*s);
+  ctx.bezierCurveTo(11.4*s,2.6*s,13.4*s,1.6*s,15.2*s,2.4*s);
+  ctx.bezierCurveTo(17*s,3.2*s,17.4*s,5.4*s,16.2*s,7*s);
+  ctx.bezierCurveTo(19*s,7.4*s,20.5*s,10.4*s,19*s,13*s);
+  ctx.bezierCurveTo(17.8*s,15*s,12*s,21*s,12*s,21*s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "#243F29";
+  ctx.lineWidth = s*1.4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(12*s,21*s);
+  ctx.lineTo(12*s,9.5*s);
+  ctx.stroke();
+  ctx.restore();
+
+  var dataUrl = canvas.toDataURL("image/png");
+  var apple = document.getElementById("appleTouchIcon");
+  var fav = document.getElementById("faviconLink");
+  if(apple) apple.setAttribute("href", dataUrl);
+  if(fav) fav.setAttribute("href", dataUrl);
+}
+
+/* ============================= INIT ============================= */
+loadState();
+renderAll();
+generateAppIcon();
+</script>
+
+</body>
+</html>
