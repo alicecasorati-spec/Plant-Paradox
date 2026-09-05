@@ -304,7 +304,8 @@ button{font:inherit;color:inherit;}
 .nutri-cell .l{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
 .detail-block h4{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
 .ing-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
-.ing-list li{display:flex;align-items:center;gap:9px;font-size:14px;}
+.ing-list li{display:flex;align-items:center;gap:9px;font-size:14px;flex-wrap:wrap;}
+.ing-qty{font-family:"JetBrains Mono";font-size:12px;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);padding:1px 7px;border-radius:6px;}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex:none;}
 .dot.have{background:var(--accent);}
 .ing-list li.have{color:var(--ink);font-weight:500;}
@@ -316,9 +317,51 @@ button{font:inherit;color:inherit;}
   background:var(--accent-soft);color:var(--accent-ink);font-family:"JetBrains Mono";font-size:11.5px;font-weight:600;
   display:flex;align-items:center;justify-content:center;
 }
-.serv-note{font-size:12.5px;color:var(--muted);}
+.serv-note{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-top:6px;}
+.serv-note #servCount{font-family:"JetBrains Mono";font-weight:600;color:var(--ink);font-size:14px;}
+.serv-step{
+  width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--ink);font-size:15px;line-height:1;cursor:pointer;
+}
+.serv-step:hover{border-color:var(--accent);}
 
 footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* ---------- Print ---------- */
+#printPlanArea{display:none;}
+#printPlanArea h1{font-size:22px;margin-bottom:14px;}
+#printPlanArea h2{font-size:16px;margin:18px 0 4px;border-bottom:1px solid #ccc;padding-bottom:4px;}
+#printPlanArea .print-fast{font-size:12px;color:#555;margin-bottom:6px;}
+#printPlanArea .print-meals{list-style:none;margin:0;padding:0;font-size:13.5px;line-height:1.7;}
+@media print{
+  body{background:#fff !important;color:#111 !important;}
+  .detail-card, .detail-body, .detail-head{background:#fff !important;color:#111 !important;}
+
+  body.printing-recipe > .app,
+  body.printing-shopping .hero, body.printing-shopping .tabs, body.printing-shopping footer.app-footer,
+  body.printing-shopping .finder, body.printing-shopping .shop-actions,
+  body.printing-shopping .view:not(#view-shopping),
+  body.printing-plan > .app > *:not(#printPlanArea)
+  { display:none !important; }
+
+  body.printing-recipe .overlay{
+    position:static !important;background:none !important;backdrop-filter:none !important;
+    padding:0 !important;display:block !important;
+  }
+  body.printing-recipe .detail-card{box-shadow:none;border:none;max-width:100%;}
+  body.printing-recipe .detail-close,
+  body.printing-recipe .detail-fav,
+  body.printing-recipe #toggleQtyBtn,
+  body.printing-recipe #printRecipeBtn,
+  body.printing-recipe #addMissingBtn
+  { display:none !important; }
+
+  body.printing-shopping #view-shopping{display:block !important;}
+  body.printing-shopping .example-note{display:none !important;}
+
+  body.printing-plan > .app{display:block !important;}
+  body.printing-plan #printPlanArea{display:block !important;}
+}
 
 /* ---------- Shopping list ---------- */
 .detail-block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
@@ -382,6 +425,12 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
 .meal-slot-kcal{font-family:"JetBrains Mono";font-size:11.5px;color:var(--muted);flex:none;}
 .meal-slot-remove{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;width:26px;height:26px;border-radius:50%;flex:none;}
 .meal-slot-remove:hover{background:var(--surface-2);}
+
+.macro-totals{background:var(--accent-soft);border-radius:14px;padding:14px 16px;}
+.macro-totals-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.macro-totals-label{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-ink);white-space:nowrap;}
+.macro-totals .nutri-row{border-color:transparent;background:var(--surface);}
+.macro-totals-week{margin-top:10px;font-size:12px;color:var(--accent-ink);}
 
 .picker-search{
   width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);
@@ -472,6 +521,7 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
     <div class="meal-slots" id="plannerSlots"></div>
     <div class="shop-actions">
       <button class="shop-btn primary" id="genShoppingFromPlanBtn" data-i="genShopping">Genera lista della spesa dal piano</button>
+      <button class="shop-btn" id="printPlanBtn" data-i="printPlan">Stampa piano settimanale</button>
       <button class="shop-btn" id="clearPlanBtn" data-i="clearPlan">Svuota piano</button>
     </div>
   </div>
@@ -490,9 +540,12 @@ footer.app-footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--bo
 
     <div class="shop-actions" id="shopActions">
       <button class="shop-btn primary" id="moveToFridgeBtn" data-i="moveToFridge">Sposta i selezionati nel frigo</button>
+      <button class="shop-btn" id="printShoppingBtn" data-i="printShopping">Stampa lista</button>
       <button class="shop-btn" id="clearShoppingBtn" data-i="clearShopping">Svuota lista</button>
     </div>
   </div>
+
+  <div id="printPlanArea"></div>
 
   <footer class="app-footer" data-i="footer">
     Contenuti tratti da «Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Ricettario Completo» (Dr. Steven Gundry), liste alimenti pag. 3–6 e 28. App non ufficiale, solo a scopo informativo: non sostituisce il parere medico.
@@ -529,12 +582,17 @@ var I18N = {
     genShopping:"Genera lista della spesa dal piano", clearPlan:"Svuota piano",
     planUpdated:"Lista aggiornata ✓", planEmptyNote:"Aggiungi almeno una ricetta al piano prima di generare la lista.",
     fastLabel:"Digiuno", fastTo:"– fine pasti –", fastHoursSuffix:"di digiuno",
+    showQty:"Mostra quantità", hideQty:"Nascondi quantità",
+    printRecipe:"Stampa", printShopping:"Stampa lista", printPlan:"Stampa piano settimanale",
+    shareRecipe:"Condividi", linkCopied:"Copiato ✓",
+    dayTotals:"Totale del giorno", weekTotals:"Totale settimana",
+    waterLabel:"Acqua", waterUnit:"bicchieri",
     shoppingLabel:"Aggiungi un ingrediente alla lista", shopPh:"Scrivi un ingrediente e premi Invio…",
     moveToFridge:"Sposta i selezionati nel frigo", clearShopping:"Svuota lista",
     addMissing:"Aggiungi mancanti alla lista", added:"Aggiunti ✓",
     shoppingEmpty:"La lista della spesa è vuota", shoppingEmptySub:"Aggiungi ingredienti a mano, oppure apri una ricetta e tocca «Aggiungi mancanti alla lista».",
     itemsInList:"nella lista",
-    footer: "Contenuti tratti da «Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Ricettario Completo» (Dr. Steven Gundry), liste alimenti pag. 3–6 e 28, più una raccolta di ricette mediterranee/italiane a basso contenuto di spezie, adatte ai bambini, composte con soli ingredienti ammessi. App non ufficiale, solo a scopo informativo: non sostituisce il parere medico."
+    footer: "Contenuti tratti da «Plant Paradox · Unlocking the Keto Code · Longevity Paradox» (Dr. Steven Gundry), una raccolta di ricette mediterranee/italiane adatte a tutti anche ai bambini, composte con soli ingredienti ammessi. App non ufficiale, solo a scopo informativo: non sostituisce il parere medico."
   },
   en: {
     tagline: "Lectin-free approved foods and recipes, inspired by Dr. Gundry's method.",
@@ -559,12 +617,17 @@ var I18N = {
     genShopping:"Build shopping list from plan", clearPlan:"Clear plan",
     planUpdated:"List updated ✓", planEmptyNote:"Add at least one recipe to the plan before generating the list.",
     fastLabel:"Fasting", fastTo:"– eating ends –", fastHoursSuffix:"fasting",
+    showQty:"Show quantities", hideQty:"Hide quantities",
+    printRecipe:"Print", printShopping:"Print list", printPlan:"Print weekly plan",
+    shareRecipe:"Share", linkCopied:"Copied ✓",
+    dayTotals:"Day total", weekTotals:"Week total",
+    waterLabel:"Water", waterUnit:"glasses",
     shoppingLabel:"Add an ingredient to the list", shopPh:"Type an ingredient and press Enter…",
     moveToFridge:"Move checked items to fridge", clearShopping:"Clear list",
     addMissing:"Add missing to list", added:"Added ✓",
     shoppingEmpty:"Your shopping list is empty", shoppingEmptySub:"Add ingredients by hand, or open a recipe and tap “Add missing to list”.",
     itemsInList:"in list",
-    footer: "Content drawn from “Plant Paradox · Unlocking the Keto Code · Longevity Paradox — Complete Cookbook” (Dr. Steven Gundry), food lists p. 3–6 and 28, plus a collection of low-spice Mediterranean/Italian, kid-friendly recipes built only from approved ingredients. Unofficial app, for information only — not a substitute for medical advice."
+    footer: "Content drawn from “Plant Paradox · Unlocking the Keto Code · Longevity Paradox” (Dr. Steven Gundry), a collection of Mediterranean/Italian recipes suited to everyone, kids included, built only from approved ingredients. Unofficial app, for information only — not a substitute for medical advice."
   }
 };
 
@@ -1299,6 +1362,167 @@ var RECIPES = [
  kcal:140,fat:9,prot:2,carb:12}
 ];
 
+/* ============================= INGREDIENT QUANTITIES (Italian, per recipe id) ============================= */
+var QTY = {
+1:{coffee:"240 ml",mct_oil:"1 cucchiaio",cream:"30 ml (o 2 cucchiai latte di capra)",sweetener:"q.b. (facoltativo)"},
+2:{coconut_milk:"240 ml",cauliflower:"70 g (congelato)",cocoa:"2 cucchiai",mct_oil:"1 cucchiaino",sweetener:"q.b."},
+3:{egg:"4",almond_flour:"2 cucchiai",coconut_milk:"1 cucchiaio",vanilla:"1/2 cucchiaino",coconut_oil:"1 cucchiaio",raspberry:"50 g",coconut_yogurt:"1 cucchiaio (opzionale)",sweetener:"1 cucchiaino",salt:"1 pizzico"},
+4:{coconut_milk:"250 ml",basil_seeds:"20 g",shredded_coconut:"20 g",sweetener:"q.b.",kiwi:"1 (facoltativo)"},
+5:{cauliflower:"300 g",egg:"3",almond_flour:"3 cucchiai",coconut_flour:"2 cucchiai"},
+6:{hazelnut:"100 g",shredded_coconut:"50 g",flaxseed:"30 g",sesame_seed:"30 g",coconut_oil:"60 g",sweetener:"q.b.",cinnamon:"q.b."},
+7:{egg:"3",spinach:"100 g",olive_oil:"1 cucchiaio",salt:"q.b."},
+8:{lettuce:"50 g",spinach:"50 g",hemp_seed:"30 g",lemon:"succo di 1"},
+9:{cauliflower:"300 g",egg:"3",goat_cheese:"50 g",almond_flour:"30 g",baking_powder:"1 cucchiaino",rosemary:"q.b."},
+10:{berries:"150 g (congelati)",coconut_milk:"100 ml",sweetener:"q.b."},
+11:{avocado:"1",olive_oil:"1 cucchiaio",sesame_seed:"q.b.",salt:"q.b."},
+12:{almond_flour:"80 g",egg:"2",coconut_milk:"50 ml",sweetener:"q.b."},
+13:{egg:"3",goat_cheese:"40 g",olive_oil:"q.b."},
+14:{coconut_milk:"150 ml",mct_oil:"1 cucchiaio"},
+15:{coconut_yogurt:"150 g",berries:"50 g",chia_seed:"q.b."},
+16:{avocado:"1/2",coconut_milk:"200 ml",vanilla:"q.b.",sweetener:"q.b."},
+17:{egg:"2",olive_oil:"1 cucchiaio"},
+18:{cocoa:"2 cucchiai",almond_butter:"1 cucchiaio",coconut_milk:"q.b."},
+19:{gorgonzola:"60 ml (sbriciolato)",red_wine_vinegar:"60 ml",olive_oil:"60 ml",walnut:"120 ml (tostate e tritate)",mustard:"1 cucchiaino (facoltativo)",radicchio:"4 tazze in totale (radicchio, rucola, indivia)",arugula:"4 tazze in totale (radicchio, rucola, indivia)",endive:"4 tazze in totale (radicchio, rucola, indivia)",red_onion:"1/2",black_pepper:"q.b."},
+20:{lettuce:"2 cuori (romana)",avocado:"1",olive_oil:"2 cucchiai",lemon:"succo di 1",salt:"q.b.",black_pepper:"q.b."},
+21:{nori:"2 fogli",avocado:"1",cucumber:"1/2",carrot:"1",olive_oil:"1 cucchiaio",lemon:"succo di 1"},
+22:{broccoli:"400 g",avocado_oil:"2 cucchiai",salt:"q.b.",black_pepper:"q.b."},
+23:{cabbage:"300 g",olive_oil:"2 cucchiai",lemon:"succo di 1",salt:"q.b."},
+24:{goat_cheese:"150 g",pistachio:"80 g",almond_flour:"30 g",olive_oil:"4 cucchiai",mct_oil:"2 cucchiai",lemon:"succo di 1",arugula:"q.b.",avocado:"1"},
+25:{cabbage:"300 g",red_onion:"1/2",olive_oil:"2 cucchiai",lemon:"succo di 1",salt:"q.b."},
+26:{olive_oil:"2 cucchiai",leek:"450 g",celery:"2 gambi",garlic:"3 spicchi",thyme:"1 cucchiaio",lemon_zest:"di 1 limone",cauliflower:"1 grande (a cimette)",nutmeg:"1/2 cucchiaino",salt:"1 cucchiaino",black_pepper:"2 cucchiaini",vegetable_broth:"2 litri",bay_leaf:"1 foglia",chives:"per guarnire"},
+27:{olive_oil:"2 cucchiai",shallot:"1",garlic:"3 spicchi",mushroom:"1 tazza (shiitake)",thyme:"1½ cucchiai",rosemary:"1 cucchiaio",miso:"3 cucchiai (rosso)",vegetable_broth:"1,5 litri",lentils:"1½ tazze (cotte)",kale:"1 tazza",coconut_aminos:"q.b."},
+28:{olive_oil:"3 cucchiai",red_onion:"1 (dolce)",celery:"2 gambi",garlic:"3 spicchi",cauliflower:"2 grandi",nutmeg:"1/2 cucchiaino",salt:"1 cucchiaino",black_pepper:"2 cucchiaini",miso:"1 cucchiaio (bianco)",vegetable_broth:"1,75 litri",coconut_milk:"2 tazze",parmesan:"1/4 tazza",bay_leaf:"1 foglia"},
+29:{cauliflower:"1 grande (a cimette)",mushroom:"900 g (misti)",shallot:"4",garlic:"2 spicchi",tahini:"2 cucchiai",miso:"1 cucchiaio",vegetable_broth:"1,5 litri",coconut_milk:"200 ml"},
+30:{olive_oil:"60 ml",leek:"1",shallot:"2",garlic:"3 spicchi",mushroom:"200 g",lentils:"200 g (cotte)",vegetable_broth:"2 litri",kale:"200 g"},
+31:{olive_oil:"2 cucchiai",red_onion:"1",curry_paste:"2 cucchiai",lentils:"250 g (cotte a pressione)",broccoli:"200 g",coconut_milk:"400 ml",vegetable_broth:"500 ml",salt:"q.b."},
+32:{tempeh:"400 g",mushroom:"400 g (misti)",shallot:"2",vegetable_broth:"500 ml",mustard:"1 cucchiaio",olive_oil:"2 cucchiai"},
+33:{shirataki_noodles:"2 confezioni",mushroom:"300 g",olive_oil:"2 cucchiai",garlic:"2 spicchi"},
+34:{cauliflower:"300 g (grattugiato)",olive_oil:"1 cucchiaio",red_onion:"1/2",salt:"q.b."},
+35:{olive_oil:"2 cucchiai",red_onion:"1",celery:"2 gambi",cabbage:"200 g",vegetable_broth:"1 litro"},
+36:{mussels:"1 kg",almond_flour:"50 g",garlic:"q.b.",olive_oil:"q.b."},
+37:{sweet_potato:"500 g",egg:"1",cassava_flour:"150 g",nutmeg:"q.b.",salt:"q.b."},
+38:{lentils:"200 g (cotte)",walnut:"50 g",mushroom:"100 g",egg:"1",cassava_flour:"30 g"},
+39:{olive_oil:"2 cucchiai",red_onion:"1",cauliflower:"200 g",broccoli:"200 g",coconut_milk:"400 ml",vegetable_broth:"500 ml",curry_paste:"2 cucchiai"},
+40:{broccoli:"400 g",egg:"4",almond_flour:"80 g",flaxseed:"20 g",cheese:"60 g",olive_oil:"q.b."},
+41:{crab:"340 g",celery:"2 gambi",red_onion:"1/2",egg:"1",coconut_flour:"30 g",almond_flour:"30 g",avocado_oil:"q.b."},
+42:{sesame_seed:"1 cucchiaio (olio di sesamo)",red_onion:"1",fennel:"1",ginger:"1 cucchiaio",garlic:"4 spicchi",curry_paste:"2 cucchiai",coconut_milk:"800 ml",vegetable_broth:"250 ml",mussels:"250 g",shrimp:"200 g",scallops:"200 g",cabbage:"150 g (verde)"},
+43:{shirataki_noodles:"2 confezioni",mushroom:"450 g",olive_oil:"100 ml",garlic:"4 spicchi",thyme:"q.b.",feta_cheese:"200 g (feta o caprino)"},
+44:{cabbage:"1 (a spicchi)",olive_oil:"3 cucchiai",salt:"q.b.",mct_oil:"60 ml",lemon:"succo di 1",walnut:"30 g"},
+45:{hemp_seed:"1 tazza",parsley:"1/2 tazza",mint:"1/4 tazza",red_onion:"1/4 tazza",celery:"2 gambi",olive_oil:"2 cucchiai",lemon:"succo di 1",salt:"q.b."},
+46:{sauerkraut:"900 g",mushroom:"200 g",red_onion:"1",coconut_milk:"400 ml",egg:"4",walnut:"100 g",salt:"q.b.",black_pepper:"q.b."},
+47:{pork:"4 costolette",fennel:"1",olive_oil:"4 cucchiai",orange_zest:"di 1 arancia",red_wine:"250 ml (facoltativo)",salt:"q.b."},
+48:{chicken:"600 g",asparagus:"600 g",tahini:"6 cucchiai",lemon:"4 cucchiai succo",garlic:"4 spicchi",olive_oil:"4 cucchiai",coconut_aminos:"4 cucchiai",ginger:"2 cucchiaini (grattugiato)",parsley:"4 cucchiai",salt:"2 pizzichi"},
+49:{almond_flour:"100 g",cocoa:"40 g",sweetener:"80 g",egg:"2",mct_oil:"60 ml",walnut:"50 g",vanilla:"1 cucchiaino"},
+50:{avocado:"4",cocoa:"8 cucchiai",coconut_milk:"12 cucchiai",sweetener:"8 cucchiaini",vanilla:"2 cucchiaini",raspberry:"120 g",pistachio:"40 g",salt:"2 pizzichi"},
+51:{coconut_milk:"400 ml (+100 ml crema di cocco)",sweetener:"q.b.",vanilla:"q.b."},
+52:{coconut_milk:"800 ml (2 lattine)",shredded_coconut:"50 g",dark_chocolate:"85 g",coconut_oil:"1 cucchiaio",sweetener:"q.b."},
+53:{almond_butter:"150 g",shredded_coconut:"50 g",flaxseed:"40 g",sweetener:"q.b."},
+54:{olive_oil:"4 cucchiai (~60 ml)",almond_flour:"180 g",hazelnut:"60 g (farina)",arrowroot:"48 g",flaxseed:"32 g",walnut:"120 g",tapioca_starch:"16 g",egg:"4",coconut_milk:"120 ml",yacon_syrup:"2 cucchiai"},
+55:{avocado:"1",lemon:"succo di 1/2",olive_oil:"2 cucchiai",salt:"q.b."},
+56:{olive_oil:"3 cucchiai",lemon:"succo di 1/2"},
+57:{sesame_seed:"2 cucchiai (olio di sesamo)",red_wine_vinegar:"1 cucchiaio",coconut_aminos:"1 cucchiaio"},
+58:{chicken:"400 g",almond_flour:"80 g",egg:"2",parmesan:"30 g",salt:"1 pizzico",olive_oil:"2 cucchiai"},
+59:{chicken:"2 petti",almond_flour:"100 g",egg:"2",parmesan:"40 g",olive_oil:"3 cucchiai",lemon:"succo di 1"},
+60:{chicken:"500 g (macinato)",cauliflower:"300 g",egg:"1",parmesan:"40 g",parsley:"2 cucchiai",salt:"1 pizzico"},
+61:{cauliflower:"1 grande",parmesan:"50 g",olive_oil:"3 cucchiai",garlic:"1 spicchio",salt:"q.b."},
+62:{white_fish:"400 g",almond_flour:"60 g",egg:"1",parsley:"2 cucchiai",lemon:"scorza e succo di 1",olive_oil:"2 cucchiai"},
+63:{egg:"6",spinach:"200 g",goat_cheese:"100 g",olive_oil:"2 cucchiai",salt:"q.b."},
+64:{chicken:"4 fettine",prosciutto:"4 fette",sage:"8 foglie",olive_oil:"2 cucchiai",lemon:"succo di 1/2"},
+65:{cauliflower:"1 grande",parmesan:"50 g",olive_oil:"2 cucchiai",shallot:"1",vegetable_broth:"200 ml"},
+66:{cauliflower:"1 grande",almond_flour:"80 g",egg:"1",parmesan:"60 g",olive_oil:"2 cucchiai"},
+67:{almond_flour:"150 g",egg:"4",spinach:"200 g",goat_cheese:"100 g",olive_oil:"2 cucchiai",salt:"q.b."},
+68:{leek:"3",sweet_potato:"400 g",vegetable_broth:"1 litro",olive_oil:"2 cucchiai",salt:"q.b."},
+69:{orange:"2",fennel:"1",olives:"80 g",olive_oil:"2 cucchiai",black_pepper:"q.b."},
+70:{almond_flour:"200 g",egg:"3",apple:"2",sweetener:"q.b.",coconut_oil:"60 ml",cinnamon:"1 cucchiaino"},
+71:{almond_flour:"200 g",egg:"1",lemon:"scorza di 1",sweetener:"q.b.",coconut_oil:"40 ml"},
+72:{white_fish:"400 g",olives:"60 g",rosemary:"1 rametto",olive_oil:"2 cucchiai",lemon:"scorza di 1"},
+73:{broccoli:"500 g",vegetable_broth:"1 litro",olive_oil:"2 cucchiai",garlic:"2 spicchi",basil:"q.b. (fresco)"},
+74:{buffalo_mozzarella:"200 g",basil:"q.b. (fresco)",olives:"50 g",olive_oil:"2 cucchiai"},
+75:{kale:"300 g",garlic:"2 spicchi",olive_oil:"2 cucchiai",salt:"q.b."},
+76:{carrot:"3 (circa 300 g)",lemon:"succo di 1",olive_oil:"2 cucchiai",salt:"q.b."},
+77:{asparagus:"400 g",olive_oil:"2 cucchiai",lemon:"succo di 1/2",salt:"q.b."},
+78:{broccoli:"400 g",lemon:"succo di 1/2",olive_oil:"2 cucchiai",salt:"q.b."},
+79:{fennel:"2 (a spicchi)",parmesan:"50 g",olive_oil:"2 cucchiai",salt:"q.b."},
+80:{artichoke:"4",garlic:"2 spicchi",parsley:"2 cucchiai",olive_oil:"3 cucchiai",lemon:"succo di 1/2"},
+81:{arugula:"100 g",pear:"1",walnut:"30 g",olive_oil:"2 cucchiai",lemon:"succo di 1/2"},
+82:{leek:"2",celeriac:"400 g",vegetable_broth:"1 litro",olive_oil:"2 cucchiai",salt:"q.b."},
+83:{salmon:"450 g",fennel:"1",lemon:"scorza di 1",olive_oil:"2 cucchiai",rosemary:"q.b."},
+84:{celeriac:"600 g",olive_oil:"2 cucchiai",garlic:"1 spicchio",salt:"q.b."}
+};
+
+var QTY_WORDS = [
+["scorza e succo di","zest and juice of"],["scorza di","zest of"],["succo di","juice of"],
+["in totale","total"],["per guarnire","to garnish"],["a bocconcini","cut into bites"],
+["a spicchi","in wedges"],["a dadini","diced"],["non alcalinizzato","non-alkalized"],
+["marino iodato","iodized sea"],["cucchiaini","tsp"],["cucchiaino","tsp"],
+["cucchiai","tbsp"],["cucchiaio","tbsp"],["pizzichi","pinches"],["pizzico","pinch"],
+["spicchi","cloves"],["spicchio","clove"],["foglie","leaves"],["foglia","leaf"],
+["fette","slices"],["fetta","slice"],["rametto","sprig"],["tazze","cups"],["tazza","cup"],
+["litri","liters"],["litro","liter"],["q.b.","to taste"],["facoltativo","optional"],
+["circa","about"],["grandi","large"],["grande","large"],["tritati","chopped"],["tritate","chopped"],
+["tritato","chopped"],["tritata","chopped"],["sbriciolato","crumbled"],["grattugiato","grated"],
+["grattugiata","grated"],["cotte","cooked"],["cotti","cooked"],["congelati","frozen"],
+["congelate","frozen"],["congelato","frozen"],["fresco","fresh"],["fresca","fresh"],
+["freschi","fresh"],["fresche","fresh"],["macinato","ground"],["macinata","ground"],
+["misti","mixed"],["miste","mixed"],["petti","breasts"],["fettine","slices"],
+["cimette","florets"],["puliti","cleaned"],["rosso","red"],["bianco","white"],
+["verde","green"],["sgusciati","shelled"],["intero","whole"],["dolce","sweet"],
+["romana","romaine"],["opzionale","optional"]
+];
+function fmtNum(n){
+  n = Math.round(n*100)/100;
+  if(Math.abs(n-Math.round(n))<0.001) return String(Math.round(n));
+  var rounded = Math.round(n*10)/10;
+  return String(rounded).replace(".", state.lang==="it" ? "," : ".");
+}
+function scaleQtyString(str, factor){
+  if(!str || factor===1) return str;
+  var re = /(\d+)?(½|¼|¾)|(\d+)\/(\d+)|(\d+(?:[.,]\d+)?)/;
+  return str.replace(re, function(mm, wholeUni, uniFrac, fracNum, fracDen, dec){
+    var val;
+    if(uniFrac){
+      var w = wholeUni ? parseInt(wholeUni,10) : 0;
+      var f = {"½":0.5,"¼":0.25,"¾":0.75}[uniFrac];
+      val = w+f;
+    } else if(fracDen){
+      val = parseInt(fracNum,10)/parseInt(fracDen,10);
+    } else {
+      val = parseFloat(dec.replace(",","."));
+    }
+    return fmtNum(val*factor);
+  });
+}
+
+function shareRecipe(r, curServ, factor){
+  var recQty = QTY[r.id] || {};
+  var ingLines = r.ing.map(function(k){
+    var entry = ING[k] || {it:k,en:k};
+    var q = recQty[k] ? translateQty(scaleQtyString(recQty[k], factor))+" " : "";
+    return "- "+q+label(entry);
+  }).join("\n");
+  var stepsArr = state.lang==="en" ? r.se : r.si;
+  var stepsLines = stepsArr.map(function(s,i){ return (i+1)+". "+s; }).join("\n");
+  var text = label(r)+" ("+curServ+" "+t("servings")+")\n\n"+t("ingredients")+":\n"+ingLines+"\n\n"+t("steps")+":\n"+stepsLines+"\n\nPlant Paradox";
+
+  var btn = document.getElementById("shareRecipeBtn");
+  if(navigator.share){
+    navigator.share({title:label(r), text:text}).catch(function(){});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      if(btn){ btn.textContent = t("linkCopied"); setTimeout(function(){ btn.textContent = t("shareRecipe"); },1800); }
+    }).catch(function(){});
+  }
+}
+
+function translateQty(s){
+  if(state.lang!=="en" || !s) return s;
+  var out = s;
+  QTY_WORDS.forEach(function(pair){
+    out = out.replace(new RegExp(pair[0],"gi"), pair[1]);
+  });
+  return out;
+}
+
 /* ============================= APP STATE ============================= */
 var state = {
   lang: "it",
@@ -1316,7 +1540,8 @@ var state = {
   favorites: [],
   plan: {},
   planDay: "mon",
-  pickerTarget: null
+  pickerTarget: null,
+  showQty: true
 };
 
 function loadState(){
@@ -1348,13 +1573,28 @@ function loadState(){
     if(savedPlan) state.plan = JSON.parse(savedPlan);
   }catch(e){ state.plan = {}; }
   ensurePlanShape();
+  try{
+    var savedQty = localStorage.getItem("pp_showqty");
+    if(savedQty!==null) state.showQty = savedQty==="1";
+  }catch(e){}
+}
+function saveShowQty(){
+  try{ localStorage.setItem("pp_showqty", state.showQty?"1":"0"); }catch(e){}
 }
 function ensurePlanShape(){
   DAYS.forEach(function(d){
     if(!state.plan[d.key]) state.plan[d.key] = {};
     if(state.plan[d.key].eatStart===undefined) state.plan[d.key].eatStart = "12:00";
     if(state.plan[d.key].eatEnd===undefined) state.plan[d.key].eatEnd = "20:00";
+    if(state.plan[d.key].water===undefined) state.plan[d.key].water = 0;
   });
+}
+var WATER_GOAL = 8;
+function setWater(dayKey, delta){
+  var w = state.plan[dayKey].water + delta;
+  state.plan[dayKey].water = Math.max(0, Math.min(20, w));
+  savePlan();
+  renderPlanner();
 }
 function saveIngredients(){
   try{ localStorage.setItem("pp_ingredients", JSON.stringify(state.ingredients)); }catch(e){}
@@ -1581,6 +1821,27 @@ function clearWholePlan(){
   savePlan();
   renderPlanner();
 }
+function computeDayTotals(dayKey){
+  var totals = {kcal:0,fat:0,prot:0,carb:0,count:0};
+  var dayPlan = state.plan[dayKey];
+  MEALS.forEach(function(m){
+    var rid = dayPlan[m.key];
+    if(rid==null) return;
+    var r = getRecipeById(rid);
+    if(!r) return;
+    totals.kcal += r.kcal; totals.fat += r.fat; totals.prot += r.prot; totals.carb += r.carb;
+    totals.count++;
+  });
+  return totals;
+}
+function computeWeekTotals(){
+  var totals = {kcal:0,fat:0,prot:0,carb:0,count:0};
+  DAYS.forEach(function(d){
+    var dt = computeDayTotals(d.key);
+    totals.kcal+=dt.kcal; totals.fat+=dt.fat; totals.prot+=dt.prot; totals.carb+=dt.carb; totals.count+=dt.count;
+  });
+  return totals;
+}
 function fastingHoursFor(dayKey){
   var d = state.plan[dayKey];
   var toMin = function(s){ var p=s.split(":"); return (+p[0])*60 + (+p[1]); };
@@ -1624,6 +1885,24 @@ function renderPlanner(){
   document.getElementById("eatStart_"+dayKey).addEventListener("change", function(e){ setFastField(dayKey,"eatStart",e.target.value); });
   document.getElementById("eatEnd_"+dayKey).addEventListener("change", function(e){ setFastField(dayKey,"eatEnd",e.target.value); });
 
+  var waterCard = document.createElement("div");
+  waterCard.className = "meal-slot";
+  var waterN = dayPlan.water;
+  var waterPct = Math.min(100, Math.round(100*waterN/WATER_GOAL));
+  waterCard.innerHTML =
+    '<div class="meal-slot-label">'+t("waterLabel")+'</div>'+
+    '<div class="meal-slot-body" style="display:flex;align-items:center;gap:12px;">'+
+      '<button type="button" class="serv-step" id="waterMinus">−</button>'+
+      '<div style="flex:1;">'+
+        '<div style="font-size:13.5px;font-weight:600;">'+waterN+' / '+WATER_GOAL+' '+t("waterUnit")+'</div>'+
+        '<div class="match-bar" style="margin-top:5px;"><div style="width:'+waterPct+'%;background:#4B8FBF;"></div></div>'+
+      '</div>'+
+      '<button type="button" class="serv-step" id="waterPlus">+</button>'+
+    '</div>';
+  slotsWrap.appendChild(waterCard);
+  document.getElementById("waterMinus").addEventListener("click", function(){ setWater(dayKey,-1); });
+  document.getElementById("waterPlus").addEventListener("click", function(){ setWater(dayKey,1); });
+
   MEALS.forEach(function(m){
     var slot = document.createElement("div");
     slot.className = "meal-slot";
@@ -1657,6 +1936,23 @@ function renderPlanner(){
     slot.appendChild(body);
     slotsWrap.appendChild(slot);
   });
+
+  var dayTot = computeDayTotals(dayKey);
+  var weekTot = computeWeekTotals();
+  var totalsCard = document.createElement("div");
+  totalsCard.className = "macro-totals";
+  totalsCard.innerHTML =
+    '<div class="macro-totals-row">'+
+      '<div class="macro-totals-label">'+t("dayTotals")+'</div>'+
+      '<div class="nutri-row" style="flex:1;">'+
+        '<div class="nutri-cell"><div class="v">'+dayTot.kcal+'</div><div class="l">'+t("kcal")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+fmtNum(dayTot.fat)+'g</div><div class="l">'+t("fat")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+fmtNum(dayTot.prot)+'g</div><div class="l">'+t("protein")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+fmtNum(dayTot.carb)+'g</div><div class="l">'+t("carbs")+'</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="macro-totals-week">'+t("weekTotals")+': '+weekTot.kcal+' '+t("kcal")+' · '+fmtNum(weekTot.fat)+'g '+t("fat")+' · '+fmtNum(weekTot.prot)+'g '+t("protein")+' · '+fmtNum(weekTot.carb)+'g '+t("carbs")+'</div>';
+  slotsWrap.appendChild(totalsCard);
 }
 
 function openPicker(dayKey, mealKey){
@@ -1920,19 +2216,29 @@ function renderRecipes(){
 }
 
 /* ============================= DETAIL OVERLAY ============================= */
-function openDetail(r){
+function openDetail(r, overrideServ){
   var overlay=document.getElementById("overlay");
   var card=document.getElementById("detailCard");
   var m=computeMatch(r);
+  var curServ = overrideServ || r.serv;
+  var factor = curServ / r.serv;
 
+  var recQty = QTY[r.id] || {};
   var ingHtml = r.ing.map(function(k){
     var have = m.haveSet[k];
     var entry = ING[k] || {it:k,en:k};
-    return '<li class="'+(have?"have":"miss")+'"><span class="dot '+(have?"have":"")+'"></span>'+label(entry)+'</li>';
+    var qtyRaw = recQty[k] ? scaleQtyString(recQty[k], factor) : null;
+    var qtyStr = (state.showQty && qtyRaw) ? '<span class="ing-qty">'+translateQty(qtyRaw)+'</span> ' : '';
+    return '<li class="'+(have?"have":"miss")+'"><span class="dot '+(have?"have":"")+'"></span>'+qtyStr+label(entry)+'</li>';
   }).join("");
 
   var stepsArr = state.lang==="en" ? r.se : r.si;
   var stepsHtml = stepsArr.map(function(s){ return "<li>"+s+"</li>"; }).join("");
+
+  var kcalS = Math.round(r.kcal*factor);
+  var fatS = Math.round(r.fat*factor*10)/10;
+  var protS = Math.round(r.prot*factor*10)/10;
+  var carbS = Math.round(r.carb*factor*10)/10;
 
   card.innerHTML =
     '<div class="detail-head">'+
@@ -1942,18 +2248,27 @@ function openDetail(r){
       (r.kid? ' <span class="kid-badge">'+t("kidBadge")+'</span>' : '')+
       (r.vegan? ' <span class="kid-badge">'+t("veganBadge")+'</span>' : (r.veg? ' <span class="kid-badge">'+t("vegBadge")+'</span>' : ''))+
       '<h2>'+label(r)+'</h2>'+
-      '<div class="serv-note">'+r.serv+' '+t("servings")+'</div>'+
+      '<div class="serv-note">'+
+        '<button type="button" class="serv-step" id="servMinus">−</button>'+
+        '<span id="servCount">'+curServ+'</span> '+t("servings")+
+        '<button type="button" class="serv-step" id="servPlus">+</button>'+
+      '</div>'+
     '</div>'+
     '<div class="detail-body">'+
       '<div class="nutri-row">'+
-        '<div class="nutri-cell"><div class="v">'+r.kcal+'</div><div class="l">'+t("kcal")+'</div></div>'+
-        '<div class="nutri-cell"><div class="v">'+r.fat+'g</div><div class="l">'+t("fat")+'</div></div>'+
-        '<div class="nutri-cell"><div class="v">'+r.prot+'g</div><div class="l">'+t("protein")+'</div></div>'+
-        '<div class="nutri-cell"><div class="v">'+r.carb+'g</div><div class="l">'+t("carbs")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+kcalS+'</div><div class="l">'+t("kcal")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+fatS+'g</div><div class="l">'+t("fat")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+protS+'g</div><div class="l">'+t("protein")+'</div></div>'+
+        '<div class="nutri-cell"><div class="v">'+carbS+'g</div><div class="l">'+t("carbs")+'</div></div>'+
       '</div>'+
       '<div class="detail-block">'+
         '<div class="detail-block-head"><h4>'+t("ingredients")+' · '+m.matched+'/'+m.total+' '+t("have")+'</h4>'+
+        '<span style="display:flex;gap:8px;flex-wrap:wrap;">'+
+        '<button class="add-missing-btn" id="toggleQtyBtn">'+(state.showQty?t("hideQty"):t("showQty"))+'</button>'+
+        '<button class="add-missing-btn" id="shareRecipeBtn">'+t("shareRecipe")+'</button>'+
+        '<button class="add-missing-btn" id="printRecipeBtn">'+t("printRecipe")+'</button>'+
         (m.matched<m.total? '<button class="add-missing-btn" id="addMissingBtn">'+t("addMissing")+'</button>' : '')+
+        '</span>'+
         '</div>'+
         '<ul class="ing-list">'+ingHtml+'</ul></div>'+
       '<div class="detail-block"><h4>'+t("steps")+'</h4><ol class="steps-list">'+stepsHtml+'</ol></div>'+
@@ -1966,6 +2281,15 @@ function openDetail(r){
     fb.classList.toggle("active", isFavorite(r.id));
     fb.textContent = isFavorite(r.id) ? "★" : "☆";
   });
+  document.getElementById("servMinus").addEventListener("click", function(){ if(curServ>1) openDetail(r, curServ-1); });
+  document.getElementById("servPlus").addEventListener("click", function(){ openDetail(r, curServ+1); });
+  document.getElementById("toggleQtyBtn").addEventListener("click", function(){
+    state.showQty = !state.showQty;
+    saveShowQty();
+    openDetail(r, curServ);
+  });
+  document.getElementById("shareRecipeBtn").addEventListener("click", function(){ shareRecipe(r, curServ, factor); });
+  document.getElementById("printRecipeBtn").addEventListener("click", function(){ printRecipe(); });
   var addMissingBtn = document.getElementById("addMissingBtn");
   if(addMissingBtn){
     addMissingBtn.addEventListener("click", function(){
@@ -2127,6 +2451,8 @@ document.getElementById("moveToFridgeBtn").addEventListener("click", moveChecked
 document.getElementById("clearShoppingBtn").addEventListener("click", clearShoppingList);
 document.getElementById("genShoppingFromPlanBtn").addEventListener("click", generateShoppingFromPlan);
 document.getElementById("clearPlanBtn").addEventListener("click", clearWholePlan);
+document.getElementById("printShoppingBtn").addEventListener("click", printShoppingList);
+document.getElementById("printPlanBtn").addEventListener("click", printPlan);
 
 document.getElementById("overlay").addEventListener("click", function(e){
   if(e.target.id==="overlay") closeDetail();
@@ -2184,6 +2510,39 @@ function generateAppIcon(){
   var fav = document.getElementById("faviconLink");
   if(apple) apple.setAttribute("href", dataUrl);
   if(fav) fav.setAttribute("href", dataUrl);
+}
+
+/* ============================= PRINT ============================= */
+function doPrint(cls){
+  document.body.classList.add(cls);
+  function cleanup(){
+    document.body.classList.remove(cls);
+    window.removeEventListener("afterprint", cleanup);
+  }
+  window.addEventListener("afterprint", cleanup);
+  window.print();
+  setTimeout(cleanup, 2000);
+}
+function printRecipe(){ doPrint("printing-recipe"); }
+function printShoppingList(){ doPrint("printing-shopping"); }
+function printPlan(){
+  var area = document.getElementById("printPlanArea");
+  var html = "<h1>"+t("tabPlanner")+" — Plant Paradox</h1>";
+  DAYS.forEach(function(d){
+    var dayPlan = state.plan[d.key];
+    var fh = fastingHoursFor(d.key);
+    html += "<h2>"+label(d)+"</h2>";
+    html += '<div class="print-fast">'+t("fastLabel")+": "+dayPlan.eatStart+" – "+dayPlan.eatEnd+" · "+fh+"h "+t("fastHoursSuffix")+" · "+t("waterLabel")+": "+dayPlan.water+"/"+WATER_GOAL+" "+t("waterUnit")+"</div>";
+    html += '<ul class="print-meals">';
+    MEALS.forEach(function(m){
+      var rid = dayPlan[m.key];
+      var r = rid!=null ? getRecipeById(rid) : null;
+      html += "<li><b>"+label(m)+":</b> "+(r? label(r)+" ("+r.kcal+" "+t("kcal")+")" : "—")+"</li>";
+    });
+    html += "</ul>";
+  });
+  area.innerHTML = html;
+  doPrint("printing-plan");
 }
 
 /* ============================= INIT ============================= */
