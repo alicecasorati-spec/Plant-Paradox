@@ -759,7 +759,11 @@ var ING = {
   artichoke:{it:"carciofi",en:"artichokes",a:["carciofo","artichoke"]},
   pear:{it:"pere",en:"pears",a:["pera","pear"]},
   celeriac:{it:"sedano rapa",en:"celeriac",a:["celeriac","sedano rapa"]},
-  salmon:{it:"salmone selvaggio",en:"wild salmon",a:["salmone","salmon"]}
+  salmon:{it:"salmone selvaggio",en:"wild salmon",a:["salmone","salmon"]},
+  onion:{it:"cipolla",en:"onion"},
+  oregano:{it:"origano",en:"oregano"},
+  tomato_peeled:{it:"pomodoro pelato o passata (senza buccia e semi)",en:"peeled tomato or purée (no skin/seeds)",a:["passata","pomodoro","tomato puree","tomato paste","pomodoro pelato"]},
+  balsamic_vinegar:{it:"aceto balsamico",en:"balsamic vinegar"}
 };
 var PANTRY = Object.keys(ING).filter(function(k){return ING[k].pantry;});
 
@@ -900,7 +904,7 @@ var FOOD_LIST = {
       {it:"Agave",en:"Agave"},{it:"Zucchero di cocco",en:"Coconut sugar"},{it:"Bevande dietetiche",en:"Diet sodas"},{it:"Zucchero granulato (anche di canna bio)",en:"Granulated sugar (incl. organic cane)"},
       {it:"Maltodestrina",en:"Maltodextrin"},{it:"Aspartame",en:"Aspartame"},{it:"Splenda",en:"Splenda"},{it:"Acesulfame-K",en:"Acesulfame-K"},{it:"Saccarina",en:"Saccharin"}
     ]},
-    {it:"Legumi non trattati a pressione", en:"Legumes (not pressure-cooked)", items:[
+    {it:"Legumi (* diventano ammessi se cotti in pentola a pressione)", en:"Legumes (* become allowed if pressure-cooked)", items:[
       {it:"Fagioli*",en:"Beans*"},{it:"Ceci* (anche hummus)",en:"Chickpeas* (incl. hummus)"},{it:"Edamame*",en:"Edamame*"},{it:"Fagiolini*",en:"Green beans*"},
       {it:"Legumi*",en:"Legumes*"},{it:"Lenticchie*",en:"Lentils*"},{it:"Proteine di pisello non isolate",en:"Non-isolated pea protein"},
       {it:"Piselli*",en:"Peas*"},{it:"Soia*",en:"Soy*"},{it:"Proteine di soia non isolate",en:"Non-isolated soy protein"},{it:"Taccole",en:"Snow peas"},{it:"Tofu*",en:"Tofu*"}
@@ -912,7 +916,7 @@ var FOOD_LIST = {
     {it:"Verdure problematiche (lectine)", en:"Problem “vegetables” (lectins)", items:[
       {it:"Peperoni",en:"Bell peppers"},{it:"Peperoncini",en:"Chili peppers"},{it:"Cetrioli",en:"Cucumbers"},{it:"Melanzane",en:"Eggplant"},
       {it:"Bacche di goji",en:"Goji berries"},{it:"Meloni (tutti)",en:"Melons (all)"},{it:"Zucche",en:"Pumpkin/squash"},{it:"Zucchine",en:"Zucchini"},
-      {it:"Tomatillos",en:"Tomatillos"},{it:"Pomodori",en:"Tomatoes"}
+      {it:"Tomatillos",en:"Tomatillos"},{it:"Pomodori (con buccia e semi)",en:"Tomatoes (with skin and seeds)"}
     ]},
     {it:"Latticini contenenti A1", en:"A1 dairy", items:[
       {it:"Burro (tranne A2, pecora o capra)",en:"Butter (except A2, sheep or goat)"},{it:"Fiocchi di latte",en:"Cottage cheese"},
@@ -1359,7 +1363,13 @@ var RECIPES = [
  ing:["celeriac","olive_oil","garlic","salt"],
  si:["Cuoci il sedano rapa a cubetti in acqua bollente finché tenero, 15 minuti.","Scola e frulla con olio, aglio e sale fino a crema liscia."],
  se:["Boil the diced celeriac until tender, 15 minutes.","Drain and blend with oil, garlic and salt until smooth."],
- kcal:140,fat:9,prot:2,carb:12}
+ kcal:140,fat:9,prot:2,carb:12},
+
+{id:85,ch:"mediterranea",tag:"MED",kid:true,veg:true,vegan:true,it:"Spaghetti alla Bolognese Vegetale",en:"Vegan Spaghetti Bolognese",serv:5,
+ ing:["olive_oil","onion","garlic","oregano","carrot","cauliflower","mushroom","celery","tomato_peeled","balsamic_vinegar","sweetener","basil","shirataki_noodles","salt","black_pepper"],
+ si:["Scalda l'olio in una padella capiente a fuoco medio-alto.","Aggiungi cipolla, aglio e origano e soffriggi qualche minuto.","Unisci carote, cavolfiore e funghi tritati grossolanamente e il sedano, condisci e cuoci 5–8 minuti.","Versa la passata e il concentrato di pomodoro (senza buccia né semi), l'aceto balsamico e il dolcificante, mescola e cuoci 15 minuti.","Cuoci i noodles di konjac secondo le istruzioni della confezione, condiscili con un filo d'olio e il basilico.","Servi i noodles con il ragù di verdure sopra."],
+ se:["Heat the oil in a large pan over medium-high heat.","Add the onion, garlic and oregano and sauté for a few minutes.","Add the roughly processed carrots, cauliflower and mushrooms, and the celery, season and cook 5–8 minutes.","Stir in the tomato purée and paste (peeled, seedless), balsamic vinegar and sweetener, and simmer 15 minutes.","Cook the konjac noodles according to the package, toss with a little oil and the basil.","Serve the noodles topped with the vegetable ragù."],
+ kcal:220,fat:12,prot:6,carb:18}
 ];
 
 /* ============================= INGREDIENT QUANTITIES (Italian, per recipe id) ============================= */
@@ -1447,7 +1457,8 @@ var QTY = {
 81:{arugula:"100 g",pear:"1",walnut:"30 g",olive_oil:"2 cucchiai",lemon:"succo di 1/2"},
 82:{leek:"2",celeriac:"400 g",vegetable_broth:"1 litro",olive_oil:"2 cucchiai",salt:"q.b."},
 83:{salmon:"450 g",fennel:"1",lemon:"scorza di 1",olive_oil:"2 cucchiai",rosemary:"q.b."},
-84:{celeriac:"600 g",olive_oil:"2 cucchiai",garlic:"1 spicchio",salt:"q.b."}
+84:{celeriac:"600 g",olive_oil:"2 cucchiai",garlic:"1 spicchio",salt:"q.b."},
+85:{olive_oil:"2 cucchiai (+ per condire)",onion:"200 g",garlic:"20 g (circa 4 spicchi)",oregano:"1½ cucchiaino (essiccato)",carrot:"350 g",cauliflower:"1 testa (tritato)",mushroom:"200 g (tritati)",celery:"1 gambo",tomato_peeled:"600 ml passata + 3-4 cucchiai concentrato",balsamic_vinegar:"2 cucchiai",sweetener:"2-3 cucchiaini (miele o sciroppo d'acero)",basil:"1 tazza (foglie fresche)",shirataki_noodles:"1 confezione",salt:"q.b.",black_pepper:"q.b."}
 };
 
 var QTY_WORDS = [
